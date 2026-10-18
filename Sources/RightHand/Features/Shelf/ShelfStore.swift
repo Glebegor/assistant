@@ -2,12 +2,24 @@ import AppKit
 import Observation
 import UniformTypeIdentifiers
 
+extension UTType {
+    /// A Shelf item dragged inside RightHand (e.g. onto a folder). Declared in Info.plist.
+    static let shelfItem = UTType(exportedAs: "com.hlibarseniuk.RightHand.shelf-item")
+}
+
 /// Everything on the Shelf, plus the watchers that add screenshots and clipboard entries.
 @Observable
 @MainActor
 final class ShelfStore {
     /// Newest first.
     private(set) var items: [ShelfItem]
+    /// Newest first.
+    private(set) var folders: [ShelfFolder]
+    /// Folder currently shown in the Shelf tab; nil = top level.
+    var openFolderID: UUID?
+
+    /// What can be dropped onto the panel or a folder.
+    static let dropTypes: [UTType] = [.shelfItem, .fileURL, .plainText]
 
     @ObservationIgnored private let screenshotWatcher = ScreenshotWatcher()
     @ObservationIgnored private let clipboardWatcher = ClipboardWatcher()
@@ -23,7 +35,9 @@ final class ShelfStore {
 
     init() {
         ShelfSettings.registerDefaults()
-        items = ShelfPersistence.load()
+        let data = ShelfPersistence.load()
+        items = data.items
+        folders = data.folders
 
         screenshotWatcher.onScreenshot = { [weak self] url in self?.addFile(url, source: .screenshot) }
         clipboardWatcher.onChange = { [weak self] pasteboard in self?.addFromPasteboard(pasteboard) }
@@ -36,34 +50,48 @@ final class ShelfStore {
         }
     }
 
-    // MARK: Adding
+    var openFolder: ShelfFolder? { folders.first { $0.id == openFolderID } }
 
-    func addFile(_ url: URL, source: ShelfItem.Source) {
-        insert(ShelfItem(content: .file(path: url.path, bookmark: try? url.bookmarkData()), source: source))
+    func items(in folderID: UUID?) -> [ShelfItem] {
+        items.filter { $0.folderID == folderID }
     }
 
-    func addText(_ text: String, source: ShelfItem.Source) {
+    // MARK: Adding
+
+    func addFile(_ url: URL, source: ShelfItem.Source, folderID: UUID? = nil) {
+        insert(ShelfItem(content: .file(path: url.path, bookmark: try? url.bookmarkData()),
+                         source: source, folderID: folderID))
+    }
+
+    func addText(_ text: String, source: ShelfItem.Source, folderID: UUID? = nil) {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               text.count <= Self.maxTextLength
         else { return }
-        insert(ShelfItem(content: .text(text), source: source))
+        insert(ShelfItem(content: .text(text), source: source, folderID: folderID))
     }
 
-    /// Handles files or text dropped onto the notch panel. Returns false if nothing was usable.
-    func addDropped(_ providers: [NSItemProvider]) -> Bool {
+    /// Handles Shelf items, files or text dropped into `folderID` (nil = top level).
+    /// Returns false if nothing was usable.
+    func addDropped(_ providers: [NSItemProvider], into folderID: UUID?) -> Bool {
         var accepted = false
         for provider in providers {
-            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+            if provider.hasItemConformingToTypeIdentifier(UTType.shelfItem.identifier) {
+                accepted = true
+                _ = provider.loadDataRepresentation(forTypeIdentifier: UTType.shelfItem.identifier) { data, _ in
+                    guard let data, let id = UUID(uuidString: String(decoding: data, as: UTF8.self)) else { return }
+                    Task { @MainActor [weak self] in self?.move(itemID: id, to: folderID) }
+                }
+            } else if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
                 accepted = true
                 _ = provider.loadObject(ofClass: URL.self) { url, _ in
                     guard let url else { return }
-                    Task { @MainActor [weak self] in self?.addFile(url, source: .dropped) }
+                    Task { @MainActor [weak self] in self?.addFile(url, source: .dropped, folderID: folderID) }
                 }
             } else if provider.canLoadObject(ofClass: String.self) {
                 accepted = true
                 _ = provider.loadObject(ofClass: String.self) { text, _ in
                     guard let text else { return }
-                    Task { @MainActor [weak self] in self?.addText(text, source: .dropped) }
+                    Task { @MainActor [weak self] in self?.addText(text, source: .dropped, folderID: folderID) }
                 }
             }
         }
@@ -110,6 +138,47 @@ final class ShelfStore {
         save()
     }
 
+    // MARK: Folders
+
+    @discardableResult
+    func createFolder() -> ShelfFolder {
+        let names = Set(folders.map(\.name))
+        var name = "New Folder"
+        var number = 2
+        while names.contains(name) {
+            name = "New Folder \(number)"
+            number += 1
+        }
+        let folder = ShelfFolder(name: name)
+        folders.insert(folder, at: 0)
+        save()
+        return folder
+    }
+
+    func rename(_ folder: ShelfFolder, to name: String) {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, let index = folders.firstIndex(where: { $0.id == folder.id }) else { return }
+        folders[index].name = name
+        save()
+    }
+
+    /// Deletes the folder and the Shelf items in it (files on disk are not touched).
+    func deleteFolder(_ folder: ShelfFolder) {
+        items(in: folder.id).forEach(ShelfPersistence.deleteStoredFile)
+        items.removeAll { $0.folderID == folder.id }
+        folders.removeAll { $0.id == folder.id }
+        if openFolderID == folder.id { openFolderID = nil }
+        save()
+    }
+
+    func move(itemID: UUID, to folderID: UUID?) {
+        guard let index = items.firstIndex(where: { $0.id == itemID }),
+              items[index].folderID != folderID
+        else { return }
+        items[index].folderID = folderID
+        save()
+    }
+
     // MARK: Actions
 
     func remove(_ item: ShelfItem) {
@@ -118,9 +187,16 @@ final class ShelfStore {
         save()
     }
 
-    func clear() {
-        items.forEach(ShelfPersistence.deleteStoredFile)
-        items.removeAll()
+    /// Removes the items in `folderID`, or everything (folders too) when nil.
+    func clear(folderID: UUID?) {
+        if let folderID {
+            items(in: folderID).forEach(ShelfPersistence.deleteStoredFile)
+            items.removeAll { $0.folderID == folderID }
+        } else {
+            items.forEach(ShelfPersistence.deleteStoredFile)
+            items.removeAll()
+            folders.removeAll()
+        }
         save()
     }
 
@@ -148,14 +224,22 @@ final class ShelfStore {
         NSWorkspace.shared.activateFileViewerSelecting([url])
     }
 
-    /// What is handed to other apps when an item is dragged out of the Shelf.
+    /// What is handed over when an item is dragged: the file/text for other apps,
+    /// plus the item's id so dropping it on a Shelf folder moves it there.
     func dragProvider(for item: ShelfItem) -> NSItemProvider {
-        switch item.content {
+        let provider: NSItemProvider = switch item.content {
         case .text(let text):
             NSItemProvider(object: text as NSString)
         case .file, .image:
             item.fileURL.flatMap { NSItemProvider(contentsOf: $0) } ?? NSItemProvider()
         }
+        let id = Data(item.id.uuidString.utf8)
+        provider.registerDataRepresentation(forTypeIdentifier: UTType.shelfItem.identifier,
+                                            visibility: .ownProcess) { completion in
+            completion(id, nil)
+            return nil
+        }
+        return provider
     }
 
     // MARK: Private
@@ -166,6 +250,6 @@ final class ShelfStore {
     }
 
     private func save() {
-        ShelfPersistence.save(items)
+        ShelfPersistence.save(ShelfData(items: items, folders: folders))
     }
 }

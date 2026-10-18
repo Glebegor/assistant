@@ -1,20 +1,36 @@
 import Foundation
 
+/// Everything the Shelf saves to disk.
+struct ShelfData: Codable {
+    var items: [ShelfItem] = []
+    var folders: [ShelfFolder] = []
+}
+
 /// Saves the Shelf to disk so it survives restarts.
 enum ShelfPersistence {
     static let imagesDirectory = AppPaths.makeDirectory(AppPaths.support.appending(path: "ShelfImages", directoryHint: .isDirectory))
     private static let itemsFile = AppPaths.support.appending(path: "shelf.json")
 
-    static func load() -> [ShelfItem] {
-        guard let data = try? Data(contentsOf: itemsFile),
-              let items = try? JSONDecoder().decode([ShelfItem].self, from: data)
-        else { return [] }
-        return items.compactMap(refresh)
+    static func load() -> ShelfData {
+        guard let json = try? Data(contentsOf: itemsFile) else { return ShelfData() }
+        let decoder = JSONDecoder()
+        var data = (try? decoder.decode(ShelfData.self, from: json))
+            // Files saved before folders existed contain only the item list.
+            ?? (try? decoder.decode([ShelfItem].self, from: json)).map { ShelfData(items: $0) }
+            ?? ShelfData()
+
+        let folderIDs = Set(data.folders.map(\.id))
+        data.items = data.items.compactMap(refresh).map { item in
+            var item = item
+            if let folderID = item.folderID, !folderIDs.contains(folderID) { item.folderID = nil }
+            return item
+        }
+        return data
     }
 
-    static func save(_ items: [ShelfItem]) {
-        guard let data = try? JSONEncoder().encode(items) else { return }
-        try? data.write(to: itemsFile, options: .atomic)
+    static func save(_ data: ShelfData) {
+        guard let json = try? JSONEncoder().encode(data) else { return }
+        try? json.write(to: itemsFile, options: .atomic)
     }
 
     static func deleteStoredFile(of item: ShelfItem) {

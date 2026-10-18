@@ -19,6 +19,8 @@ struct ShelfItem: Identifiable, Codable, Equatable {
     var content: Content
     var source: Source
     var dateAdded = Date()
+    /// The Shelf folder this item is in; nil = top level.
+    var folderID: UUID?
 
     /// File on disk for file and image items.
     var fileURL: URL? {
@@ -49,4 +51,11 @@ struct ShelfItem: Identifiable, Codable, Equatable {
         case .image: nil
         }
     }
+}
+
+/// A named group on the Shelf. Folders exist only inside RightHand; files on disk are not moved.
+struct ShelfFolder: Identifiable, Codable, Equatable {
+    var id = UUID()
+    var name: String
+    var dateAdded = Date()
 }

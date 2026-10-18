@@ -9,7 +9,9 @@ import AppKit
 final class NotchController {
     static let expandedSize = CGSize(width: 560, height: 230)
     /// How long the mouse may stay outside the open panel before it closes.
-    private static let closeDelay: TimeInterval = 0.35
+    private static let closeDelay: TimeInterval = 0.3
+    /// Length of the close animation in `NotchRootView`.
+    private static let closeAnimationDuration: TimeInterval = 0.4
 
     /// The notch window on one screen.
     private struct ScreenNotch {
@@ -107,6 +109,17 @@ final class NotchController {
         notch.model.isPinned = false
         notch.panel.ignoresMouseEvents = true
         expanded = nil
+        returnKeyboardFocus(from: notch)
+    }
+
+    /// After typing in the panel (e.g. a folder name) it holds the keyboard. Once it has
+    /// closed, hide and re-show it so the keyboard goes back to the app you were using.
+    private func returnKeyboardFocus(from notch: ScreenNotch) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.closeAnimationDuration) { [weak self] in
+            guard let self, notch.panel.isKeyWindow, notch.panel !== self.expanded?.panel else { return }
+            notch.panel.orderOut(nil)
+            notch.panel.orderFrontRegardless()
+        }
     }
 
     // While a panel is open the mouse is over our own window, so the global monitor
@@ -114,7 +127,7 @@ final class NotchController {
     private func startExitPolling() {
         guard exitPoller == nil else { return }
         mouseOutsideSince = nil
-        let timer = Timer(timeInterval: 0.1, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 0.05, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.checkMouseLeft() }
         }
         RunLoop.main.add(timer, forMode: .common)
