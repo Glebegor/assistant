@@ -4,7 +4,9 @@ import SwiftUI
 struct NotchRootView: View {
     let model: NotchModel
     let pomodoro: PomodoroTimer
+    let shelf: ShelfStore
     let openSettings: () -> Void
+    @State private var isDropTargeted = false
 
     var body: some View {
         let size = model.isExpanded ? NotchController.expandedSize : model.geometry.collapsedSize
@@ -33,7 +35,7 @@ struct NotchRootView: View {
             Group {
                 switch model.selectedTab {
                 case .pomodoro: PomodoroView(timer: pomodoro)
-                case .shelf: ShelfView()
+                case .shelf: ShelfView(store: shelf)
                 case .chat: ChatView()
                 }
             }
@@ -41,6 +43,19 @@ struct NotchRootView: View {
             .padding(.bottom, 16)
         }
         .foregroundStyle(.white)
+        // Anything dragged onto the panel goes to the Shelf.
+        .onDrop(of: [.fileURL, .plainText], isTargeted: $isDropTargeted) { providers in
+            shelf.addDropped(providers)
+        }
+        .onChange(of: isDropTargeted) { _, targeted in
+            if targeted { model.selectedTab = .shelf }
+        }
+        .overlay {
+            if isDropTargeted {
+                UnevenRoundedRectangle(bottomLeadingRadius: 26, bottomTrailingRadius: 26, style: .continuous)
+                    .strokeBorder(.white.opacity(0.5), style: StrokeStyle(lineWidth: 2, dash: [6]))
+            }
+        }
     }
 
     /// Top row: tabs on the left of the camera, actions on the right.
