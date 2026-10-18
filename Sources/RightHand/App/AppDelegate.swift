@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let pomodoro = PomodoroTimer()
     private let shelf = ShelfStore()
     private let settingsWindow = SettingsWindowController()
+    private var eyeRest: EyeRestController?
     private var notch: NotchController?
     private var statusItem: StatusItemController?
 
@@ -13,11 +14,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Notifier.shared.requestAuthorization()
 
         let settings = settingsWindow
+        let eyeRest = EyeRestController(pomodoro: pomodoro)
+        self.eyeRest = eyeRest
         let notch = NotchController(pomodoro: pomodoro, shelf: shelf, openSettings: { settings.show() })
         self.notch = notch
         statusItem = StatusItemController(
             pomodoro: pomodoro,
             showPanel: { notch.showPinned() },
+            takeEyeBreak: { eyeRest.takeBreakNow() },
             openSettings: { settings.show() }
         )
     }

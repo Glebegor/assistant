@@ -6,12 +6,15 @@ final class StatusItemController: NSObject {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let pomodoro: PomodoroTimer
     private let showPanel: () -> Void
+    private let takeEyeBreak: () -> Void
     private let openSettings: () -> Void
     private let toggleTimerItem = NSMenuItem(title: "", action: #selector(toggleTimer), keyEquivalent: "")
 
-    init(pomodoro: PomodoroTimer, showPanel: @escaping () -> Void, openSettings: @escaping () -> Void) {
+    init(pomodoro: PomodoroTimer, showPanel: @escaping () -> Void, takeEyeBreak: @escaping () -> Void,
+         openSettings: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.showPanel = showPanel
+        self.takeEyeBreak = takeEyeBreak
         self.openSettings = openSettings
         super.init()
 
@@ -32,6 +35,7 @@ final class StatusItemController: NSObject {
         menu.addItem(NSMenuItem(title: "Skip Phase", action: #selector(skipPhase), keyEquivalent: ""))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Show Panel", action: #selector(showPanelAction), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Take an Eye Break", action: #selector(takeEyeBreakAction), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Settings…", action: #selector(openSettingsAction), keyEquivalent: ","))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quit RightHand", action: #selector(quit), keyEquivalent: "q"))
@@ -51,6 +55,7 @@ final class StatusItemController: NSObject {
     @objc private func resetTimer() { pomodoro.reset() }
     @objc private func skipPhase() { pomodoro.skip() }
     @objc private func showPanelAction() { showPanel() }
+    @objc private func takeEyeBreakAction() { takeEyeBreak() }
     @objc private func openSettingsAction() { openSettings() }
     @objc private func quit() { NSApp.terminate(nil) }
 }
