@@ -21,6 +21,18 @@ struct ShelfItem: Identifiable, Codable, Equatable {
     var dateAdded = Date()
     /// The Shelf folder this item is in; nil = top level.
     var folderID: UUID?
+    /// Set when the file was copied into the Shelf files folder: where the original is.
+    /// Without it, a file item is only a link to a file somewhere else.
+    var originalPath: String?
+
+    /// RightHand made this file (a copy or a clipboard image), so it may move or trash it.
+    var ownsFile: Bool {
+        switch content {
+        case .file: originalPath != nil
+        case .image: true
+        case .text: false
+        }
+    }
 
     /// File on disk for file and image items.
     var fileURL: URL? {
@@ -46,7 +58,7 @@ struct ShelfItem: Identifiable, Codable, Equatable {
     /// Two items with the same key are duplicates; the newer one replaces the older.
     var duplicateKey: String? {
         switch content {
-        case .file(let path, _): "file:\(path)"
+        case .file(let path, _): "file:\(originalPath ?? path)"
         case .text(let text): "text:\(text)"
         case .image: nil
         }
