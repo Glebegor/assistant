@@ -5,6 +5,9 @@ notch and a panel drops down with Pomodoro, a file/screenshot shelf and an AI as
 
 ## Run
 
+Run `make` to list all commands (`make run`, `make install`, `make release`, …).
+They call the scripts below.
+
 ```sh
 scripts/run.sh            # build (debug) and launch build/RightHand.app
 scripts/build-app.sh release
