@@ -1,0 +1,54 @@
+# Publishes a GitHub release whenever master changes and the commits since the
+# last release contain a Breaking/Feature/Enhancement/Fix/HotFix/Feet commit.
+name: Release
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: release
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history and tags, needed to work out the version
+
+      - name: Work out the next version
+        id: version
+        run: |
+          VERSION="$(scripts/next-version.sh)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [ -z "$VERSION" ]; then echo "Nothing to release."; else echo "Next version: $VERSION"; fi
+
+      - name: Build and package
+        if: steps.version.outputs.version != ''
+        run: scripts/package.sh "${{ steps.version.outputs.version }}"
+
+      - name: Publish the release
+        if: steps.version.outputs.version != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          {
+            scripts/next-version.sh --notes
+            cat <<'EOF'
+          ### Install
+
+          1. Download `RightHand-*.zip` below and unzip it.
+          2. Move **RightHand.app** to **Applications**.
+          3. The app is not notarized by Apple, so the first launch is blocked: open
+             **System Settings → Privacy & Security**, scroll down and click **Open Anyway**.
+          EOF
+          } > build/notes.md
+          gh release create "v$VERSION" "build/RightHand-$VERSION.zip" \
+            --target "$GITHUB_SHA" \
+            --title "RightHand $VERSION" \
+            --notes-file build/notes.md
