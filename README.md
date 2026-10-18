@@ -8,6 +8,7 @@ notch and a panel drops down with Pomodoro, a file/screenshot shelf and an AI as
 ```sh
 scripts/run.sh            # build (debug) and launch build/RightHand.app
 scripts/build-app.sh release
+scripts/install.sh        # build (release) and install into /Applications, then launch
 ```
 
 Requires macOS 14+ and Xcode (or Command Line Tools) with Swift 5.10+.
