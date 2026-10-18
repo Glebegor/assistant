@@ -1,8 +1,9 @@
 import AppKit
 
-/// Opens the notch panel when the mouse touches the camera area and closes it when the mouse leaves.
+/// Shows a black notch at the top of every screen. When the mouse touches one, its panel
+/// opens (and the panel on any other screen closes); it closes again when the mouse leaves.
 ///
-/// The window always has the expanded size; while closed it ignores the mouse, so it never
+/// Each window always has the expanded size; while closed it ignores the mouse, so it never
 /// blocks the menu bar. SwiftUI animates the black shape between notch size and panel size.
 @MainActor
 final class NotchController {
@@ -10,77 +11,105 @@ final class NotchController {
     /// How long the mouse may stay outside the open panel before it closes.
     private static let closeDelay: TimeInterval = 0.35
 
-    private let model = NotchModel()
-    private let panel = NotchPanel()
-    private var screen: NSScreen?
+    /// The notch window on one screen.
+    private struct ScreenNotch {
+        let screen: NSScreen
+        let panel: NotchPanel
+        let model: NotchModel
+    }
+
+    private let pomodoro: PomodoroTimer
+    private let shelf: ShelfStore
+    private let openSettings: () -> Void
+
+    private var notches: [ScreenNotch] = []
+    private var expanded: ScreenNotch?
+    /// Tab to show when a panel opens, so switching screens keeps the same tab.
+    private var lastTab: NotchTab = .pomodoro
     private var mouseMonitor: Any?
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
     init(pomodoro: PomodoroTimer, shelf: ShelfStore, openSettings: @escaping () -> Void) {
-        panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, openSettings: openSettings)
-        )
-        move(to: NSScreen.main ?? NSScreen.screens[0])
-        panel.orderFrontRegardless()
+        self.pomodoro = pomodoro
+        self.shelf = shelf
+        self.openSettings = openSettings
+        rebuildNotches()
 
-        // Fires for mouse moves in other apps — exactly the case while the panel is closed.
+        // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
         mouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged]) { [weak self] _ in
-            MainActor.assumeIsolated { self?.checkHoverZone() }
+            MainActor.assumeIsolated { self?.checkHoverZones() }
         }
 
+        // Monitors plugged in, unplugged or rearranged.
         NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated {
-                guard let self else { return }
-                let current = NSScreen.screens.first { $0 == self.screen } ?? NSScreen.main ?? NSScreen.screens[0]
-                self.move(to: current)
-            }
+            MainActor.assumeIsolated { self?.rebuildNotches() }
         }
     }
 
-    /// Opens the panel and keeps it open (used from the menu bar).
+    /// Opens the panel on the screen with the mouse and keeps it open (used from the menu bar).
     func showPinned() {
-        model.isPinned = true
-        expand(on: screen ?? NSScreen.main ?? NSScreen.screens[0])
-    }
-
-    private func checkHoverZone() {
-        guard !model.isExpanded else { return }
         let mouse = NSEvent.mouseLocation
-        if let hovered = NSScreen.screens.first(where: { NotchGeometry(screen: $0).hoverZone(on: $0).contains(mouse) }) {
-            expand(on: hovered)
-        }
+        guard let notch = notches.first(where: { $0.screen.frame.contains(mouse) }) ?? notches.first else { return }
+        expand(notch)
+        notch.model.isPinned = true
     }
 
-    private func expand(on screen: NSScreen) {
-        if screen != self.screen { move(to: screen) }
-        panel.ignoresMouseEvents = false
-        panel.orderFrontRegardless()
-        model.isExpanded = true
-        startExitPolling()
+    private func rebuildNotches() {
+        collapse()
+        notches.forEach { $0.panel.close() }
+        notches = NSScreen.screens.map(makeNotch)
     }
 
-    private func collapse() {
-        stopExitPolling()
-        model.isExpanded = false
-        model.isPinned = false
-        panel.ignoresMouseEvents = true
-    }
-
-    private func move(to screen: NSScreen) {
-        self.screen = screen
-        model.geometry = NotchGeometry(screen: screen)
+    private func makeNotch(on screen: NSScreen) -> ScreenNotch {
+        let model = NotchModel(geometry: NotchGeometry(screen: screen))
+        let panel = NotchPanel()
+        panel.contentView = FirstClickHostingView(
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, openSettings: openSettings)
+        )
         let size = Self.expandedSize
         panel.setFrame(NSRect(x: screen.frame.midX - size.width / 2,
                               y: screen.frame.maxY - size.height,
                               width: size.width,
                               height: size.height),
                        display: true)
+        panel.orderFrontRegardless()
+        return ScreenNotch(screen: screen, panel: panel, model: model)
     }
 
-    // While the panel is open the mouse is over our own window, so the global monitor
+    private func checkHoverZones() {
+        let mouse = NSEvent.mouseLocation
+        guard let hovered = notches.first(where: { $0.model.geometry.hoverZone(on: $0.screen).contains(mouse) }),
+              hovered.panel !== expanded?.panel
+        else { return }
+        expand(hovered)
+    }
+
+    private func expand(_ notch: ScreenNotch) {
+        if notch.panel !== expanded?.panel {
+            collapse()
+            notch.model.selectedTab = lastTab
+        }
+        expanded = notch
+        notch.panel.ignoresMouseEvents = false
+        notch.panel.orderFrontRegardless()
+        notch.model.isExpanded = true
+        startExitPolling()
+    }
+
+    private func collapse() {
+        stopExitPolling()
+        guard let notch = expanded else { return }
+        lastTab = notch.model.selectedTab
+        notch.model.isExpanded = false
+        notch.model.isPinned = false
+        notch.panel.ignoresMouseEvents = true
+        expanded = nil
+    }
+
+    // While a panel is open the mouse is over our own window, so the global monitor
     // goes quiet; a light poll detects when the mouse leaves.
     private func startExitPolling() {
         guard exitPoller == nil else { return }
@@ -98,9 +127,9 @@ final class NotchController {
     }
 
     private func checkMouseLeft() {
-        guard !model.isPinned else { mouseOutsideSince = nil; return }
+        guard let notch = expanded, !notch.model.isPinned else { mouseOutsideSince = nil; return }
         // Stay open while a mouse button is held, so dragging files in or out isn't interrupted.
-        if NSEvent.pressedMouseButtons != 0 || panel.frame.insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
+        if NSEvent.pressedMouseButtons != 0 || notch.panel.frame.insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
             mouseOutsideSince = nil
         } else if let since = mouseOutsideSince {
             if Date().timeIntervalSince(since) > Self.closeDelay { collapse() }
