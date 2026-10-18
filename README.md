@@ -14,6 +14,21 @@ scripts/install.sh        # build (release) and install into /Applications, then
 Requires macOS 14+ and Xcode (or Command Line Tools) with Swift 5.10+.
 For editing in VS Code install the **Swift** extension (`swiftlang.swift-vscode`).
 
+## Releases
+
+Versions come from commit messages since the last release (`v*` tag):
+`Breaking:` → major, `Feature:` / `Enhancement:` → minor, `Feet:` / `Fix:` / `HotFix:` → patch.
+
+```sh
+scripts/next-version.sh           # show the next version (empty = nothing to release)
+scripts/next-version.sh --notes   # preview the release notes
+scripts/release.sh                # merge dev into master and push
+scripts/package.sh                # build build/RightHand-<version>.zip locally
+```
+
+Pushing to `master` runs `.github/workflows/release.yml`, which builds the app, tags `vX.Y.Z`
+and publishes a GitHub release with the zip.
+
 ## Project layout
 
 ```
