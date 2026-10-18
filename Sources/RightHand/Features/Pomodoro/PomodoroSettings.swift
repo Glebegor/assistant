@@ -8,6 +8,9 @@ enum PomodoroSettings {
         static let longBreakMinutes = "pomodoro.longBreakMinutes"
         static let sessionsBeforeLongBreak = "pomodoro.sessionsBeforeLongBreak"
         static let autoStartNext = "pomodoro.autoStartNext"
+        static let focusEndSound = "pomodoro.focusEndSound"
+        static let breakEndSound = "pomodoro.breakEndSound"
+        static let soundVolume = "pomodoro.soundVolume"
     }
 
     enum Default {
@@ -16,6 +19,9 @@ enum PomodoroSettings {
         static let longBreakMinutes = 15
         static let sessionsBeforeLongBreak = 4
         static let autoStartNext = false
+        static let focusEndSound = "Glass"
+        static let breakEndSound = "Hero"
+        static let soundVolume = 0.8
     }
 
     private static var defaults: UserDefaults { .standard }
@@ -27,6 +33,9 @@ enum PomodoroSettings {
             Key.longBreakMinutes: Default.longBreakMinutes,
             Key.sessionsBeforeLongBreak: Default.sessionsBeforeLongBreak,
             Key.autoStartNext: Default.autoStartNext,
+            Key.focusEndSound: Default.focusEndSound,
+            Key.breakEndSound: Default.breakEndSound,
+            Key.soundVolume: Default.soundVolume,
         ])
     }
 
@@ -41,4 +50,9 @@ enum PomodoroSettings {
 
     static var sessionsBeforeLongBreak: Int { max(1, defaults.integer(forKey: Key.sessionsBeforeLongBreak)) }
     static var autoStartNext: Bool { defaults.bool(forKey: Key.autoStartNext) }
+    /// Sound names; empty = no sound.
+    static var focusEndSound: String { defaults.string(forKey: Key.focusEndSound) ?? Default.focusEndSound }
+    static var breakEndSound: String { defaults.string(forKey: Key.breakEndSound) ?? Default.breakEndSound }
+    /// 0…1, relative to the system volume.
+    static var soundVolume: Float { Float(defaults.double(forKey: Key.soundVolume)) }
 }
