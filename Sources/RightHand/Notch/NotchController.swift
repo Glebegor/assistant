@@ -49,6 +49,32 @@ final class NotchController {
         ) { [weak self] _ in
             MainActor.assumeIsolated { self?.rebuildNotches() }
         }
+
+        // Entering/leaving full screen switches Spaces; switching apps can reveal a full-screen window.
+        let workspace = NSWorkspace.shared.notificationCenter
+        for name in [NSWorkspace.activeSpaceDidChangeNotification, NSWorkspace.didActivateApplicationNotification] {
+            workspace.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.scheduleFullScreenCheck() }
+            }
+        }
+    }
+
+    /// Hides the closed notch on screens where an app is in full screen.
+    private func updateFullScreenState() {
+        let fullScreen = FullScreenDetector.fullScreenDisplays()
+        for notch in notches {
+            notch.model.hidesWhenCollapsed = notch.screen.displayID.map(fullScreen.contains) ?? false
+        }
+    }
+
+    /// Checks now and again after the Space switch animation, when the window list has settled.
+    private func scheduleFullScreenCheck() {
+        updateFullScreenState()
+        for delay in [0.4, 1.0] {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                self?.updateFullScreenState()
+            }
+        }
     }
 
     /// Opens the panel on the screen with the mouse and keeps it open (used from the menu bar).
@@ -63,6 +89,7 @@ final class NotchController {
         collapse()
         notches.forEach { $0.panel.close() }
         notches = NSScreen.screens.map(makeNotch)
+        updateFullScreenState()
     }
 
     private func makeNotch(on screen: NSScreen) -> ScreenNotch {

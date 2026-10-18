@@ -14,7 +14,9 @@ struct NotchRootView: View {
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
 
         ZStack(alignment: .top) {
-            shape.fill(.black)
+            shape
+                .fill(.black)
+                .opacity(model.isExpanded || !model.hidesWhenCollapsed ? 1 : 0)
             if model.isExpanded {
                 content
                     .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
@@ -23,6 +25,7 @@ struct NotchRootView: View {
         .frame(width: size.width, height: size.height)
         .clipShape(shape)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
+        .animation(.easeInOut(duration: 0.2), value: model.hidesWhenCollapsed)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .environment(\.colorScheme, .dark)
     }

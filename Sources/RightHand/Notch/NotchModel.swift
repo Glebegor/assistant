@@ -62,6 +62,8 @@ final class NotchModel {
     var isPinned = false
     var selectedTab: NotchTab = .pomodoro
     var geometry: NotchGeometry
+    /// True while an app is in full screen on this screen: the closed notch is not drawn.
+    var hidesWhenCollapsed = false
 
     init(geometry: NotchGeometry) {
         self.geometry = geometry
