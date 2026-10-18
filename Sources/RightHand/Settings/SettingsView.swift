@@ -7,6 +7,9 @@ struct SettingsView: View {
     @AppStorage(PomodoroSettings.Key.longBreakMinutes) private var longBreakMinutes = PomodoroSettings.Default.longBreakMinutes
     @AppStorage(PomodoroSettings.Key.sessionsBeforeLongBreak) private var sessionsBeforeLongBreak = PomodoroSettings.Default.sessionsBeforeLongBreak
     @AppStorage(PomodoroSettings.Key.autoStartNext) private var autoStartNext = PomodoroSettings.Default.autoStartNext
+    @AppStorage(ShelfSettings.Key.captureScreenshots) private var captureScreenshots = ShelfSettings.Default.captureScreenshots
+    @AppStorage(ShelfSettings.Key.clipboardHistory) private var clipboardHistory = ShelfSettings.Default.clipboardHistory
+    @AppStorage(ShelfSettings.Key.filesDirectory) private var filesDirectory = ShelfSettings.Default.filesDirectory
 
     var body: some View {
         Form {
@@ -17,10 +20,48 @@ struct SettingsView: View {
                 Stepper("Long break after \(sessionsBeforeLongBreak) sessions", value: $sessionsBeforeLongBreak, in: 2...10)
                 Toggle("Start next phase automatically", isOn: $autoStartNext)
             }
+            Section {
+                Toggle("Add new screenshots automatically", isOn: $captureScreenshots)
+                Toggle("Keep clipboard history", isOn: $clipboardHistory)
+                LabeledContent("Files folder") {
+                    HStack {
+                        Text((filesDirectory as NSString).abbreviatingWithTildeInPath)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                            .foregroundStyle(.secondary)
+                        Button("Change…", action: chooseFilesDirectory)
+                        Button("Show") {
+                            let url = URL(filePath: filesDirectory, directoryHint: .isDirectory)
+                            try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                }
+            } header: {
+                Text("Shelf")
+            } footer: {
+                Text("""
+                Dropped files and screenshots are copied into the files folder; Shelf folders are its subfolders. \
+                Keeps the last \(ShelfSettings.maxClipboardItems) copied items. Passwords from password managers are skipped.
+                """)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
-        .frame(width: 420)
+        .frame(width: 460)
         .fixedSize()
+    }
+
+    private func chooseFilesDirectory() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.canCreateDirectories = true
+        panel.prompt = "Use This Folder"
+        panel.directoryURL = URL(filePath: filesDirectory)
+        if panel.runModal() == .OK, let url = panel.url {
+            filesDirectory = url.path
+        }
     }
 }
 

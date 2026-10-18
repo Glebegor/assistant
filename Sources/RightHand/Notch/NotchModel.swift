@@ -23,10 +23,10 @@ enum NotchTab: CaseIterable, Identifiable {
     }
 }
 
-/// Size of the camera notch on a screen. Screens without a notch get a thin strip at the top edge.
+/// Size of the camera notch on a screen. Screens without a notch get a black
+/// "fake notch" of the same style in the middle of their menu bar.
 struct NotchGeometry {
-    var hasNotch: Bool
-    /// Size of the black shape when the panel is closed (the notch itself).
+    /// Size of the black shape when the panel is closed.
     var collapsedSize: CGSize
     /// Area at the top of the screen that opens the panel when the mouse enters it.
     var hoverSize: CGSize
@@ -35,16 +35,14 @@ struct NotchGeometry {
         if screen.safeAreaInsets.top > 0,
            let left = screen.auxiliaryTopLeftArea,
            let right = screen.auxiliaryTopRightArea {
-            let size = CGSize(width: screen.frame.width - left.width - right.width,
-                              height: screen.safeAreaInsets.top)
-            hasNotch = true
-            collapsedSize = size
-            hoverSize = CGSize(width: size.width + 20, height: size.height)
+            collapsedSize = CGSize(width: screen.frame.width - left.width - right.width,
+                                   height: screen.safeAreaInsets.top)
         } else {
-            hasNotch = false
-            collapsedSize = CGSize(width: 200, height: 0)
-            hoverSize = CGSize(width: 240, height: 4)
+            let menuBarHeight = screen.frame.maxY - screen.visibleFrame.maxY
+            collapsedSize = CGSize(width: 200,
+                                   height: menuBarHeight > 0 ? menuBarHeight : NSStatusBar.system.thickness)
         }
+        hoverSize = CGSize(width: collapsedSize.width + 20, height: collapsedSize.height)
     }
 
     func hoverZone(on screen: NSScreen) -> NSRect {
@@ -55,7 +53,7 @@ struct NotchGeometry {
     }
 }
 
-/// UI state shared between the notch window (AppKit) and its SwiftUI content.
+/// UI state of one notch window (there is one per screen), shared with its SwiftUI content.
 @Observable
 @MainActor
 final class NotchModel {
@@ -63,5 +61,9 @@ final class NotchModel {
     /// When pinned, the panel stays open after the mouse leaves.
     var isPinned = false
     var selectedTab: NotchTab = .pomodoro
-    var geometry = NotchGeometry(screen: NSScreen.main ?? NSScreen.screens[0])
+    var geometry: NotchGeometry
+
+    init(geometry: NotchGeometry) {
+        self.geometry = geometry
+    }
 }
