@@ -20,6 +20,7 @@ final class SettingsWindowController {
         tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
         tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
         tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
+        tabs.addTabViewItem(pane(BlockerSettingsPane(), title: "Blocking", systemImage: "hand.raised"))
         tabs.addTabViewItem(pane(AboutPane(), title: "About", systemImage: "info.circle"))
 
         let window = NSWindow(contentViewController: tabs)

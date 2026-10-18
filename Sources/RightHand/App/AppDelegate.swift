@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let shelf = ShelfStore()
     private let settingsWindow = SettingsWindowController()
     private var eyeRest: EyeRestController?
+    private var blocker: URLBlocker?
     private var notch: NotchController?
     private var statusItem: StatusItemController?
 
@@ -16,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let settings = settingsWindow
         let eyeRest = EyeRestController(pomodoro: pomodoro)
         self.eyeRest = eyeRest
+        blocker = URLBlocker(pomodoro: pomodoro)
         let notch = NotchController(pomodoro: pomodoro, shelf: shelf, openSettings: { settings.show() })
         self.notch = notch
         statusItem = StatusItemController(
