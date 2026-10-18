@@ -18,6 +18,7 @@ final class SettingsWindowController {
         let tabs = SettingsTabViewController()
         tabs.tabStyle = .toolbar
         tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
+        tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
         tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
         tabs.addTabViewItem(pane(AboutPane(), title: "About", systemImage: "info.circle"))
 

@@ -43,6 +43,7 @@ struct SettingsStepperRow: View {
     let color: Color
     @Binding var value: Int
     let range: ClosedRange<Int>
+    var step = 1
     let unit: String
 
     var body: some View {
@@ -51,8 +52,39 @@ struct SettingsStepperRow: View {
                 Text("\(value) \(unit)")
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
-                Stepper(title, value: $value, in: range)
+                Stepper(title, value: $value, in: range, step: step)
                     .labelsHidden()
+            }
+        } label: {
+            SettingsRowLabel(title, systemImage: systemImage, color: color)
+        }
+    }
+}
+
+/// Picker of macOS sounds that plays the sound when you choose it, plus a ▶ button.
+struct SettingsSoundRow: View {
+    let title: String
+    let systemImage: String
+    let color: Color
+    @Binding var selection: String
+
+    var body: some View {
+        LabeledContent {
+            HStack(spacing: 6) {
+                Picker(title, selection: $selection) {
+                    Text("None").tag("")
+                    Divider()
+                    ForEach(PomodoroSound.available, id: \.self) { Text($0).tag($0) }
+                }
+                .labelsHidden()
+                .fixedSize()
+                .onChange(of: selection) { _, name in PomodoroSound.play(name) }
+                Button("Play", systemImage: "play.circle.fill") { PomodoroSound.play(selection) }
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .font(.title3)
+                    .disabled(selection.isEmpty)
+                    .help("Play sound")
             }
         } label: {
             SettingsRowLabel(title, systemImage: systemImage, color: color)

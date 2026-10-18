@@ -30,8 +30,8 @@ struct PomodoroSettingsPane: View {
             }
 
             Section("Sounds") {
-                soundRow("Focus finished", systemImage: "bell.fill", color: .red, selection: $focusEndSound)
-                soundRow("Break finished", systemImage: "bell.badge.fill", color: .pink, selection: $breakEndSound)
+                SettingsSoundRow(title: "Focus finished", systemImage: "bell.fill", color: .red, selection: $focusEndSound)
+                SettingsSoundRow(title: "Break finished", systemImage: "bell.badge.fill", color: .pink, selection: $breakEndSound)
                 LabeledContent {
                     HStack(spacing: 8) {
                         Image(systemName: "speaker.fill").foregroundStyle(.secondary)
@@ -47,30 +47,5 @@ struct PomodoroSettingsPane: View {
             }
         }
         .formStyle(.grouped)
-    }
-
-    /// Sound picker that plays the sound when you choose it, plus a ▶ button.
-    private func soundRow(_ title: String, systemImage: String, color: Color,
-                          selection: Binding<String>) -> some View {
-        LabeledContent {
-            HStack(spacing: 6) {
-                Picker(title, selection: selection) {
-                    Text("None").tag("")
-                    Divider()
-                    ForEach(PomodoroSound.available, id: \.self) { Text($0).tag($0) }
-                }
-                .labelsHidden()
-                .fixedSize()
-                .onChange(of: selection.wrappedValue) { _, name in PomodoroSound.play(name) }
-                Button("Play", systemImage: "play.circle.fill") { PomodoroSound.play(selection.wrappedValue) }
-                    .labelStyle(.iconOnly)
-                    .buttonStyle(.borderless)
-                    .font(.title3)
-                    .disabled(selection.wrappedValue.isEmpty)
-                    .help("Play sound")
-            }
-        } label: {
-            SettingsRowLabel(title, systemImage: systemImage, color: color)
-        }
     }
 }
