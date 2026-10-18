@@ -27,7 +27,7 @@ Sources/RightHand/
   Shared/                     Small reusable helpers and views
   Features/
     Pomodoro/                 Timer logic, settings, view
-    Shelf/                    File/screenshot buffer (placeholder)
+    Shelf/                    Files, screenshots and clipboard history
     Chat/                     AI assistant (placeholder)
 ```
 
@@ -35,7 +35,7 @@ Sources/RightHand/
 
 - [x] App skeleton: notch panel, menu bar item, settings window
 - [x] Pomodoro: focus / short / long breaks, notifications, menu bar countdown
-- [ ] Shelf: drag & drop files, auto-capture screenshots, clipboard history
+- [x] Shelf: drag & drop files, auto-capture screenshots, clipboard history (saved between launches)
 - [ ] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
 - [ ] Assistant tools: apps & system control, files, screen & clipboard
 - [ ] Action approval: ask before every action, with "always allow" per tool

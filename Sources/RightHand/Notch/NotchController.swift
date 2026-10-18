@@ -17,9 +17,9 @@ final class NotchController {
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, openSettings: @escaping () -> Void) {
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, openSettings: @escaping () -> Void) {
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, openSettings: openSettings)
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, openSettings: openSettings)
         )
         move(to: NSScreen.main ?? NSScreen.screens[0])
         panel.orderFrontRegardless()
@@ -99,7 +99,8 @@ final class NotchController {
 
     private func checkMouseLeft() {
         guard !model.isPinned else { mouseOutsideSince = nil; return }
-        if panel.frame.insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
+        // Stay open while a mouse button is held, so dragging files in or out isn't interrupted.
+        if NSEvent.pressedMouseButtons != 0 || panel.frame.insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
             mouseOutsideSince = nil
         } else if let since = mouseOutsideSince {
             if Date().timeIntervalSince(since) > Self.closeDelay { collapse() }
