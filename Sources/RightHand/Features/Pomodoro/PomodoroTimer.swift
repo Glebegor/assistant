@@ -115,10 +115,11 @@ final class PomodoroTimer {
         isFresh = true
 
         guard completed else { return }
-        NSSound(named: "Glass")?.play()
+        PomodoroSound.playEnd(of: finished)
         Notifier.shared.notify(
             title: finished == .focus ? "Focus session done" : "Break is over",
-            body: finished == .focus ? "Time for a \(phase.title.lowercased())." : "Ready to focus again?"
+            body: finished == .focus ? "Time for a \(phase.title.lowercased())." : "Ready to focus again?",
+            playsSound: false // the Pomodoro sound above is enough
         )
         if PomodoroSettings.autoStartNext { start() }
     }
