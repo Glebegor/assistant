@@ -16,6 +16,12 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/RightHand" "$APP/Contents/MacOS/RightHand"
 cp Support/Info.plist "$APP/Contents/Info.plist"
 
+# Release builds pass VERSION=x.y.z (see scripts/package.sh).
+if [ -n "${VERSION:-}" ]; then
+    plutil -replace CFBundleShortVersionString -string "$VERSION" "$APP/Contents/Info.plist"
+    plutil -replace CFBundleVersion -string "$(git rev-list --count HEAD)" "$APP/Contents/Info.plist"
+fi
+
 # App icon: turn assets/icon.png into AppIcon.icns with all the sizes macOS needs.
 ICONSET="build/AppIcon.iconset"
 rm -rf "$ICONSET"
