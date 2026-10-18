@@ -14,9 +14,7 @@ struct NotchRootView: View {
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
 
         ZStack(alignment: .top) {
-            shape
-                .fill(.black)
-                .opacity(model.isExpanded || model.geometry.hasNotch ? 1 : 0)
+            shape.fill(.black)
             if model.isExpanded {
                 content
                     .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
