@@ -16,6 +16,17 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/RightHand" "$APP/Contents/MacOS/RightHand"
 cp Support/Info.plist "$APP/Contents/Info.plist"
 
+# App icon: turn assets/icon.png into AppIcon.icns with all the sizes macOS needs.
+ICONSET="build/AppIcon.iconset"
+rm -rf "$ICONSET"
+mkdir -p "$ICONSET"
+for size in 16 32 128 256 512; do
+    sips -z $size $size assets/icon.png --out "$ICONSET/icon_${size}x${size}.png" >/dev/null
+    sips -z $((size * 2)) $((size * 2)) assets/icon.png --out "$ICONSET/icon_${size}x${size}@2x.png" >/dev/null
+done
+iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
+rm -rf "$ICONSET"
+
 # Ad-hoc signature so macOS treats it as a proper app (notifications, permissions).
 codesign --force --sign - "$APP" >/dev/null
 

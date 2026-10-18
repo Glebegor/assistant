@@ -58,9 +58,36 @@ final class ShelfStore {
 
     // MARK: Adding
 
+    /// Dropped files and screenshots are copied into the Shelf files folder.
+    /// Files copied in Finder (clipboard) are only linked, so the clipboard doesn't duplicate files.
     func addFile(_ url: URL, source: ShelfItem.Source, folderID: UUID? = nil) {
-        insert(ShelfItem(content: .file(path: url.path, bookmark: try? url.bookmarkData()),
-                         source: source, folderID: folderID))
+        // Already ours (e.g. dragged out of the Shelf and back in): just move it.
+        if let existing = items.first(where: { $0.fileURL?.standardizedFileURL == url.standardizedFileURL }) {
+            move(itemID: existing.id, to: folderID)
+            return
+        }
+        let isShelfDirectory = ([nil] + folders).contains {
+            ShelfFiles.directory(for: $0).standardizedFileURL == url.standardizedFileURL
+        }
+        guard !isShelfDirectory else { return }
+
+        guard source != .clipboard, !ShelfFiles.isInsideRoot(url) else {
+            insert(ShelfItem(content: .file(path: url.path, bookmark: try? url.bookmarkData()),
+                             source: source, folderID: folderID))
+            return
+        }
+
+        // Replace an older copy of the same file instead of making "name 2".
+        removeDuplicates(of: "file:\(url.path)")
+        let directory = ShelfFiles.directory(for: folders.first { $0.id == folderID })
+        Task {
+            // Copying can take a while for big files on another disk, so do it off the main thread.
+            let copy = try? await Task.detached { try ShelfFiles.copy(url, into: directory) }.value
+            let file = copy ?? url // if copying fails, keep a link to the original
+            insert(ShelfItem(content: .file(path: file.path, bookmark: try? file.bookmarkData()),
+                             source: source, folderID: folderID,
+                             originalPath: copy == nil ? nil : url.path))
+        }
     }
 
     func addText(_ text: String, source: ShelfItem.Source, folderID: UUID? = nil) {
@@ -124,9 +151,7 @@ final class ShelfStore {
     }
 
     private func insert(_ item: ShelfItem) {
-        if let key = item.duplicateKey {
-            items.removeAll { $0.duplicateKey == key }
-        }
+        if let key = item.duplicateKey { removeDuplicates(of: key) }
         items.insert(item, at: 0)
 
         // Keep only the newest clipboard entries.
@@ -138,45 +163,102 @@ final class ShelfStore {
         save()
     }
 
+    private func removeDuplicates(of key: String) {
+        for duplicate in items where duplicate.duplicateKey == key {
+            ShelfPersistence.deleteStoredFile(of: duplicate)
+        }
+        items.removeAll { $0.duplicateKey == key }
+    }
+
     // MARK: Folders
 
     @discardableResult
     func createFolder() -> ShelfFolder {
-        let names = Set(folders.map(\.name))
-        var name = "New Folder"
-        var number = 2
-        while names.contains(name) {
-            name = "New Folder \(number)"
-            number += 1
-        }
-        let folder = ShelfFolder(name: name)
+        let folder = ShelfFolder(name: uniqueFolderName("New Folder"))
         folders.insert(folder, at: 0)
+        try? FileManager.default.createDirectory(at: ShelfFiles.directory(for: folder), withIntermediateDirectories: true)
         save()
         return folder
     }
 
+    /// Renames the folder and its folder on disk.
     func rename(_ folder: ShelfFolder, to name: String) {
-        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !name.isEmpty, let index = folders.firstIndex(where: { $0.id == folder.id }) else { return }
-        folders[index].name = name
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, trimmed != folder.name,
+              let index = folders.firstIndex(where: { $0.id == folder.id })
+        else { return }
+
+        let oldDirectory = ShelfFiles.directory(for: folders[index])
+        folders[index].name = uniqueFolderName(trimmed, excluding: folder.id)
+        let newDirectory = ShelfFiles.directory(for: folders[index])
+
+        if FileManager.default.fileExists(atPath: oldDirectory.path),
+           (try? FileManager.default.moveItem(at: oldDirectory, to: newDirectory)) != nil {
+            // Point the copies inside at their new location.
+            let oldPrefix = oldDirectory.standardizedFileURL.path + "/"
+            let newPrefix = newDirectory.standardizedFileURL.path + "/"
+            for i in items.indices {
+                guard case .file(let path, _) = items[i].content, path.hasPrefix(oldPrefix) else { continue }
+                let newPath = newPrefix + path.dropFirst(oldPrefix.count)
+                items[i].content = .file(path: newPath, bookmark: try? URL(filePath: newPath).bookmarkData())
+            }
+        }
         save()
     }
 
-    /// Deletes the folder and the Shelf items in it (files on disk are not touched).
+    /// Deletes the folder and its items; its folder on disk goes to the Trash.
+    /// Linked originals elsewhere are not touched.
     func deleteFolder(_ folder: ShelfFolder) {
         items(in: folder.id).forEach(ShelfPersistence.deleteStoredFile)
         items.removeAll { $0.folderID == folder.id }
         folders.removeAll { $0.id == folder.id }
+        ShelfFiles.trash(ShelfFiles.directory(for: folder))
         if openFolderID == folder.id { openFolderID = nil }
         save()
     }
 
+    /// Moves an item into a folder (nil = top level); copies are moved on disk too.
     func move(itemID: UUID, to folderID: UUID?) {
         guard let index = items.firstIndex(where: { $0.id == itemID }),
               items[index].folderID != folderID
         else { return }
+        if case .file = items[index].content, items[index].ownsFile, let url = items[index].fileURL {
+            let directory = ShelfFiles.directory(for: folders.first { $0.id == folderID })
+            if let moved = ShelfFiles.move(url, into: directory) {
+                items[index].content = .file(path: moved.path, bookmark: try? moved.bookmarkData())
+            }
+        }
         items[index].folderID = folderID
         save()
+    }
+
+    func directoryURL(for folderID: UUID?) -> URL {
+        ShelfFiles.directory(for: folders.first { $0.id == folderID })
+    }
+
+    /// Opens the folder on disk in Finder.
+    func revealDirectory(for folderID: UUID?) {
+        let url = directoryURL(for: folderID)
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        NSWorkspace.shared.open(url)
+    }
+
+    /// Dragging a Shelf folder out hands over its real folder with all copied files.
+    func dragProvider(for folder: ShelfFolder) -> NSItemProvider {
+        let url = ShelfFiles.directory(for: folder)
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        return NSItemProvider(contentsOf: url) ?? NSItemProvider()
+    }
+
+    private func uniqueFolderName(_ base: String, excluding id: UUID? = nil) -> String {
+        let taken = Set(folders.filter { $0.id != id }.map { ShelfFiles.directoryName(for: $0.name).lowercased() })
+        var name = base
+        var number = 2
+        while taken.contains(ShelfFiles.directoryName(for: name).lowercased()) {
+            name = "\(base) \(number)"
+            number += 1
+        }
+        return name
     }
 
     // MARK: Actions
@@ -188,12 +270,14 @@ final class ShelfStore {
     }
 
     /// Removes the items in `folderID`, or everything (folders too) when nil.
+    /// Copies go to the Trash; linked originals are not touched.
     func clear(folderID: UUID?) {
         if let folderID {
             items(in: folderID).forEach(ShelfPersistence.deleteStoredFile)
             items.removeAll { $0.folderID == folderID }
         } else {
             items.forEach(ShelfPersistence.deleteStoredFile)
+            folders.forEach { ShelfFiles.trash(ShelfFiles.directory(for: $0)) }
             items.removeAll()
             folders.removeAll()
         }

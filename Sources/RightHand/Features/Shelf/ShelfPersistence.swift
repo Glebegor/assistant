@@ -33,9 +33,15 @@ enum ShelfPersistence {
         try? json.write(to: itemsFile, options: .atomic)
     }
 
+    /// Removes the file RightHand made for this item: copies go to the Trash,
+    /// clipboard images are deleted. Linked files are never touched.
     static func deleteStoredFile(of item: ShelfItem) {
-        guard case .image = item.content, let url = item.fileURL else { return }
-        try? FileManager.default.removeItem(at: url)
+        guard item.ownsFile, let url = item.fileURL else { return }
+        switch item.content {
+        case .file: ShelfFiles.trash(url)
+        case .image: try? FileManager.default.removeItem(at: url)
+        case .text: break
+        }
     }
 
     /// Follows moved files and drops items whose file no longer exists.

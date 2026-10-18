@@ -49,6 +49,10 @@ struct ShelfView: View {
             }
             Text("\(count)").foregroundStyle(.secondary)
             Spacer()
+            Button("Show in Finder", systemImage: "folder") { store.revealDirectory(for: folder?.id) }
+                .buttonStyle(.notchPill())
+                .labelStyle(.iconOnly)
+                .help("Show the files in Finder")
             if folder == nil {
                 Button("New Folder", systemImage: "folder.badge.plus") {
                     renamingFolderID = store.createFolder().id
@@ -117,12 +121,14 @@ private struct ShelfFolderCard: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { if !isRenaming { store.openFolderID = folder.id } }
+        .onDrag { store.dragProvider(for: folder) }
         .onDrop(of: ShelfStore.dropTypes, isTargeted: $isDropTargeted) { providers in
             store.addDropped(providers, into: folder.id)
         }
         .help(folder.name)
         .contextMenu {
             Button("Open") { store.openFolderID = folder.id }
+            Button("Show in Finder") { store.revealDirectory(for: folder.id) }
             Button("Rename") { renamingFolderID = folder.id }
             Divider()
             Button("Delete Folder", role: .destructive) { store.deleteFolder(folder) }

@@ -9,7 +9,7 @@ import AppKit
 final class NotchController {
     static let expandedSize = CGSize(width: 560, height: 230)
     /// How long the mouse may stay outside the open panel before it closes.
-    private static let closeDelay: TimeInterval = 0.3
+    private static let closeDelay: TimeInterval = 0.1
     /// Length of the close animation in `NotchRootView`.
     private static let closeAnimationDuration: TimeInterval = 0.4
 
@@ -127,7 +127,7 @@ final class NotchController {
     private func startExitPolling() {
         guard exitPoller == nil else { return }
         mouseOutsideSince = nil
-        let timer = Timer(timeInterval: 0.05, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 0.025, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.checkMouseLeft() }
         }
         RunLoop.main.add(timer, forMode: .common)
