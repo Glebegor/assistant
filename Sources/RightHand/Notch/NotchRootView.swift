@@ -42,8 +42,8 @@ struct NotchRootView: View {
         }
         .foregroundStyle(.white)
         // Anything dragged onto the panel goes to the Shelf.
-        .onDrop(of: [.fileURL, .plainText], isTargeted: $isDropTargeted) { providers in
-            shelf.addDropped(providers)
+        .onDrop(of: ShelfStore.dropTypes, isTargeted: $isDropTargeted) { providers in
+            shelf.addDropped(providers, into: shelf.openFolderID)
         }
         .onChange(of: isDropTargeted) { _, targeted in
             if targeted { model.selectedTab = .shelf }

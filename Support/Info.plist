@@ -23,5 +23,19 @@
 	<true/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<!-- Private drag type for moving Shelf items into Shelf folders. -->
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.hlibarseniuk.RightHand.shelf-item</string>
+			<key>UTTypeDescription</key>
+			<string>RightHand Shelf Item</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
