@@ -6,9 +6,9 @@ enum PomodoroPhase {
 
     var title: String {
         switch self {
-        case .focus: "Focus"
-        case .shortBreak: "Short Break"
-        case .longBreak: "Long Break"
+        case .focus: L("Focus")
+        case .shortBreak: L("Short Break")
+        case .longBreak: L("Long Break")
         }
     }
 }
@@ -117,8 +117,9 @@ final class PomodoroTimer {
         guard completed else { return }
         PomodoroSound.playEnd(of: finished)
         Notifier.shared.notify(
-            title: finished == .focus ? "Focus session done" : "Break is over",
-            body: finished == .focus ? "Time for a \(phase.title.lowercased())." : "Ready to focus again?",
+            title: finished == .focus ? L("Focus session done") : L("Break is over"),
+            body: finished != .focus ? L("Ready to focus again?")
+                : (phase == .longBreak ? L("Time for a long break.") : L("Time for a short break.")),
             playsSound: false // the Pomodoro sound above is enough
         )
         if PomodoroSettings.autoStartNext { start() }

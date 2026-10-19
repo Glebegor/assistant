@@ -8,7 +8,7 @@ struct MemoryTool: AnthropicDefinedTool {
 
     let name = "memory"
     let anthropicType = "memory_20250818"
-    let displayName = "Project memory"
+    var displayName: String { L("Project memory") }
     let description = """
     Your persistent memory for this project: a directory of notes at /memories that survives between chats. \
     Check it at the start of a task, and record decisions, progress and the user's preferences as you work. \
@@ -37,12 +37,12 @@ struct MemoryTool: AnthropicDefinedTool {
     func describe(_ input: JSONValue) -> String {
         let path = input["path"]?.string ?? input["old_path"]?.string ?? "/memories"
         switch input["command"]?.string {
-        case "view": return "Read memory \(path)"
-        case "create": return "Write memory note \(path)"
-        case "str_replace", "insert": return "Edit memory note \(path)"
-        case "delete": return "Delete memory \(path)"
-        case "rename": return "Rename memory \(path)"
-        default: return "Use project memory"
+        case "view": return L("Read memory %@", path)
+        case "create": return L("Write memory note %@", path)
+        case "str_replace", "insert": return L("Edit memory note %@", path)
+        case "delete": return L("Delete memory %@", path)
+        case "rename": return L("Rename memory %@", path)
+        default: return L("Use project memory")
         }
     }
 

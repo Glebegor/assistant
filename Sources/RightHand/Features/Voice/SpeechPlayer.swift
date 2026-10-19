@@ -53,7 +53,7 @@ final class SpeechPlayer {
     func speak(_ text: String) {
         stop()
         guard let apiKey = Keychain.read(VoiceSettings.keychainAccount) else {
-            errorMessage = "Add your ElevenLabs API key in Settings → Assistant."
+            errorMessage = L("Add your %@ API key in Settings → Assistant.", "ElevenLabs")
             return
         }
         currentText = text
@@ -85,7 +85,7 @@ final class SpeechPlayer {
 
     private func play(_ audio: Data) {
         guard let player = try? AVAudioPlayer(data: audio) else {
-            errorMessage = "Couldn't play the audio."
+            errorMessage = L("Couldn't play the audio.")
             currentText = nil
             return
         }
@@ -150,7 +150,7 @@ enum ElevenLabs {
         guard let status = (response as? HTTPURLResponse)?.statusCode, status != 200 else { return }
         let detail = JSONValue.parse(data)?["detail"]
         let message = detail?["message"]?.string ?? detail?.string
-        throw ChatError(message: status == 401 ? "The ElevenLabs API key was rejected." : "ElevenLabs error \(status)\(message.map { ": \($0)" } ?? "").")
+        throw ChatError(message: status == 401 ? L("The ElevenLabs API key was rejected.") : L("ElevenLabs error %lld%@", status, message.map { ": \($0)" } ?? ""))
     }
 }
 

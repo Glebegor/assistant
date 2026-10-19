@@ -7,19 +7,19 @@ enum MainMenu {
         let menu = NSMenu()
 
         let app = NSMenu(title: "RightHand")
-        app.addItem(withTitle: "Quit RightHand", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        app.addItem(withTitle: L("Quit RightHand"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(submenu: app)
 
-        let edit = NSMenu(title: "Edit")
+        let edit = NSMenu(title: L("Edit"))
         for shortcut in EditShortcut.all {
             let item = edit.addItem(withTitle: shortcut.title, action: shortcut.action, keyEquivalent: shortcut.key)
             item.keyEquivalentModifierMask = shortcut.modifiers
         }
         menu.addItem(submenu: edit)
 
-        let window = NSMenu(title: "Window")
-        window.addItem(withTitle: "Close", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
-        window.addItem(withTitle: "Minimize", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+        let window = NSMenu(title: L("Window"))
+        window.addItem(withTitle: L("Close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
+        window.addItem(withTitle: L("Minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
         menu.addItem(submenu: window)
 
         return menu
@@ -34,12 +34,12 @@ struct EditShortcut {
     var modifiers: NSEvent.ModifierFlags = .command
 
     static let all: [EditShortcut] = [
-        EditShortcut(title: "Undo", action: Selector(("undo:")), key: "z"),
-        EditShortcut(title: "Redo", action: Selector(("redo:")), key: "z", modifiers: [.command, .shift]),
-        EditShortcut(title: "Cut", action: #selector(NSText.cut(_:)), key: "x"),
-        EditShortcut(title: "Copy", action: #selector(NSText.copy(_:)), key: "c"),
-        EditShortcut(title: "Paste", action: #selector(NSText.paste(_:)), key: "v"),
-        EditShortcut(title: "Select All", action: #selector(NSText.selectAll(_:)), key: "a"),
+        EditShortcut(title: L("Undo"), action: Selector(("undo:")), key: "z"),
+        EditShortcut(title: L("Redo"), action: Selector(("redo:")), key: "z", modifiers: [.command, .shift]),
+        EditShortcut(title: L("Cut"), action: #selector(NSText.cut(_:)), key: "x"),
+        EditShortcut(title: L("Copy"), action: #selector(NSText.copy(_:)), key: "c"),
+        EditShortcut(title: L("Paste"), action: #selector(NSText.paste(_:)), key: "v"),
+        EditShortcut(title: L("Select All"), action: #selector(NSText.selectAll(_:)), key: "a"),
     ]
 
     /// The shortcut for a key press, if it is one of these.

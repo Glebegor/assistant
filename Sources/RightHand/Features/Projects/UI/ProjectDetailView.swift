@@ -136,7 +136,7 @@ struct ProjectDetailView: View {
         let panel = NSOpenPanel()
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
-        panel.prompt = "Add Folder"
+        panel.prompt = L("Add Folder")
         if panel.runModal() == .OK, let url = panel.url, !project.folders.contains(url.path) {
             project.folders.append(url.path)
         }

@@ -17,7 +17,7 @@ struct ShelfSettingsPane: View {
                 }
                 Toggle(isOn: $clipboardHistory) {
                     SettingsRowLabel("Clipboard history",
-                                     subtitle: "Keeps the last \(ShelfSettings.maxClipboardItems) copied items. Passwords from password managers are skipped.",
+                                     subtitle: L("Keeps the last %lld copied items. Passwords from password managers are skipped.", ShelfSettings.maxClipboardItems),
                                      systemImage: "doc.on.clipboard.fill", color: .indigo)
                 }
             }
@@ -54,7 +54,7 @@ struct ShelfSettingsPane: View {
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.canCreateDirectories = true
-        panel.prompt = "Use This Folder"
+        panel.prompt = L("Use This Folder")
         panel.directoryURL = filesDirectoryURL
         if panel.runModal() == .OK, let url = panel.url {
             filesDirectory = url.path

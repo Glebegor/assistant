@@ -5,7 +5,7 @@ struct OpenTool: AssistantTool {
     let access: FileAccess
 
     let name = "open"
-    let displayName = "Open apps, links and files"
+    var displayName: String { L("Open apps, links and files") }
     let description = """
     Opens something on the user's Mac: a web address (https://…), an app by name (e.g. "Safari", "Notes"), \
     or a file or folder from the project folders. Use it when the user asks to open or show something.
@@ -16,7 +16,7 @@ struct OpenTool: AssistantTool {
          "required": ["target"]]
     }
 
-    func describe(_ input: JSONValue) -> String { "Open \(input["target"]?.string ?? "something")" }
+    func describe(_ input: JSONValue) -> String { L("Open %@", input["target"]?.string ?? L("something")) }
 
     func run(_ input: JSONValue) async -> ToolOutput {
         do {
@@ -69,12 +69,16 @@ enum Toolbox {
     }
 
     /// Every kind of tool, for Settings.
-    static let catalog: [(name: String, displayName: String)] = [
-        ("memory", "Project memory"),
-        ("list_files", "List files"),
-        ("read_file", "Read files"),
-        ("search_files", "Search files"),
-        ("write_file", "Write files"),
-        ("open", "Open apps, links and files"),
-    ]
+    static var catalog: [(name: String, displayName: String)] {
+        [("memory", L("Project memory")),
+         ("list_files", L("List files")),
+         ("read_file", L("Read files")),
+         ("search_files", L("Search files")),
+         ("write_file", L("Write files")),
+         ("open", L("Open apps, links and files"))]
+    }
+
+    static func displayName(of tool: String) -> String {
+        catalog.first { $0.name == tool }?.displayName ?? tool
+    }
 }

@@ -57,7 +57,7 @@ struct AssistantSettingsPane: View {
                         .labelsHidden()
                         .fixedSize()
                         Button("Try", systemImage: "play.circle.fill") {
-                            SpeechPlayer.shared.speak("Hi! I'm RightHand. Привіт, я твоя права рука.")
+                            SpeechPlayer.shared.speak(L("Hi! I'm RightHand, your right hand on the Mac."))
                         }
                         .labelStyle(.iconOnly)
                         .buttonStyle(.borderless)
@@ -68,7 +68,7 @@ struct AssistantSettingsPane: View {
                 }
                 LabeledContent {
                     Picker("Voice model", selection: $voiceModel) {
-                        ForEach(VoiceSettings.models, id: \.id) { Text($0.name).tag($0.id) }
+                        ForEach(VoiceSettings.models, id: \.id) { Text(LocalizedStringKey($0.name)).tag($0.id) }
                     }
                     .labelsHidden()
                     .fixedSize()
@@ -89,7 +89,7 @@ struct AssistantSettingsPane: View {
                             alwaysAllowed = ToolPermissions.alwaysAllowed
                         }
                     )) {
-                        Text(tool.displayName)
+                        Text(verbatim: tool.displayName)
                     }
                 }
             } header: {
@@ -140,7 +140,7 @@ private struct APIKeyRow: View {
                 }
             }
         } label: {
-            SettingsRowLabel("API key", subtitle: "Get one at \(keysURL.host() ?? "")",
+            SettingsRowLabel("API key", subtitle: L("Get one at %@", keysURL.host() ?? ""),
                              systemImage: "key.fill", color: color)
                 .onTapGesture { NSWorkspace.shared.open(keysURL) }
                 .help("Open \(keysURL.absoluteString)")

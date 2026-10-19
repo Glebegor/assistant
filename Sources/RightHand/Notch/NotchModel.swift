@@ -8,9 +8,9 @@ enum NotchTab: CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .pomodoro: "Pomodoro"
-        case .shelf: "Shelf"
-        case .chat: "Assistant"
+        case .pomodoro: L("Pomodoro")
+        case .shelf: L("Shelf")
+        case .chat: L("Assistant")
         }
     }
 

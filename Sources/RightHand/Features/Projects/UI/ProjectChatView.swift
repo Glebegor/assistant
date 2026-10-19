@@ -208,7 +208,7 @@ struct ProjectMessageRow: View {
     }
 
     private static func toolTitle(_ name: String) -> String {
-        Toolbox.catalog.first { $0.name == name }?.displayName ?? name
+        Toolbox.displayName(of: name)
     }
 
     /// The most telling part of the input, e.g. the path or the query.

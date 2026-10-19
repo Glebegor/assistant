@@ -92,6 +92,6 @@ struct NotchRootView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help(help)
+        .help(Text(LocalizedStringKey(help)))
     }
 }

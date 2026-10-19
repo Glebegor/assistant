@@ -58,9 +58,9 @@ enum ServerSentEvents {
             .flatMap { $0["error"] as? [String: Any] }
             .flatMap { $0["message"] as? String }
         switch status {
-        case 401: return "The API key was rejected. Check it in Settings → Assistant."
-        case 429: return message ?? "Too many requests or no credit left. Try again later."
-        default: return message.map { "Error \(status): \($0)" } ?? "Error \(status)."
+        case 401: return L("The API key was rejected. Check it in Settings → Assistant.")
+        case 429: return message ?? L("Too many requests or no credit left. Try again later.")
+        default: return message.map { L("Error %lld: %@", status, $0) } ?? L("Error %lld.", status)
         }
     }
 }

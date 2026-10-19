@@ -18,13 +18,14 @@ enum BlockPage {
             URLQueryItem(name: "site", value: site),
             URLQueryItem(name: "url", value: blocked.absoluteString),
             URLQueryItem(name: "until", value: String(Int(focusEnds.timeIntervalSince1970 * 1000))),
+            URLQueryItem(name: "lang", value: AppLanguage.current),
         ]
         return components.url!
     }
 
     private static let html = """
     <!doctype html>
-    <html lang="en">
+    <html>
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -55,22 +56,35 @@ enum BlockPage {
     <body>
     <main>
       <div class="icon">✋</div>
-      <h1><span class="site" id="site">This site</span> is blocked</h1>
-      <p>You're in a focus session. It'll be here when you're done.</p>
+      <h1 id="title"></h1>
+      <p id="subtitle"></p>
       <div class="focus">
         <span class="timer" id="timer">--:--</span>
-        <span class="label">until the focus session ends</span>
+        <span class="label" id="until"></span>
       </div>
       <div class="done" id="done">
-        <p>Focus session is over. <a id="link" href="#">Open <span id="site2"></span></a></p>
+        <p><span id="over"></span> <a id="link" href="#"></a></p>
       </div>
     </main>
     <script>
       const q = new URLSearchParams(location.search);
-      const site = q.get("site") || "This site";
+      const texts = {
+        en: ["is blocked", "You're in a focus session. It'll be here when you're done.", "until the focus session ends", "Focus session is over.", "Open"],
+        uk: ["заблоковано", "Зараз сесія фокусу. Сайт нікуди не дінеться.", "до кінця сесії фокусу", "Сесію фокусу завершено.", "Відкрити"],
+        cs: ["je zablokovaný", "Právě se soustředíš. Web tu bude i potom.", "do konce soustředění", "Soustředění skončilo.", "Otevřít"],
+        ru: ["заблокирован", "Сейчас сессия фокуса. Сайт никуда не денется.", "до конца сессии фокуса", "Сессия фокуса завершена.", "Открыть"],
+      };
+      const t = texts[q.get("lang")] || texts.en;
+      const site = q.get("site") || "";
       const until = Number(q.get("until") || 0);
-      document.getElementById("site").textContent = site;
-      document.getElementById("site2").textContent = site;
+      const name = document.createElement("span");
+      name.className = "site";
+      name.textContent = site;
+      document.getElementById("title").append(name, " " + t[0]);
+      document.getElementById("subtitle").textContent = t[1];
+      document.getElementById("until").textContent = t[2];
+      document.getElementById("over").textContent = t[3];
+      document.getElementById("link").textContent = t[4] + " " + site;
       document.getElementById("link").href = q.get("url") || "#";
       function tick() {
         const left = Math.max(0, Math.round((until - Date.now()) / 1000));
