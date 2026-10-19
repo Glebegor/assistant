@@ -213,7 +213,7 @@
 "Resume" = "Pokračovat";
 "Resume %@" = "Pokračovat: %@";
 "Resume Eye Rest (paused until %@)" = "Obnovit odpočinek očí (pozastaveno do %@)";
-"Return sends, Option-Return adds a new line." = "Return odešle, Option-Return přidá nový řádek.";
+"Return sends, Shift-Return adds a new line." = "Return odešle, Shift-Return přidá nový řádek.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand potřebuje přístup k Ploše, aby mohl automaticky přidávat snímky obrazovky";
 "Run Terminal commands" = "Příkazy Terminálu";
 "Run a command in %@" = "Spustit příkaz v %@";

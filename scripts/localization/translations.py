@@ -173,7 +173,7 @@ T = {
     "Resume": ("Продовжити", "Pokračovat", "Продолжить"),
     "Resume %@": ("Продовжити: %@", "Pokračovat: %@", "Продолжить: %@"),
     "Resume Eye Rest (paused until %@)": ("Відновити відпочинок очей (пауза до %@)", "Obnovit odpočinek očí (pozastaveno do %@)", "Возобновить отдых глаз (пауза до %@)"),
-    "Return sends, Option-Return adds a new line.": ("Return — надіслати, Option-Return — новий рядок.", "Return odešle, Option-Return přidá nový řádek.", "Return — отправить, Option-Return — новая строка."),
+    "Return sends, Shift-Return adds a new line.": ("Return — надіслати, Shift-Return — новий рядок.", "Return odešle, Shift-Return přidá nový řádek.", "Return — отправить, Shift-Return — новая строка."),
     "RightHand needs access to your Desktop to add screenshots automatically": ("RightHand потрібен доступ до Робочого столу, щоб додавати знімки екрана автоматично", "RightHand potřebuje přístup k Ploše, aby mohl automaticky přidávat snímky obrazovky", "RightHand нужен доступ к Рабочему столу, чтобы добавлять снимки экрана автоматически"),
     "Automatic (Mac language)": ("Автоматично (мова Mac)", "Automaticky (jazyk Macu)", "Автоматически (язык Mac)"),
     "Save": ("Зберегти", "Uložit", "Сохранить"),

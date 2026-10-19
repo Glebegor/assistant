@@ -213,7 +213,7 @@
 "Resume" = "Продолжить";
 "Resume %@" = "Продолжить: %@";
 "Resume Eye Rest (paused until %@)" = "Возобновить отдых глаз (пауза до %@)";
-"Return sends, Option-Return adds a new line." = "Return — отправить, Option-Return — новая строка.";
+"Return sends, Shift-Return adds a new line." = "Return — отправить, Shift-Return — новая строка.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand нужен доступ к Рабочему столу, чтобы добавлять снимки экрана автоматически";
 "Run Terminal commands" = "Команды Терминала";
 "Run a command in %@" = "Выполнить команду в %@";

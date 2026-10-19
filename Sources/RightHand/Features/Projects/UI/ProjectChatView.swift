@@ -66,6 +66,7 @@ struct ProjectChatView: View {
                 .lineLimit(1...8)
                 .focused($isInputFocused)
                 .onSubmit(send)
+                .shiftReturnAddsNewLine()
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
                 .background(.quaternary.opacity(0.6), in: RoundedRectangle(cornerRadius: 18, style: .continuous))

@@ -17,7 +17,7 @@ struct ChatView: View {
             } else if store.isEmpty {
                 PlaceholderView(systemImage: "sparkles",
                                 title: L("Ask %@ anything", store.provider.title),
-                                message: "Return sends, Option-Return adds a new line.")
+                                message: "Return sends, Shift-Return adds a new line.")
             } else {
                 conversation
             }
@@ -110,6 +110,7 @@ struct ChatView: View {
                 .lineLimit(1...5)
                 .focused($isInputFocused)
                 .onSubmit(send)
+                .shiftReturnAddsNewLine()
                 .padding(.horizontal, 12)
                 .padding(.vertical, 9)
                 .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 16, style: .continuous))

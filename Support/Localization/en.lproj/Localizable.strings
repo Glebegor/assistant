@@ -213,7 +213,7 @@
 "Resume" = "Resume";
 "Resume %@" = "Resume %@";
 "Resume Eye Rest (paused until %@)" = "Resume Eye Rest (paused until %@)";
-"Return sends, Option-Return adds a new line." = "Return sends, Option-Return adds a new line.";
+"Return sends, Shift-Return adds a new line." = "Return sends, Shift-Return adds a new line.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand needs access to your Desktop to add screenshots automatically";
 "Run Terminal commands" = "Run Terminal commands";
 "Run a command in %@" = "Run a command in %@";
