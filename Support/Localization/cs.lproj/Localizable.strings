@@ -67,6 +67,8 @@
 "Done" = "Hotovo";
 "Drop files here. New screenshots appear here too." = "Přetáhni sem soubory. Objeví se tu i nové snímky obrazovky.";
 "Edit" = "Úpravy";
+"Edit %@" = "Upravit %@";
+"Edit files" = "Úpravy souborů";
 "Edit memory note %@" = "Upravit poznámku v paměti %@";
 "ElevenLabs (read answers aloud)" = "ElevenLabs (předčítání odpovědí)";
 "ElevenLabs error %lld%@" = "Chyba ElevenLabs %lld%@";

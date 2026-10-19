@@ -253,4 +253,6 @@ T = {
     'Work with the whole Mac': ('Працювати з усім Mac', 'Pracovat s celým Macem', 'Работать со всем Mac'),
     'Always asks': ('Завжди питає', 'Vždy se ptá', 'Всегда спрашивает'),
     'In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash.': ('У проєктах AI може читати, створювати, переміщувати й видаляти файли будь-де на твоєму Mac і виконувати команди Терміналу. Він питає тебе перед кожною дією поза папками проєкту, а також перед кожною командою й видаленням. Видалені файли потрапляють у Кошик.', 'V projektech může AI číst, vytvářet, přesouvat a mazat soubory kdekoli na tvém Macu a spouštět příkazy Terminálu. Před každou akcí mimo složky projektu a před každým příkazem a smazáním se tě zeptá. Smazané soubory jdou do koše.', 'В проектах AI может читать, создавать, перемещать и удалять файлы где угодно на твоём Mac и выполнять команды Терминала. Он спрашивает тебя перед каждым действием вне папок проекта, а также перед каждой командой и удалением. Удалённые файлы попадают в Корзину.'),
+    'Edit files': ('Редагування файлів', 'Úpravy souborů', 'Редактирование файлов'),
+    'Edit %@': ('Змінити %@', 'Upravit %@', 'Изменить %@'),
 }

@@ -10,7 +10,10 @@ enum ProjectContext {
 
     /// System prompt for a new chat in `project`.
     static func systemPrompt(for project: Project, provider: ChatProvider) -> String {
-        var parts = ["""
+        var parts = [project.id == ChatStore.projectID ? """
+        You are RightHand, an assistant on the user's Mac, in a quick chat opened from the notch at the top of the screen. \
+        The panel is small: answer briefly. Use Markdown for code and short lists.
+        """ : """
         You are RightHand, an assistant on the user's Mac, working in the project "\(project.name)". \
         Answer clearly and concisely. Use Markdown for code and short lists.
         """]
@@ -42,7 +45,9 @@ enum ProjectContext {
 
             You can also work outside the project folders anywhere on the user's Mac (home folder: \(NSHomeDirectory())): \
             list, read, search, write, move, copy and delete files, create folders, and run Terminal commands with \
-            `run_command`. The user approves each of these actions before it runs, and may decline; then don't retry \
+            `run_command`. When a request involves the Mac (files, folders, apps, settings, information about the system), \
+            use these tools yourself, as many times as the task needs, instead of telling the user how to do it or asking \
+            them to paste things. The user approves each action before it runs, and may decline; then don't retry \
             it, ask what they want instead. Deleted files go to the Trash. Do only what the user asked for, and say \
             what you are about to change before changing it.
             """)

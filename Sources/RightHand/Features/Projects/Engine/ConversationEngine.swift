@@ -28,6 +28,8 @@ final class ConversationEngine {
     private(set) var activity: String?
     private(set) var pendingApproval: ToolApproval?
     var errorMessage: String?
+    /// Called when a permission question appears (the notch opens to show it).
+    @ObservationIgnored var onApprovalNeeded: (() -> Void)?
 
     @ObservationIgnored private let project: () -> Project?
     @ObservationIgnored private let onSave: (ProjectChat) -> Void
@@ -158,6 +160,7 @@ final class ConversationEngine {
                 approvalContinuation = continuation
                 pendingApproval = ToolApproval(toolName: tool.name, toolDisplayName: tool.displayName, action: action,
                                                detail: tool.detail(input), canAlwaysAllow: tool.canAlwaysAllow && !tool.alwaysAsks(input))
+                onApprovalNeeded?()
             }
             switch decision {
             case .deny: return .error("The user declined: \(action).")

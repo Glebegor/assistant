@@ -65,9 +65,9 @@ Sources/RightHand/
 - [x] Shelf: drag & drop files, auto-capture screenshots, clipboard history, folders (saved between launches)
 - [x] Eye rest: full-screen 20-20-20 break reminders
 - [x] Site blocking during Pomodoro focus (Safari, Chrome, Arc, Brave, Edge, Vivaldi)
-- [x] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
+- [x] AI chat in the notch: Claude + ChatGPT (switchable), uses the same tools as projects, API keys in Keychain
 - [x] Projects window: instructions, files, folders, memory, automatic summarizing
-- [x] Assistant tools: files anywhere on the Mac (read, write, move, copy, delete to Trash), Terminal commands, opening apps and links
+- [x] Assistant tools: files anywhere on the Mac (read, write, edit, move, copy, delete to Trash), Terminal commands, opening apps and links
 - [x] Action approval: ask before every action, with "always allow" per tool; commands, deletions and anything outside the project folders always ask
 - [ ] Assistant tools: screen & clipboard, system control
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), Notion, more

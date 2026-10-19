@@ -1,27 +1,38 @@
 import Foundation
 import Observation
 
-/// The conversation in the Assistant tab: sends questions to Claude or ChatGPT and streams answers.
+/// The conversation in the Assistant tab. It runs on the same engine as project chats, so the
+/// AI can use tools on the Mac (files, Terminal commands, opening apps), asking you first.
 @Observable
 @MainActor
 final class ChatStore {
-    private(set) var messages: [ChatMessage] = []
-    private(set) var isSending = false
+    /// The notch chat is a built-in project without folders; its memory is kept between chats.
+    nonisolated static let projectID = UUID(uuidString: "00000000-0000-0000-0000-00000000A551")!
+    private static let project = Project(id: projectID, name: "Assistant")
+
+    private(set) var engine: ConversationEngine
     /// Providers that have an API key in the Keychain.
     private(set) var configuredProviders: Set<ChatProvider> = []
+    /// Called when the AI asks for permission, so the panel can open and show the question.
+    @ObservationIgnored var onApprovalNeeded: (() -> Void)?
 
     var provider: ChatProvider {
-        didSet { ChatSettings.provider = provider }
+        didSet {
+            ChatSettings.provider = provider
+            if engine.chat.provider != provider { newChat() }
+        }
     }
 
     /// Bumped when Settings change, so the model name shown in the chat refreshes.
     private var settingsRevision = 0
-    @ObservationIgnored private var task: Task<Void, Never>?
 
     init() {
         ChatSettings.registerDefaults()
-        provider = ChatSettings.provider
+        let provider = ChatSettings.provider
+        self.provider = provider
+        engine = Self.makeEngine(provider: provider)
         reloadKeys()
+        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
         NotificationCenter.default.addObserver(forName: Keychain.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.reloadKeys() }
         }
@@ -31,104 +42,39 @@ final class ChatStore {
     }
 
     var hasKey: Bool { configuredProviders.contains(provider) }
+    var isSending: Bool { engine.isRunning }
+    var isEmpty: Bool { engine.chat.messages.isEmpty }
     var modelName: String {
         _ = settingsRevision
         return ChatSettings.modelName(for: provider)
     }
 
     func send(_ text: String) {
-        let question = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !question.isEmpty, !isSending, let apiKey = Keychain.read(provider.keychainAccount) else { return }
-
-        let model = ChatSettings.model(for: provider)
-        messages.append(ChatMessage(role: .user, text: question))
-        let history = conversationHistory()
-        let answer = ChatMessage(role: .assistant, text: "", provider: provider,
-                                 modelName: ChatSettings.modelName(for: provider), isStreaming: true)
-        messages.append(answer)
-        isSending = true
-
-        let stream: AsyncThrowingStream<ChatEvent, Error>
-        do {
-            switch provider {
-            case .claude:
-                stream = ClaudeService.stream(body: try ClaudeService.body(history: history, model: model),
-                                              model: model, apiKey: apiKey)
-            case .openAI:
-                stream = OpenAIService.stream(body: try OpenAIService.body(history: history, model: model),
-                                              apiKey: apiKey)
-            }
-        } catch {
-            finish(answer.id, error: error.localizedDescription)
-            return
-        }
-
-        task = Task { [weak self] in
-            do {
-                for try await event in stream {
-                    self?.apply(event, to: answer.id)
-                }
-                self?.finish(answer.id, error: nil)
-            } catch is CancellationError {
-                self?.finish(answer.id, error: nil)
-            } catch {
-                self?.finish(answer.id, error: error.localizedDescription)
-            }
-        }
+        // A model chosen in Settings applies from the next new chat; an empty chat picks it up now.
+        if isEmpty, engine.chat.model != ChatSettings.model(for: provider) { newChat() }
+        engine.send(text)
     }
 
-    /// Stops the answer that is streaming in; what arrived so far is kept.
+    /// Stops the answer or the tool that is running; what arrived so far is kept.
     func stop() {
-        task?.cancel()
+        engine.stop()
     }
 
     func newChat() {
-        task?.cancel()
-        task = nil
-        messages = []
-        isSending = false
+        engine.stop()
+        engine = Self.makeEngine(provider: provider)
+        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
     }
 
     func reloadKeys() {
         configuredProviders = Set(ChatProvider.allCases.filter { Keychain.read($0.keychainAccount) != nil })
     }
 
-    // MARK: Private
-
-    /// Questions and answers the AI should remember: declined or failed exchanges are left out
-    /// (only ever at the end of a chat, so earlier turns never change).
-    private func conversationHistory() -> [ChatMessage] {
-        var history: [ChatMessage] = []
-        for (index, message) in messages.enumerated() where message.role == .user {
-            let isNewQuestion = index == messages.count - 1
-            let answer = messages.indices.contains(index + 1) ? messages[index + 1] : nil
-            if isNewQuestion {
-                history.append(message)
-            } else if let answer, answer.belongsInHistory {
-                history.append(message)
-                history.append(answer)
-            }
-        }
-        return history
-    }
-
-    private func apply(_ event: ChatEvent, to id: UUID) {
-        guard let index = messages.firstIndex(where: { $0.id == id }) else { return }
-        switch event {
-        case .text(let text):
-            messages[index].text += text
-        case .finished(let claudeContent, let declined):
-            messages[index].claudeContent = claudeContent
-            messages[index].isDeclined = declined
-        }
-    }
-
-    private func finish(_ id: UUID, error: String?) {
-        if let index = messages.firstIndex(where: { $0.id == id }) {
-            messages[index].isStreaming = false
-            messages[index].errorMessage = error
-        }
-        isSending = false
-        task = nil
+    private static func makeEngine(provider: ChatProvider) -> ConversationEngine {
+        let chat = ProjectChat(projectID: projectID, provider: provider, model: ChatSettings.model(for: provider),
+                               system: ProjectContext.systemPrompt(for: project, provider: provider),
+                               contextFingerprint: ProjectContext.fingerprint(of: project))
+        // The notch chat lives only until you start a new one, so nothing is saved.
+        return ConversationEngine(chat: chat, project: { project }, onSave: { _ in })
     }
 }

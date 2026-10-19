@@ -67,6 +67,8 @@
 "Done" = "Готово";
 "Drop files here. New screenshots appear here too." = "Перетягни сюди файли. Нові знімки екрана теж з'являються тут.";
 "Edit" = "Редагування";
+"Edit %@" = "Змінити %@";
+"Edit files" = "Редагування файлів";
 "Edit memory note %@" = "Змінити нотатку в пам'яті %@";
 "ElevenLabs (read answers aloud)" = "ElevenLabs (озвучування відповідей)";
 "ElevenLabs error %lld%@" = "Помилка ElevenLabs %lld%@";

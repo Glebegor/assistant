@@ -67,6 +67,8 @@
 "Done" = "Done";
 "Drop files here. New screenshots appear here too." = "Drop files here. New screenshots appear here too.";
 "Edit" = "Edit";
+"Edit %@" = "Edit %@";
+"Edit files" = "Edit files";
 "Edit memory note %@" = "Edit memory note %@";
 "ElevenLabs (read answers aloud)" = "ElevenLabs (read answers aloud)";
 "ElevenLabs error %lld%@" = "ElevenLabs error %lld%@";

@@ -76,7 +76,7 @@ enum Toolbox {
         var tools: [AssistantTool] = [MemoryTool(root: ProjectStorage.memoryDirectory(of: project.id))]
         if access.base != nil {
             tools += [ListFilesTool(access: access), ReadFileTool(access: access),
-                      SearchFilesTool(access: access), WriteFileTool(access: access),
+                      SearchFilesTool(access: access), WriteFileTool(access: access), EditFileTool(access: access),
                       CreateFolderTool(access: access), MoveFileTool(access: access), DeleteFileTool(access: access)]
         }
         if wholeMac { tools.append(RunCommandTool(access: access)) }
@@ -91,6 +91,7 @@ enum Toolbox {
          ("read_file", L("Read files")),
          ("search_files", L("Search files")),
          ("write_file", L("Write files")),
+         ("edit_file", L("Edit files")),
          ("create_folder", L("Create folders")),
          ("move_file", L("Move and copy files")),
          ("delete_file", L("Delete files")),
