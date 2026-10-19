@@ -42,6 +42,8 @@ struct EyeRestOverlayView: View {
                         controller.postpone()
                     }
                     .buttonStyle(.notchPill())
+                    Button("Pause 1 hour", systemImage: "pause.fill") { controller.pause() }
+                        .buttonStyle(.notchPill())
                     Button("Skip", systemImage: "xmark") { controller.skip() }
                         .buttonStyle(.notchPill())
                         .keyboardShortcut(.cancelAction) // Esc

@@ -22,6 +22,8 @@ enum EyeRestSettings {
     /// Being away from the Mac this long counts as an eye break.
     static let awayResetSeconds: TimeInterval = 120
     static let postponeMinutes = 5
+    /// "Pause for 1 hour" in the menu bar and on the break screen.
+    static let pauseDuration: TimeInterval = 60 * 60
 
     private static var defaults: UserDefaults { .standard }
 

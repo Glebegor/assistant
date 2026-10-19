@@ -11,6 +11,10 @@ final class EyeRestController {
     private(set) var restRemaining = 0
     /// When the next eye break starts; nil while paused.
     private(set) var nextBreak: Date?
+    /// Eye breaks are paused until this time (from "Pause for 1 hour").
+    private(set) var pausedUntil: Date?
+
+    var isPaused: Bool { pausedUntil.map { $0 > Date() } ?? false }
 
     @ObservationIgnored private let pomodoro: PomodoroTimer
     @ObservationIgnored private var ticker: Timer?
@@ -54,6 +58,24 @@ final class EyeRestController {
         nextBreak = Date().addingTimeInterval(TimeInterval(EyeRestSettings.postponeMinutes * 60))
     }
 
+    /// Stops eye breaks for a while (ends a running break too).
+    func pause(for duration: TimeInterval = EyeRestSettings.pauseDuration) {
+        finishRest(completed: false)
+        pausedUntil = Date().addingTimeInterval(duration)
+        nextBreak = nil
+    }
+
+    func resume() {
+        pausedUntil = nil
+    }
+
+    /// Turns eye rest reminders on or off (the same switch as in Settings).
+    func setEnabled(_ enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: EyeRestSettings.Key.enabled)
+        if !enabled { finishRest(completed: false) }
+        pausedUntil = nil
+    }
+
     // MARK: Scheduling
 
     private func tick() {
@@ -62,7 +84,8 @@ final class EyeRestController {
             if restRemaining <= 0 { finishRest(completed: true) }
             return
         }
-        guard EyeRestSettings.enabled, !isPausedForPomodoroBreak, !isAway else {
+        if let pausedUntil, pausedUntil <= Date() { self.pausedUntil = nil }
+        guard EyeRestSettings.enabled, !isPaused, !isPausedForPomodoroBreak, !isAway else {
             nextBreak = nil
             return
         }
@@ -103,7 +126,7 @@ final class EyeRestController {
     private func finishRest(completed: Bool) {
         guard isResting else { return }
         isResting = false
-        nextBreak = Date().addingTimeInterval(EyeRestSettings.interval)
+        nextBreak = EyeRestSettings.enabled ? Date().addingTimeInterval(EyeRestSettings.interval) : nil
         hideOverlays()
         if completed { PomodoroSound.play(EyeRestSettings.endSound) }
     }
