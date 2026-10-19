@@ -10,10 +10,16 @@ struct ToolApproval: Identifiable {
     /// The exact command or text, when there is one.
     let detail: String?
     let canAlwaysAllow: Bool
+    /// "For This Project" is offered in project chats, not in the notch chat.
+    let canAllowForProject: Bool
 }
 
 enum ApprovalDecision {
     case deny, allowOnce, alwaysAllow
+    /// Until this chat ends (a new chat or quitting RightHand).
+    case allowForChat
+    /// For every chat in this project, until you remove it in the project's settings.
+    case allowForProject
 }
 
 /// Runs one project chat: sends messages, streams answers, runs tools (asking first), saves.
@@ -36,6 +42,8 @@ final class ConversationEngine {
     @ObservationIgnored private var task: Task<Void, Never>?
     @ObservationIgnored private var approvalContinuation: CheckedContinuation<ApprovalDecision, Never>?
     @ObservationIgnored private var turnNumber = 0
+    /// Tools you allowed for the rest of this chat.
+    @ObservationIgnored private var allowedForChat: Set<String> = []
     private static let maxToolRounds = 30
 
     init(chat: ProjectChat, project: @escaping () -> Project?, onSave: @escaping (ProjectChat) -> Void) {
@@ -154,18 +162,24 @@ final class ConversationEngine {
         }
 
         let action = tool.describe(input)
-        if tool.alwaysAsks(input) || !tool.canAlwaysAllow || !ToolPermissions.isAlwaysAllowed(tool.name) {
+        let projectID = chat.projectID
+        let isAllowed = allowedForChat.contains(tool.name) || ProjectPermissions.isAllowed(tool.name, in: projectID)
+            || (tool.canAlwaysAllow && !tool.alwaysAsks(input) && ToolPermissions.isAlwaysAllowed(tool.name))
+        if !isAllowed {
             activity = L("Waiting for your permission…")
             let decision = await withCheckedContinuation { continuation in
                 approvalContinuation = continuation
                 pendingApproval = ToolApproval(toolName: tool.name, toolDisplayName: tool.displayName, action: action,
-                                               detail: tool.detail(input), canAlwaysAllow: tool.canAlwaysAllow && !tool.alwaysAsks(input))
+                                               detail: tool.detail(input), canAlwaysAllow: tool.canAlwaysAllow && !tool.alwaysAsks(input),
+                                               canAllowForProject: projectID != ChatStore.projectID)
                 onApprovalNeeded?()
             }
             switch decision {
             case .deny: return .error("The user declined: \(action).")
             case .alwaysAllow: if tool.canAlwaysAllow { ToolPermissions.setAlwaysAllowed(tool.name, true) }
             case .allowOnce: break
+            case .allowForChat: allowedForChat.insert(tool.name)
+            case .allowForProject: ProjectPermissions.set(tool.name, allowed: true, in: projectID)
             }
         }
         activity = action + "…"

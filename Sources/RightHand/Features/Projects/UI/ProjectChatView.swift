@@ -121,7 +121,13 @@ private struct ApprovalCard: View {
                     Button("Always Allow") { engine.resolveApproval(.alwaysAllow) }
                         .help("Don't ask again for “\(approval.toolDisplayName)” (change it in Settings → Assistant)")
                 }
-                Button("Allow Once") { engine.resolveApproval(.allowOnce) }
+                Button("For This Chat") { engine.resolveApproval(.allowForChat) }
+                .help("Allow “\(approval.toolDisplayName)” without asking until this chat ends or RightHand quits")
+            if approval.canAllowForProject {
+                Button("For This Project") { engine.resolveApproval(.allowForProject) }
+                    .help("Allow “\(approval.toolDisplayName)” without asking in every chat of this project (undo it in the project's settings)")
+            }
+            Button("Allow Once") { engine.resolveApproval(.allowOnce) }
                     .keyboardShortcut(.defaultAction)
             }
             if let detail = approval.detail {

@@ -74,6 +74,24 @@ enum ToolPermissions {
     }
 }
 
+/// Tools you allowed for a whole project: they run there without asking, also for commands,
+/// deletions and paths outside the project folders. Shown and removable in the project's settings.
+enum ProjectPermissions {
+    private static func key(_ projectID: UUID) -> String { "tools.projectAllowed.\(projectID.uuidString)" }
+
+    static func allowed(in projectID: UUID) -> [String] {
+        UserDefaults.standard.stringArray(forKey: key(projectID)) ?? []
+    }
+
+    static func isAllowed(_ tool: String, in projectID: UUID) -> Bool { allowed(in: projectID).contains(tool) }
+
+    static func set(_ tool: String, allowed: Bool, in projectID: UUID) {
+        var tools = Set(self.allowed(in: projectID))
+        if allowed { tools.insert(tool) } else { tools.remove(tool) }
+        UserDefaults.standard.set(tools.sorted(), forKey: key(projectID))
+    }
+}
+
 extension JSONValue {
     /// Reads a required string input field.
     func requiredString(_ key: String) throws -> String {

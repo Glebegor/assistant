@@ -10,6 +10,7 @@ struct ProjectDetailView: View {
 
     @State private var confirmDelete = false
     @State private var openMemoryFile: URL?
+    @State private var allowedTools: [String] = []
 
     var body: some View {
         Form {
@@ -37,6 +38,7 @@ struct ProjectDetailView: View {
             filesSection
             foldersSection
             memorySection
+            if !allowedTools.isEmpty { permissionsSection }
 
             Section {
                 Button("Delete Project…", role: .destructive) { confirmDelete = true }
@@ -48,6 +50,10 @@ struct ProjectDetailView: View {
             Button("Delete Project", role: .destructive, action: onDelete)
         } message: {
             Text("Its chats, files and memory are moved to the Trash.")
+        }
+        .onAppear { allowedTools = ProjectPermissions.allowed(in: project.id) }
+        .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
+            allowedTools = ProjectPermissions.allowed(in: project.id)
         }
         .sheet(item: $openMemoryFile) { url in
             MemoryFileSheet(url: url)
@@ -76,6 +82,24 @@ struct ProjectDetailView: View {
         .dropDestination(for: URL.self) { urls, _ in
             store.attach(urls.filter(\.isFileURL), to: project)
             return true
+        }
+    }
+
+    /// Tools allowed "For This Project": they run here without asking.
+    private var permissionsSection: some View {
+        Section {
+            ForEach(allowedTools, id: \.self) { tool in
+                HStack {
+                    Image(systemName: "checkmark.shield.fill").foregroundStyle(.green)
+                    Text(verbatim: Toolbox.displayName(of: tool))
+                    Spacer()
+                    Button("Ask Again") { ProjectPermissions.set(tool, allowed: false, in: project.id) }
+                }
+            }
+        } header: {
+            Text("Allowed without asking")
+        } footer: {
+            SettingsFooter("In this project these tools run without asking, also outside the project folders.")
         }
     }
 

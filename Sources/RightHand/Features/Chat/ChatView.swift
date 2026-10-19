@@ -180,6 +180,9 @@ private struct NotchApprovalCard: View {
                         .buttonStyle(.notchPill())
                         .help("Don't ask again for “\(approval.toolDisplayName)” (change it in Settings → Assistant)")
                 }
+                Button("For This Chat") { engine.resolveApproval(.allowForChat) }
+                    .buttonStyle(.notchPill())
+                    .help("Allow “\(approval.toolDisplayName)” without asking until you start a new chat")
                 Button("Allow Once") { engine.resolveApproval(.allowOnce) }
                     .buttonStyle(.notchPill(prominent: true, tint: .white))
                     .keyboardShortcut(.defaultAction)
