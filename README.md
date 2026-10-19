@@ -17,6 +17,13 @@ scripts/install.sh        # build (release) and install into /Applications, then
 Requires macOS 14+ and Xcode (or Command Line Tools) with Swift 5.10+.
 For editing in VS Code install the **Swift** extension (`swiftlang.swift-vscode`).
 
+## Signing
+
+Local builds are signed with a self-made certificate, "RightHand Local Signing", which
+`scripts/setup-signing.sh` creates in your login keychain on the first build. Because every
+build has the same signature, macOS keeps the app's permissions (Desktop folder, browser
+control, Keychain) after rebuilds. CI builds use an ad-hoc signature.
+
 ## Releases
 
 Versions come from commit messages since the last release (`v*` tag):
