@@ -15,6 +15,8 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/RightHand" "$APP/Contents/MacOS/RightHand"
 cp Support/Info.plist "$APP/Contents/Info.plist"
+# Interface translations (en, uk, cs, ru).
+cp -R Support/Localization/*.lproj "$APP/Contents/Resources/"
 
 # Release builds pass VERSION=x.y.z (see scripts/package.sh).
 if [ -n "${VERSION:-}" ]; then

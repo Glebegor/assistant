@@ -17,6 +17,7 @@ final class SettingsWindowController {
     private func makeWindow() -> NSWindow {
         let tabs = SettingsTabViewController()
         tabs.tabStyle = .toolbar
+        tabs.addTabViewItem(pane(GeneralSettingsPane(), title: "General", systemImage: "gearshape"))
         tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
         tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
         tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
@@ -35,9 +36,9 @@ final class SettingsWindowController {
 
     private func pane(_ content: some View, title: String, systemImage: String) -> NSTabViewItem {
         let controller = NSHostingController(rootView: content.frame(width: Self.paneWidth).fixedSize())
-        controller.title = title
+        controller.title = L(title)
         let item = NSTabViewItem(viewController: controller)
-        item.label = title
+        item.label = L(title)
         item.image = NSImage(systemSymbolName: systemImage, accessibilityDescription: title)
         return item
     }

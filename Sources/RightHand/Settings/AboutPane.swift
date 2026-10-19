@@ -9,7 +9,7 @@ struct AboutPane: View {
         let info = Bundle.main.infoDictionary
         let short = info?["CFBundleShortVersionString"] as? String ?? "–"
         let build = info?["CFBundleVersion"] as? String ?? "–"
-        return "Version \(short) (\(build))"
+        return L("Version %@ (%@)", short, build)
     }
 
     var body: some View {
@@ -20,7 +20,7 @@ struct AboutPane: View {
             VStack(spacing: 4) {
                 Text("RightHand")
                     .font(.title.weight(.semibold))
-                Text(version)
+                Text(verbatim: version)
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
             }

@@ -17,7 +17,7 @@ final class ProjectStore {
         ChatSettings.registerDefaults()
         projects = ProjectStorage.loadProjects()
         for project in projects { chats[project.id] = ProjectStorage.loadChats(of: project.id) }
-        if projects.isEmpty { createProject(name: "General") }
+        if projects.isEmpty { createProject(name: L("General")) }
     }
 
     // MARK: Projects

@@ -45,7 +45,7 @@ final class ConversationEngine {
         let question = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !question.isEmpty, !isRunning, let project = project() else { return }
         guard let apiKey = Keychain.read(chat.provider.keychainAccount) else {
-            errorMessage = "Add your \(chat.provider.title) API key in Settings → Assistant."
+            errorMessage = L("Add your %@ API key in Settings → Assistant.", chat.provider.title)
             return
         }
         errorMessage = nil
@@ -98,7 +98,7 @@ final class ConversationEngine {
                 try Task.checkCancellation()
                 try await shortenIfNeeded(apiKey: apiKey)
 
-                activity = "Thinking…"
+                activity = L("Thinking…")
                 streamingText = ""
                 turnNumber += 1
                 let number = turnNumber
@@ -115,7 +115,7 @@ final class ConversationEngine {
                 save()
 
                 if turn.stopReason == "refusal" {
-                    errorMessage = "\(chat.provider.title) declined this request. Try rephrasing it."
+                    errorMessage = L("%@ declined this request. Try rephrasing it.", chat.provider.title)
                     // Tools from a declined turn never run, but every call still needs an answer.
                     answer(turn.toolCalls, with: .error("Not run: the request was declined."))
                     return
@@ -133,7 +133,7 @@ final class ConversationEngine {
                 chat.messages += client.toolResultMessages(results)
                 save()
             }
-            errorMessage = "Stopped after \(Self.maxToolRounds) tool steps. Send a message to continue."
+            errorMessage = L("Stopped after %lld tool steps. Send a message to continue.", Self.maxToolRounds)
         } catch is CancellationError {
             // Stopped by the user; what arrived so far is kept.
         } catch {
@@ -150,7 +150,7 @@ final class ConversationEngine {
 
         let action = tool.describe(input)
         if !ToolPermissions.isAlwaysAllowed(tool.name) {
-            activity = "Waiting for your permission…"
+            activity = L("Waiting for your permission…")
             let decision = await withCheckedContinuation { continuation in
                 approvalContinuation = continuation
                 pendingApproval = ToolApproval(toolName: tool.name, toolDisplayName: tool.displayName, action: action)
@@ -176,7 +176,7 @@ final class ConversationEngine {
         guard chat.provider == .openAI else { return }
         let client = OpenAIClient()
         if let shortened = try? await client.shortened(chat, system: chat.system, apiKey: apiKey) {
-            activity = "Summarizing the earlier conversation…"
+            activity = L("Summarizing the earlier conversation…")
             chat.contextStart = shortened.start
             chat.summary = shortened.summary
             save()
@@ -190,9 +190,9 @@ final class ConversationEngine {
             streamingText += text
             activity = nil
         case .usingTool(let name):
-            activity = "Preparing \(name)…"
+            activity = L("Preparing %@…", Toolbox.displayName(of: name))
         case .compacting:
-            activity = "Summarizing the earlier conversation…"
+            activity = L("Summarizing the earlier conversation…")
         }
     }
 

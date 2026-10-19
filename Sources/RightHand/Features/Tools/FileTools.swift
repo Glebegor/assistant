@@ -50,7 +50,7 @@ struct ListFilesTool: AssistantTool {
     let access: FileAccess
 
     let name = "list_files"
-    let displayName = "List files"
+    var displayName: String { L("List files") }
     let description = """
     Lists files and folders in the project folders on the user's Mac. \
     Call this to explore a folder before reading or searching files in it.
@@ -63,7 +63,7 @@ struct ListFilesTool: AssistantTool {
          ]]
     }
 
-    func describe(_ input: JSONValue) -> String { "List \(input["path"]?.string ?? "the project folder")" }
+    func describe(_ input: JSONValue) -> String { L("List %@", input["path"]?.string ?? L("the project folder")) }
 
     func run(_ input: JSONValue) async -> ToolOutput {
         do {
@@ -101,7 +101,7 @@ struct ReadFileTool: AssistantTool {
     private static let maxCharacters = 60_000
 
     let name = "read_file"
-    let displayName = "Read files"
+    var displayName: String { L("Read files") }
     let description = """
     Reads a text file (code, notes, Markdown, PDF text, …) from the project folders, with line numbers. \
     Call this whenever the answer depends on what a file contains. For long files, read a range of lines.
@@ -116,7 +116,7 @@ struct ReadFileTool: AssistantTool {
          "required": ["path"]]
     }
 
-    func describe(_ input: JSONValue) -> String { "Read \(input["path"]?.string ?? "a file")" }
+    func describe(_ input: JSONValue) -> String { L("Read %@", input["path"]?.string ?? L("a file")) }
 
     func run(_ input: JSONValue) async -> ToolOutput {
         do {
@@ -146,7 +146,7 @@ struct SearchFilesTool: AssistantTool {
     let access: FileAccess
 
     let name = "search_files"
-    let displayName = "Search files"
+    var displayName: String { L("Search files") }
     let description = """
     Searches the project folders for files whose name or text contains the query (case-insensitive). \
     Call this to find where something is mentioned or which file to read.
@@ -160,7 +160,7 @@ struct SearchFilesTool: AssistantTool {
          "required": ["query"]]
     }
 
-    func describe(_ input: JSONValue) -> String { "Search files for “\(input["query"]?.string ?? "")”" }
+    func describe(_ input: JSONValue) -> String { L("Search files for “%@”", input["query"]?.string ?? "") }
 
     func run(_ input: JSONValue) async -> ToolOutput {
         do {
@@ -200,7 +200,7 @@ struct WriteFileTool: AssistantTool {
     let access: FileAccess
 
     let name = "write_file"
-    let displayName = "Write files"
+    var displayName: String { L("Write files") }
     let description = """
     Creates or overwrites a text file in the project folders with the given content. \
     Use it when the user asks you to save, create or change a file. Read the file first when changing it.
@@ -215,9 +215,9 @@ struct WriteFileTool: AssistantTool {
     }
 
     func describe(_ input: JSONValue) -> String {
-        let path = input["path"]?.string ?? "a file"
+        let path = input["path"]?.string ?? L("a file")
         let exists = (try? access.resolve(path)).map { FileManager.default.fileExists(atPath: $0.path) } ?? false
-        return "\(exists ? "Overwrite" : "Create") \(path)"
+        return exists ? L("Overwrite %@", path) : L("Create %@", path)
     }
 
     func run(_ input: JSONValue) async -> ToolOutput {

@@ -16,7 +16,7 @@ struct Project: Codable, Identifiable, Hashable {
 struct ProjectChat: Codable, Identifiable, Hashable {
     var id = UUID()
     var projectID: UUID
-    var title = "New chat"
+    var title = L("New chat")
     var provider: ChatProvider
     var model: String
     var createdAt = Date()

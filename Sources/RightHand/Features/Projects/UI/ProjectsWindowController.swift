@@ -18,7 +18,7 @@ final class ProjectsWindowController: NSObject, NSWindowDelegate {
             let window = NSWindow(contentViewController: NSHostingController(
                 rootView: ProjectsView(store: store, openSettings: openSettings)
             ))
-            window.title = "Projects"
+            window.title = L("Projects")
             window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
             window.setContentSize(NSSize(width: 1100, height: 720))
             window.minSize = NSSize(width: 760, height: 480)

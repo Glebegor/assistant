@@ -63,7 +63,7 @@ struct ProjectsView: View {
         .toolbar {
             ToolbarItem {
                 Button("New Project", systemImage: "folder.badge.plus") {
-                    let project = store.createProject(name: "New Project")
+                    let project = store.createProject(name: L("New Project"))
                     selection = .project(project.id)
                 }
                 .help("New project")

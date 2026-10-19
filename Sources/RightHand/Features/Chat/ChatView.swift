@@ -16,7 +16,7 @@ struct ChatView: View {
                 missingKey
             } else if store.messages.isEmpty {
                 PlaceholderView(systemImage: "sparkles",
-                                title: "Ask \(store.provider.title) anything",
+                                title: L("Ask %@ anything", store.provider.title),
                                 message: "Return sends, Option-Return adds a new line.")
             } else {
                 conversation
