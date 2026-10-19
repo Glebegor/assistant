@@ -1,0 +1,80 @@
+import AppKit
+
+/// Opens a web page, an app, or a file/folder from the project folders.
+struct OpenTool: AssistantTool {
+    let access: FileAccess
+
+    let name = "open"
+    let displayName = "Open apps, links and files"
+    let description = """
+    Opens something on the user's Mac: a web address (https://…), an app by name (e.g. "Safari", "Notes"), \
+    or a file or folder from the project folders. Use it when the user asks to open or show something.
+    """
+    var inputSchema: JSONValue {
+        ["type": "object",
+         "properties": ["target": ["type": "string", "description": "A URL, an app name, or a file/folder path."]],
+         "required": ["target"]]
+    }
+
+    func describe(_ input: JSONValue) -> String { "Open \(input["target"]?.string ?? "something")" }
+
+    func run(_ input: JSONValue) async -> ToolOutput {
+        do {
+            let target = try input.requiredString("target").trimmingCharacters(in: .whitespaces)
+            if let url = URL(string: target), let scheme = url.scheme?.lowercased(), ["http", "https", "mailto"].contains(scheme) {
+                return await open(url, label: target)
+            }
+            if target.hasPrefix("/") || target.hasPrefix("~") || target.contains("/") {
+                let file = try access.resolve(target)
+                guard FileManager.default.fileExists(atPath: file.path) else { return .error("\(target) doesn't exist.") }
+                return await open(file, label: file.path)
+            }
+            guard let app = Self.application(named: target) else { return .error("No app named “\(target)” was found.") }
+            return await open(app, label: app.deletingPathExtension().lastPathComponent)
+        } catch {
+            return .error(error.localizedDescription)
+        }
+    }
+
+    @MainActor
+    private func open(_ url: URL, label: String) -> ToolOutput {
+        NSWorkspace.shared.open(url) ? ToolOutput(text: "Opened \(label).") : .error("Couldn't open \(label).")
+    }
+
+    private static func application(named name: String) -> URL? {
+        let wanted = name.lowercased().replacingOccurrences(of: ".app", with: "")
+        let folders = ["/Applications", "/System/Applications", "/System/Applications/Utilities",
+                       NSHomeDirectory() + "/Applications"]
+        for folder in folders {
+            let apps = (try? FileManager.default.contentsOfDirectory(atPath: folder)) ?? []
+            if let app = apps.first(where: { $0.lowercased() == wanted + ".app" }) {
+                return URL(filePath: folder).appending(path: app)
+            }
+        }
+        return nil
+    }
+}
+
+/// The tools available in a project.
+enum Toolbox {
+    static func tools(for project: Project) -> [AssistantTool] {
+        let access = FileAccess(folders: project.folders)
+        var tools: [AssistantTool] = [MemoryTool(root: ProjectStorage.memoryDirectory(of: project.id))]
+        if !project.folders.isEmpty {
+            tools += [ListFilesTool(access: access), ReadFileTool(access: access),
+                      SearchFilesTool(access: access), WriteFileTool(access: access)]
+        }
+        tools.append(OpenTool(access: access))
+        return tools
+    }
+
+    /// Every kind of tool, for Settings.
+    static let catalog: [(name: String, displayName: String)] = [
+        ("memory", "Project memory"),
+        ("list_files", "List files"),
+        ("read_file", "Read files"),
+        ("search_files", "Search files"),
+        ("write_file", "Write files"),
+        ("open", "Open apps, links and files"),
+    ]
+}

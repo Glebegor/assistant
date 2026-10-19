@@ -5,6 +5,7 @@ import SwiftUI
 struct ChatView: View {
     let store: ChatStore
     let openSettings: () -> Void
+    let openProjects: () -> Void
     @State private var draft = ""
     @FocusState private var isInputFocused: Bool
 
@@ -37,6 +38,10 @@ struct ChatView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()
+            Button("Projects", systemImage: "rectangle.stack") { openProjects() }
+                .buttonStyle(.notchPill())
+                .labelStyle(.iconOnly)
+                .help("Open the Projects window for long work")
             Button("New Chat", systemImage: "square.and.pencil") {
                 store.newChat()
                 isInputFocused = true
@@ -149,6 +154,11 @@ private struct MessageRow: View {
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                         .help("Copy answer")
+                        SpeakButton(text: message.text)
+                            .labelStyle(.iconOnly)
+                            .buttonStyle(.plain)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
                     }
                 }
                 if message.text.isEmpty && message.isStreaming {

@@ -25,6 +25,7 @@ final class NotchController {
     private let shelf: ShelfStore
     private let chat: ChatStore
     private let openSettings: () -> Void
+    private let openProjects: () -> Void
 
     private var notches: [ScreenNotch] = []
     private var expanded: ScreenNotch?
@@ -35,11 +36,13 @@ final class NotchController {
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, chat: ChatStore, openSettings: @escaping () -> Void) {
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, chat: ChatStore,
+         openSettings: @escaping () -> Void, openProjects: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.shelf = shelf
         self.chat = chat
         self.openSettings = openSettings
+        self.openProjects = openProjects
         rebuildNotches()
 
         // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
@@ -108,7 +111,8 @@ final class NotchController {
         let model = NotchModel(geometry: NotchGeometry(screen: screen))
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, chat: chat, openSettings: openSettings)
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, chat: chat,
+                                   openSettings: openSettings, openProjects: openProjects)
         )
         let size = NotchTab.maxPanelSize
         panel.setFrame(NSRect(x: screen.frame.midX - size.width / 2,

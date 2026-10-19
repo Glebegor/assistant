@@ -5,11 +5,16 @@ import SwiftUI
 struct AssistantSettingsPane: View {
     @AppStorage(ChatSettings.Key.claudeModel) private var claudeModel = ChatSettings.Default.claudeModel
     @AppStorage(ChatSettings.Key.openAIModel) private var openAIModel = ChatSettings.Default.openAIModel
+    @AppStorage(VoiceSettings.Key.voiceID) private var voiceID = VoiceSettings.Default.voiceID
+    @AppStorage(VoiceSettings.Key.model) private var voiceModel = VoiceSettings.Default.model
+    @State private var voices: [ElevenLabs.Voice] = []
+    @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
 
     var body: some View {
         Form {
             Section {
-                APIKeyRow(provider: .claude, color: .orange, systemImage: "sparkle")
+                APIKeyRow(account: ChatProvider.claude.keychainAccount, keysURL: ChatProvider.claude.keysURL,
+                          color: .orange, systemImage: "sparkle")
                 LabeledContent {
                     Picker("Model", selection: $claudeModel) {
                         ForEach(ChatSettings.claudeModels, id: \.id) { Text($0.name).tag($0.id) }
@@ -25,7 +30,8 @@ struct AssistantSettingsPane: View {
             }
 
             Section {
-                APIKeyRow(provider: .openAI, color: .green, systemImage: "bubble.left.and.bubble.right.fill")
+                APIKeyRow(account: ChatProvider.openAI.keychainAccount, keysURL: ChatProvider.openAI.keysURL,
+                          color: .green, systemImage: "bubble.left.and.bubble.right.fill")
                 LabeledContent {
                     TextField("Model", text: $openAIModel, prompt: Text(ChatSettings.Default.openAIModel))
                         .textFieldStyle(.roundedBorder)
@@ -37,17 +43,75 @@ struct AssistantSettingsPane: View {
                 }
             } header: {
                 Text("ChatGPT")
+            }
+
+            Section {
+                APIKeyRow(account: VoiceSettings.keychainAccount, keysURL: VoiceSettings.keysURL,
+                          color: .indigo, systemImage: "waveform")
+                LabeledContent {
+                    HStack {
+                        Picker("Voice", selection: $voiceID) {
+                            if !voices.contains(where: { $0.id == voiceID }) { Text("Sarah").tag(voiceID) }
+                            ForEach(voices) { Text($0.name).tag($0.id) }
+                        }
+                        .labelsHidden()
+                        .fixedSize()
+                        Button("Try", systemImage: "play.circle.fill") {
+                            SpeechPlayer.shared.speak("Hi! I'm RightHand. Привіт, я твоя права рука.")
+                        }
+                        .labelStyle(.iconOnly)
+                        .buttonStyle(.borderless)
+                        .font(.title3)
+                    }
+                } label: {
+                    SettingsRowLabel("Voice", systemImage: "person.wave.2.fill", color: .purple)
+                }
+                LabeledContent {
+                    Picker("Voice model", selection: $voiceModel) {
+                        ForEach(VoiceSettings.models, id: \.id) { Text($0.name).tag($0.id) }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                } label: {
+                    SettingsRowLabel("Voice model", systemImage: "cpu", color: .gray)
+                }
+            } header: {
+                Text("ElevenLabs (read answers aloud)")
+            }
+            .task { await loadVoices() }
+
+            Section {
+                ForEach(Toolbox.catalog, id: \.name) { tool in
+                    Toggle(isOn: Binding(
+                        get: { !alwaysAllowed.contains(tool.name) },
+                        set: { ask in
+                            ToolPermissions.setAlwaysAllowed(tool.name, !ask)
+                            alwaysAllowed = ToolPermissions.alwaysAllowed
+                        }
+                    )) {
+                        Text(tool.displayName)
+                    }
+                }
+            } header: {
+                Text("Ask before the AI uses a tool")
             } footer: {
-                SettingsFooter("API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using the API is billed by them per message.")
+                SettingsFooter("API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them.")
             }
         }
         .formStyle(.grouped)
+    }
+
+    private func loadVoices() async {
+        guard let key = Keychain.read(VoiceSettings.keychainAccount),
+              let list = try? await ElevenLabs.voices(apiKey: key) else { return }
+        voices = list
     }
 }
 
 /// Shows whether a key is saved; lets you paste a new one or remove it.
 private struct APIKeyRow: View {
-    let provider: ChatProvider
+    let account: String
+    let keysURL: URL
     let color: Color
     let systemImage: String
     @State private var isSaved = false
@@ -60,7 +124,7 @@ private struct APIKeyRow: View {
                     Label("Saved", systemImage: "checkmark.circle.fill")
                         .foregroundStyle(.green)
                     Button("Remove") {
-                        Keychain.delete(provider.keychainAccount)
+                        Keychain.delete(account)
                         refresh()
                     }
                 }
@@ -76,10 +140,10 @@ private struct APIKeyRow: View {
                 }
             }
         } label: {
-            SettingsRowLabel("API key", subtitle: "Get one at \(provider.keysURL.host() ?? "")",
+            SettingsRowLabel("API key", subtitle: "Get one at \(keysURL.host() ?? "")",
                              systemImage: "key.fill", color: color)
-                .onTapGesture { NSWorkspace.shared.open(provider.keysURL) }
-                .help("Open \(provider.keysURL.absoluteString)")
+                .onTapGesture { NSWorkspace.shared.open(keysURL) }
+                .help("Open \(keysURL.absoluteString)")
         }
         .onAppear(perform: refresh)
     }
@@ -87,12 +151,12 @@ private struct APIKeyRow: View {
     private func save() {
         let key = draft.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !key.isEmpty else { return }
-        Keychain.save(key, for: provider.keychainAccount)
+        Keychain.save(key, for: account)
         draft = ""
         refresh()
     }
 
     private func refresh() {
-        isSaved = Keychain.read(provider.keychainAccount) != nil
+        isSaved = Keychain.read(account) != nil
     }
 }
