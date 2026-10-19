@@ -5,11 +5,12 @@ struct NotchRootView: View {
     let model: NotchModel
     let pomodoro: PomodoroTimer
     let shelf: ShelfStore
+    let chat: ChatStore
     let openSettings: () -> Void
     @State private var isDropTargeted = false
 
     var body: some View {
-        let size = model.isExpanded ? NotchController.expandedSize : model.geometry.collapsedSize
+        let size = model.isExpanded ? model.selectedTab.panelSize : model.geometry.collapsedSize
         let radius: CGFloat = model.isExpanded ? 26 : 10
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
 
@@ -25,6 +26,7 @@ struct NotchRootView: View {
         .frame(width: size.width, height: size.height)
         .clipShape(shape)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
+        .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.selectedTab)
         .animation(.easeInOut(duration: 0.2), value: model.hidesWhenCollapsed)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .environment(\.colorScheme, .dark)
@@ -37,7 +39,7 @@ struct NotchRootView: View {
                 switch model.selectedTab {
                 case .pomodoro: PomodoroView(timer: pomodoro)
                 case .shelf: ShelfView(store: shelf)
-                case .chat: ChatView()
+                case .chat: ChatView(store: chat, openSettings: openSettings)
                 }
             }
             .padding(.horizontal, 20)

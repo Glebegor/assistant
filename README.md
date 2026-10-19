@@ -5,6 +5,9 @@ notch and a panel drops down with Pomodoro, a file/screenshot shelf and an AI as
 
 ## Run
 
+Run `make` to list all commands (`make run`, `make install`, `make release`, …).
+They call the scripts below.
+
 ```sh
 scripts/run.sh            # build (debug) and launch build/RightHand.app
 scripts/build-app.sh release
@@ -52,7 +55,9 @@ Sources/RightHand/
 - [x] App skeleton: notch panel, menu bar item, settings window
 - [x] Pomodoro: focus / short / long breaks, notifications, menu bar countdown
 - [x] Shelf: drag & drop files, auto-capture screenshots, clipboard history, folders (saved between launches)
-- [ ] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
+- [x] Eye rest: full-screen 20-20-20 break reminders
+- [x] Site blocking during Pomodoro focus (Safari, Chrome, Arc, Brave, Edge, Vivaldi)
+- [x] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
 - [ ] Assistant tools: apps & system control, files, screen & clipboard
 - [ ] Action approval: ask before every action, with "always allow" per tool
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), Notion, more

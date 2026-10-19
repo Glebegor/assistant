@@ -7,7 +7,6 @@ import AppKit
 /// blocks the menu bar. SwiftUI animates the black shape between notch size and panel size.
 @MainActor
 final class NotchController {
-    static let expandedSize = CGSize(width: 560, height: 230)
     /// How long the mouse may stay outside the open panel before it closes.
     private static let closeDelay: TimeInterval = 0.1
     /// Length of the close animation in `NotchRootView`.
@@ -18,10 +17,13 @@ final class NotchController {
         let screen: NSScreen
         let panel: NotchPanel
         let model: NotchModel
+        /// Notices drags and hovering over the closed notch.
+        let catcher: NotchDropCatcher
     }
 
     private let pomodoro: PomodoroTimer
     private let shelf: ShelfStore
+    private let chat: ChatStore
     private let openSettings: () -> Void
 
     private var notches: [ScreenNotch] = []
@@ -29,18 +31,24 @@ final class NotchController {
     /// Tab to show when a panel opens, so switching screens keeps the same tab.
     private var lastTab: NotchTab = .pomodoro
     private var mouseMonitor: Any?
+    private var clickMonitor: Any?
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, openSettings: @escaping () -> Void) {
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, chat: ChatStore, openSettings: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.shelf = shelf
+        self.chat = chat
         self.openSettings = openSettings
         rebuildNotches()
 
         // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
         mouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged]) { [weak self] _ in
             MainActor.assumeIsolated { self?.checkHoverZones() }
+        }
+        // A click outside the open panel closes it (also when it's kept open for typing).
+        clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+            MainActor.assumeIsolated { self?.closeAfterOutsideClick() }
         }
 
         // Monitors plugged in, unplugged or rearranged.
@@ -64,6 +72,7 @@ final class NotchController {
         let fullScreen = FullScreenDetector.fullScreenDisplays()
         for notch in notches {
             notch.model.hidesWhenCollapsed = notch.screen.displayID.map(fullScreen.contains) ?? false
+            updateCatcher(of: notch)
         }
     }
 
@@ -87,7 +96,10 @@ final class NotchController {
 
     private func rebuildNotches() {
         collapse()
-        notches.forEach { $0.panel.close() }
+        notches.forEach {
+            $0.panel.close()
+            $0.catcher.close()
+        }
         notches = NSScreen.screens.map(makeNotch)
         updateFullScreenState()
     }
@@ -96,16 +108,28 @@ final class NotchController {
         let model = NotchModel(geometry: NotchGeometry(screen: screen))
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, openSettings: openSettings)
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, chat: chat, openSettings: openSettings)
         )
-        let size = Self.expandedSize
+        let size = NotchTab.maxPanelSize
         panel.setFrame(NSRect(x: screen.frame.midX - size.width / 2,
                               y: screen.frame.maxY - size.height,
                               width: size.width,
                               height: size.height),
                        display: true)
         panel.orderFrontRegardless()
-        return ScreenNotch(screen: screen, panel: panel, model: model)
+
+        let catcher = NotchDropCatcher()
+        catcher.setFrame(model.geometry.hoverZone(on: screen), display: false)
+        let notch = ScreenNotch(screen: screen, panel: panel, model: model, catcher: catcher)
+        catcher.onActivate = { [weak self, weak panel] in
+            guard let self, let match = self.notches.first(where: { $0.panel === panel }) else { return }
+            // A drag from another app is almost always meant for the Shelf.
+            let isDragging = NSEvent.pressedMouseButtons != 0
+            self.expand(match)
+            if isDragging { match.model.selectedTab = .shelf }
+        }
+        updateCatcher(of: notch)
+        return notch
     }
 
     private func checkHoverZones() {
@@ -125,6 +149,7 @@ final class NotchController {
         notch.panel.ignoresMouseEvents = false
         notch.panel.orderFrontRegardless()
         notch.model.isExpanded = true
+        updateCatcher(of: notch)
         startExitPolling()
     }
 
@@ -136,7 +161,18 @@ final class NotchController {
         notch.model.isPinned = false
         notch.panel.ignoresMouseEvents = true
         expanded = nil
+        updateCatcher(of: notch)
         returnKeyboardFocus(from: notch)
+    }
+
+    /// The catcher sits over the closed notch only: not while the panel is open, and not
+    /// over full-screen apps (where it would block clicks at the top of the screen).
+    private func updateCatcher(of notch: ScreenNotch) {
+        if notch.model.isExpanded || notch.model.hidesWhenCollapsed {
+            notch.catcher.orderOut(nil)
+        } else {
+            notch.catcher.orderFrontRegardless()
+        }
     }
 
     /// After typing in the panel (e.g. a folder name) it holds the keyboard. Once it has
@@ -167,14 +203,34 @@ final class NotchController {
     }
 
     private func checkMouseLeft() {
-        guard let notch = expanded, !notch.model.isPinned else { mouseOutsideSince = nil; return }
+        guard let notch = expanded, !notch.model.isPinned, !isTyping(in: notch) else { mouseOutsideSince = nil; return }
         // Stay open while a mouse button is held, so dragging files in or out isn't interrupted.
-        if NSEvent.pressedMouseButtons != 0 || notch.panel.frame.insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
+        if NSEvent.pressedMouseButtons != 0 || visibleFrame(of: notch).insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
             mouseOutsideSince = nil
         } else if let since = mouseOutsideSince {
             if Date().timeIntervalSince(since) > Self.closeDelay { collapse() }
         } else {
             mouseOutsideSince = Date()
         }
+    }
+
+    /// Screen area of the open panel on its current tab (the window itself is bigger).
+    private func visibleFrame(of notch: ScreenNotch) -> NSRect {
+        let size = notch.model.selectedTab.panelSize
+        let window = notch.panel.frame
+        return NSRect(x: window.midX - size.width / 2, y: window.maxY - size.height,
+                      width: size.width, height: size.height)
+    }
+
+    /// While you type in the chat the panel stays open even if the mouse leaves; a click outside closes it.
+    private func isTyping(in notch: ScreenNotch) -> Bool {
+        notch.model.selectedTab == .chat && notch.panel.isKeyWindow
+    }
+
+    private func closeAfterOutsideClick() {
+        guard let notch = expanded, !notch.model.isPinned,
+              !visibleFrame(of: notch).contains(NSEvent.mouseLocation)
+        else { return }
+        collapse()
     }
 }

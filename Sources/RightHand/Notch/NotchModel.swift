@@ -21,6 +21,20 @@ enum NotchTab: CaseIterable, Identifiable {
         case .chat: "sparkles"
         }
     }
+
+    /// Size of the open panel on this tab.
+    var panelSize: CGSize {
+        switch self {
+        case .pomodoro: CGSize(width: 560, height: 230)
+        case .chat: CGSize(width: 600, height: 440)
+        case .shelf: CGSize(width: 560, height: 325) // two rows: clipboard and files
+        }
+    }
+
+    /// The notch window is this big so every tab fits; transparent parts let clicks through.
+    static var maxPanelSize: CGSize {
+        CGSize(width: allCases.map(\.panelSize.width).max()!, height: allCases.map(\.panelSize.height).max()!)
+    }
 }
 
 /// Size of the camera notch on a screen. Screens without a notch get a black

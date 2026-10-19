@@ -25,6 +25,8 @@
 	<true/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>RightHand checks the address of the open browser tab to block distracting sites during focus sessions.</string>
 	<!-- Private drag type for moving Shelf items into Shelf folders. -->
 	<key>UTExportedTypeDeclarations</key>
 	<array>
