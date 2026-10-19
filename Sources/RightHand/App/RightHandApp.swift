@@ -12,6 +12,7 @@ enum RightHandApp {
         let app = NSApplication.shared
         app.setActivationPolicy(.accessory) // no Dock icon
         app.delegate = delegate
+        app.mainMenu = MainMenu.make() // makes ⌘C/⌘V/… work in text fields
         app.run()
     }
 }
