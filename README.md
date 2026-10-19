@@ -32,6 +32,12 @@ scripts/package.sh                # build build/RightHand-<version>.zip locally
 Pushing to `master` runs `.github/workflows/release.yml`, which builds the app, tags `vX.Y.Z`
 and publishes a GitHub release with the zip.
 
+## Languages
+
+The interface is available in English, Ukrainian, Czech and Russian (Settings → General).
+Translations are in `scripts/localization/translations.py`; after changing them run
+`python3 scripts/localization/generate.py` to update `Support/Localization/*.lproj`.
+
 ## Project layout
 
 ```
