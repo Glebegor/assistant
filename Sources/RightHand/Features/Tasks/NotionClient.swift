@@ -100,7 +100,7 @@ struct NotionClient: Sendable {
 
     // MARK: HTTP
 
-    private func request(_ method: String, _ path: String, body: JSONValue? = nil) async throws -> JSONValue {
+    func request(_ method: String, _ path: String, body: JSONValue? = nil) async throws -> JSONValue {
         var request = URLRequest(url: URL(string: path, relativeTo: baseURL)!)
         request.httpMethod = method
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")

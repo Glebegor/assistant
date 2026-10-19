@@ -27,7 +27,7 @@ final class SettingsWindowController {
         tabs.addTabViewItem(pane(GeneralSettingsPane(), title: "General", systemImage: "gearshape"))
         tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
         tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
-        tabs.addTabViewItem(pane(TasksSettingsPane(store: tasks), title: "Tasks", systemImage: "checklist"))
+        tabs.addTabViewItem(pane(TasksSettingsPane(store: tasks), title: "Services", systemImage: "square.stack.3d.up"))
         tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
         tabs.addTabViewItem(pane(BlockerSettingsPane(), title: "Blocking", systemImage: "hand.raised"))
         tabs.addTabViewItem(pane(AssistantSettingsPane(), title: "Assistant", systemImage: "sparkles"))

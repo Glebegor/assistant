@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// Settings → Tasks: Notion workspaces, their task databases, and who you are in each.
+/// Settings → Services: Notion workspaces (and their task databases), ClickUp and Google.
 struct TasksSettingsPane: View {
     let store: TaskStore
     @State private var connections = TasksSettings.connections
@@ -71,6 +71,9 @@ struct TasksSettingsPane: View {
             } footer: {
                 SettingsFooter("1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first.")
             }
+
+            ClickUpSection(store: store)
+            GoogleSection()
         }
         .formStyle(.grouped)
         // Databases connected in Notion after setup show up without pressing Reload.
@@ -133,5 +136,134 @@ struct TasksSettingsPane: View {
     private func disconnect(_ connection: NotionConnection) {
         Keychain.delete(connection.keychainAccount)
         connections.removeAll { $0.id == connection.id }
+    }
+}
+
+/// ClickUp: personal token, and whether its tasks show in the Tasks tab.
+private struct ClickUpSection: View {
+    let store: TaskStore
+    @State private var isConnected = ClickUpSettings.isConnected
+    @State private var userName: String?
+    @State private var token = ""
+    @State private var message: String?
+    @AppStorage(ClickUpSettings.showInTasksKey) private var showInTasks = true
+
+    var body: some View {
+        Section {
+            if isConnected {
+                LabeledContent {
+                    Button("Disconnect", role: .destructive) {
+                        Keychain.delete(ClickUpSettings.keychainAccount)
+                        isConnected = false
+                        store.refresh()
+                    }
+                } label: {
+                    SettingsRowLabel("Connected", subtitle: userName, systemImage: "checkmark.circle.fill", color: .purple)
+                }
+                Toggle(isOn: $showInTasks) {
+                    SettingsRowLabel("Show in the Tasks tab", subtitle: L("Open tasks assigned to you or to nobody"),
+                                     systemImage: "checklist", color: .purple)
+                }
+                .onChange(of: showInTasks) { _, _ in store.refresh() }
+            } else {
+                LabeledContent {
+                    HStack(spacing: 8) {
+                        SecureField("Token", text: $token, prompt: Text(verbatim: "pk_…"))
+                            .textFieldStyle(.roundedBorder).labelsHidden().frame(width: 170)
+                            .onSubmit { Task { await connect() } }
+                        Button("Connect") { Task { await connect() } }
+                            .disabled(token.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                } label: {
+                    SettingsRowLabel("API token", subtitle: L("ClickUp → Settings → Apps → API Token"),
+                                     systemImage: "key.fill", color: .purple)
+                        .onTapGesture { NSWorkspace.shared.open(ClickUpSettings.tokenURL) }
+                        .help("Open \(ClickUpSettings.tokenURL.absoluteString)")
+                }
+            }
+            if let message { Text(message).font(.callout).foregroundStyle(.orange) }
+        } header: {
+            Text("ClickUp")
+        } footer: {
+            SettingsFooter("The AI can find, read and change your ClickUp tasks (it asks first).")
+        }
+        .task {
+            guard isConnected, userName == nil, let token = ClickUpSettings.token else { return }
+            userName = try? await ClickUpClient(token: token).me().name
+        }
+    }
+
+    private func connect() async {
+        let token = token.trimmingCharacters(in: .whitespacesAndNewlines)
+        do {
+            userName = try await ClickUpClient(token: token).me().name
+            Keychain.save(token, for: ClickUpSettings.keychainAccount)
+            self.token = ""
+            message = nil
+            isConnected = true
+            store.refresh()
+        } catch {
+            message = error.localizedDescription
+        }
+    }
+}
+
+/// Google: your own OAuth client, then "Sign in with Google" in the browser.
+private struct GoogleSection: View {
+    @State private var isConnected = GoogleAuth.isConnected
+    @State private var clientID = GoogleAuth.clientID ?? ""
+    @State private var secret = ""
+    @State private var isSigningIn = false
+    @State private var message: String?
+
+    var body: some View {
+        Section {
+            if isConnected {
+                LabeledContent {
+                    Button("Sign Out", role: .destructive) {
+                        Task {
+                            await GoogleAuth.signOut()
+                            isConnected = false
+                        }
+                    }
+                } label: {
+                    SettingsRowLabel("Signed in", subtitle: GoogleAuth.email, systemImage: "checkmark.circle.fill", color: .blue)
+                }
+            } else {
+                TextField("Client ID", text: $clientID, prompt: Text(verbatim: "….apps.googleusercontent.com"))
+                SecureField("Client secret", text: $secret, prompt: Text(verbatim: "GOCSPX-…"))
+                HStack {
+                    Button("Sign in with Google") { Task { await signIn() } }
+                        .disabled(clientID.trimmingCharacters(in: .whitespaces).isEmpty
+                                  || (secret.isEmpty && Keychain.read(GoogleAuth.secretAccount) == nil) || isSigningIn)
+                    if isSigningIn {
+                        ProgressView().controlSize(.small)
+                        Text("Finish signing in in your browser…").foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button("Open Google Cloud") { NSWorkspace.shared.open(GoogleAuth.consoleURL) }
+                }
+            }
+            if let message { Text(message).font(.callout).foregroundStyle(.orange) }
+        } header: {
+            Text("Google (Gmail and Drive)")
+        } footer: {
+            SettingsFooter("Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files.")
+        }
+    }
+
+    private func signIn() async {
+        isSigningIn = true
+        message = nil
+        defer { isSigningIn = false }
+        do {
+            let secret = secret.isEmpty ? (Keychain.read(GoogleAuth.secretAccount) ?? "") : secret
+            try await GoogleAuth.signIn(clientID: clientID.trimmingCharacters(in: .whitespacesAndNewlines),
+                                        secret: secret.trimmingCharacters(in: .whitespacesAndNewlines))
+            self.secret = ""
+            isConnected = true
+        } catch {
+            message = error.localizedDescription
+        }
     }
 }

@@ -1,9 +1,9 @@
 import Foundation
 import Observation
 
-/// A task from Notion (ClickUp can be added as another source later).
+/// A task from Notion or ClickUp.
 struct TaskItem: Identifiable, Hashable, Sendable {
-    enum Source: Sendable { case notion }
+    enum Source: Sendable { case notion, clickUp }
     enum Priority: Int, Comparable, Sendable {
         case high, medium, low, none
         static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
@@ -74,7 +74,7 @@ enum TasksSettings {
     }
 }
 
-/// The Tasks tab: open tasks assigned to you or to nobody, from the Notion databases you chose.
+/// The Tasks tab: open tasks assigned to you or to nobody, from the Notion databases you chose and ClickUp.
 @Observable
 @MainActor
 final class TaskStore {
@@ -89,7 +89,7 @@ final class TaskStore {
     @ObservationIgnored private var refreshTask: Task<Void, Never>?
 
     var isConfigured: Bool {
-        TasksSettings.connections.contains { !$0.enabledDatabaseIDs.isEmpty }
+        TasksSettings.connections.contains { !$0.enabledDatabaseIDs.isEmpty } || (ClickUpSettings.isConnected && ClickUpSettings.showsInTasks)
     }
 
     /// Refreshes when the tab is shown and the list is older than a minute.
@@ -120,14 +120,33 @@ final class TaskStore {
                     }
                 }
             }
+            if ClickUpSettings.showsInTasks, let token = ClickUpSettings.token {
+                do {
+                    loaded += try await Self.clickUpTasks(ClickUpClient(token: token))
+                } catch {
+                    failures.append("ClickUp: \(error.localizedDescription)")
+                }
+            }
             tasks = TaskItem.ordered(loaded)
             errorMessage = failures.isEmpty ? nil : failures.joined(separator: "\n")
             lastRefresh = Date()
         }
     }
 
-    /// Marks a task done in Notion; it disappears from the list once saved.
+    /// Open ClickUp tasks assigned to you or to nobody.
+    private static func clickUpTasks(_ client: ClickUpClient) async throws -> [TaskItem] {
+        let me = String(try await client.me().id)
+        var items: [TaskItem] = []
+        for workspace in try await client.workspaces() {
+            items += try await client.tasks(in: workspace.id).compactMap(ClickUpClient.taskItem)
+                .filter { $0.assigneeIDs.isEmpty || $0.assigneeIDs.contains(me) }
+        }
+        return items
+    }
+
+    /// Marks a task done in Notion or ClickUp; it disappears from the list once saved.
     func complete(_ task: TaskItem) {
+        if task.source == .clickUp { return completeInClickUp(task) }
         guard task.canComplete, !completing.contains(task.id),
               let connection = TasksSettings.connections.first(where: { $0.databases.contains { $0.id == task.databaseID } }),
               let token = Keychain.read(connection.keychainAccount),
@@ -137,6 +156,25 @@ final class TaskStore {
         Task {
             do {
                 try await NotionClient(token: token).update(page: task.id, properties: update)
+                try? await Task.sleep(for: .milliseconds(500))
+                tasks.removeAll { $0.id == task.id }
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            completing.remove(task.id)
+        }
+    }
+
+    private func completeInClickUp(_ task: TaskItem) {
+        guard !completing.contains(task.id), let token = ClickUpSettings.token else { return }
+        completing.insert(task.id)
+        Task {
+            do {
+                let client = ClickUpClient(token: token)
+                guard let done = try await client.doneStatus(ofList: task.databaseID) else {
+                    throw ChatError(message: L("This ClickUp list has no done status."))
+                }
+                _ = try await client.updateTask(task.id, fields: ["status": .string(done)])
                 try? await Task.sleep(for: .milliseconds(500))
                 tasks.removeAll { $0.id == task.id }
             } catch {

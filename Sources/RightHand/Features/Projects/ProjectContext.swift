@@ -18,6 +18,11 @@ enum ProjectContext {
         Answer clearly and concisely. Use Markdown for code and short lists.
         """]
 
+        let aboutMe = AboutMe.text
+        if !aboutMe.isEmpty {
+            parts.append("# About the user\n\nThe user wrote this about themselves. Use it to personalize answers; don't repeat it back.\n\n\(aboutMe)")
+        }
+
         let instructions = project.instructions.trimmingCharacters(in: .whitespacesAndNewlines)
         if !instructions.isEmpty {
             parts.append("# Project instructions\n\n\(instructions)")
@@ -53,6 +58,8 @@ enum ProjectContext {
             """)
         }
 
+        if let services = Integrations.systemPrompt { parts.append(services) }
+
         parts.append(provider == .claude
             ? "# Memory\n\nUse your memory tool to keep notes about this project (decisions, progress, preferences) so later chats can continue the work."
             : "# Memory\n\nUse the `memory` tool to keep notes about this project (decisions, progress, preferences) so later chats can continue the work. Check your memory at the start of a task.")
@@ -62,7 +69,7 @@ enum ProjectContext {
     /// Changes whenever something the system prompt is built from changes.
     static func fingerprint(of project: Project) -> String {
         var text = project.name + "\n" + project.instructions + "\n" + project.folders.joined(separator: "\n")
-            + "\nwholeMac=\(ComputerAccess.isEnabled)"
+            + "\nwholeMac=\(ComputerAccess.isEnabled)\naboutMe=\(AboutMe.text)\nservices=\(Integrations.fingerprint)"
         for file in attachedFiles(of: project) {
             let modified = (try? file.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
             text += "\n\(file.lastPathComponent)@\(modified.timeIntervalSince1970)"
