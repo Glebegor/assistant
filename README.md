@@ -53,6 +53,7 @@ Sources/RightHand/
   Features/
     Pomodoro/                 Timer logic, settings, view
     Shelf/                    Files, screenshots and clipboard history
+    Tasks/                    Notion tasks in the notch
     Chat/                     AI chat in the notch
     Projects/                 Projects window and the conversation engine
     Tools/                    What the AI can do on the Mac (files, commands, memory)
@@ -70,5 +71,6 @@ Sources/RightHand/
 - [x] Assistant tools: files anywhere on the Mac (read, write, edit, move, copy, delete to Trash), Terminal commands, opening apps and links
 - [x] Action approval: ask before every action, with "always allow" per tool; commands, deletions and anything outside the project folders always ask
 - [ ] Assistant tools: screen & clipboard, system control
-- [ ] Integrations: Calendar / Reminders / Notes (EventKit), Notion, more
+- [x] Tasks tab: open Notion tasks (yours or unassigned), overdue and high priority first, tick to mark done
+- [ ] Integrations: ClickUp, Calendar / Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

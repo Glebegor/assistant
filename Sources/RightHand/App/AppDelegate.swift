@@ -6,9 +6,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let pomodoro = PomodoroTimer()
     private let shelf = ShelfStore()
     private let chat = ChatStore()
+    private let tasks = TaskStore()
     private let projects = ProjectStore()
     private var projectsWindow: ProjectsWindowController?
-    private let settingsWindow = SettingsWindowController()
+    private lazy var settingsWindow = SettingsWindowController(tasks: tasks)
     private var eyeRest: EyeRestController?
     private var blocker: URLBlocker?
     private var notch: NotchController?
@@ -23,7 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         blocker = URLBlocker(pomodoro: pomodoro)
         let projectsWindow = ProjectsWindowController(store: projects, openSettings: { settings.show() })
         self.projectsWindow = projectsWindow
-        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, chat: chat,
+        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat,
                                     openSettings: { settings.show() }, openProjects: { projectsWindow.show() })
         self.notch = notch
         statusItem = StatusItemController(
