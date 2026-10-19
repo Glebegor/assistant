@@ -123,7 +123,6 @@ private struct TaskRow: View {
         .background(isHovered ? .white.opacity(0.07) : .clear, in: RoundedRectangle(cornerRadius: 8))
         .contentShape(Rectangle())
         .onHover { isHovered = $0 }
-        .onTapGesture(count: 2) { if let url = task.url { NSWorkspace.shared.open(url) } }
     }
 
     @ViewBuilder

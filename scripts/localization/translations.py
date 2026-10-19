@@ -360,4 +360,8 @@ T = {
     'remove due date': ('прибрати термін', 'odebrat termín', 'убрать срок'),
     'status “%@”': ('статус «%@»', 'stav „%@“', 'статус «%@»'),
     'title “%@”': ('назва «%@»', 'název „%@“', 'название «%@»'),
+    'New chat in a new tab': ('Новий чат у новій вкладці', 'Nový chat na nové kartě', 'Новый чат в новой вкладке'),
+    'Close tab': ('Закрити вкладку', 'Zavřít kartu', 'Закрыть вкладку'),
+    "Notion isn't connected for this database. Check Settings → Services.": ('Notion не підключено для цієї бази. Перевір Налаштування → Сервіси.', 'Notion není pro tuto databázi připojený. Zkontroluj Nastavení → Služby.', 'Notion не подключён для этой базы. Проверь Настройки → Сервисы.'),
+    "ClickUp isn't connected. Check Settings → Services.": ('ClickUp не підключено. Перевір Налаштування → Сервіси.', 'ClickUp není připojený. Zkontroluj Nastavení → Služby.', 'ClickUp не подключён. Проверь Настройки → Сервисы.'),
 }
