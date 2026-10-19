@@ -1,7 +1,7 @@
 import Foundation
 
 /// Which AI answers in the Assistant tab.
-enum ChatProvider: String, CaseIterable, Identifiable, Sendable {
+enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
     case claude, openAI
 
     var id: Self { self }

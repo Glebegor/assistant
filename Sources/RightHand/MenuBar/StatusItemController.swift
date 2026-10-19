@@ -7,6 +7,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let pomodoro: PomodoroTimer
     private let eyeRest: EyeRestController
     private let showPanel: () -> Void
+    private let openProjects: () -> Void
     private let openSettings: () -> Void
     private let toggleTimerItem = NSMenuItem(title: "", action: #selector(toggleTimer), keyEquivalent: "")
     private let eyeRestEnabledItem = NSMenuItem(title: "Eye Rest Reminders", action: #selector(toggleEyeRest), keyEquivalent: "")
@@ -14,10 +15,11 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let eyeBreakNowItem = NSMenuItem(title: "Take an Eye Break Now", action: #selector(takeEyeBreak), keyEquivalent: "")
 
     init(pomodoro: PomodoroTimer, eyeRest: EyeRestController,
-         showPanel: @escaping () -> Void, openSettings: @escaping () -> Void) {
+         showPanel: @escaping () -> Void, openProjects: @escaping () -> Void, openSettings: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.eyeRest = eyeRest
         self.showPanel = showPanel
+        self.openProjects = openProjects
         self.openSettings = openSettings
         super.init()
 
@@ -43,6 +45,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.addItem(eyeBreakNowItem)
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Show Panel", action: #selector(showPanelAction), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Projects…", action: #selector(openProjectsAction), keyEquivalent: "p"))
         menu.addItem(NSMenuItem(title: "Settings…", action: #selector(openSettingsAction), keyEquivalent: ","))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quit RightHand", action: #selector(quit), keyEquivalent: "q"))
@@ -80,6 +83,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     @objc private func pauseOrResumeEyeRest() { eyeRest.isPaused ? eyeRest.resume() : eyeRest.pause() }
     @objc private func takeEyeBreak() { eyeRest.takeBreakNow() }
     @objc private func showPanelAction() { showPanel() }
+    @objc private func openProjectsAction() { openProjects() }
     @objc private func openSettingsAction() { openSettings() }
     @objc private func quit() { NSApp.terminate(nil) }
 }
