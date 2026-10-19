@@ -17,9 +17,11 @@ final class ShelfStore {
     private(set) var folders: [ShelfFolder]
     /// Folder currently shown in the Shelf tab; nil = top level.
     var openFolderID: UUID?
+    /// macOS doesn't let RightHand read the screenshots folder (needs permission).
+    private(set) var needsScreenshotFolderAccess = false
 
     /// What can be dropped onto the panel or a folder.
-    static let dropTypes: [UTType] = [.shelfItem, .fileURL, .plainText]
+    static let dropTypes: [UTType] = [.shelfItem, .fileURL, .image, .plainText]
 
     @ObservationIgnored private let screenshotWatcher = ScreenshotWatcher()
     @ObservationIgnored private let clipboardWatcher = ClipboardWatcher()
@@ -40,6 +42,9 @@ final class ShelfStore {
         folders = data.folders
 
         screenshotWatcher.onScreenshot = { [weak self] url in self?.addFile(url, source: .screenshot) }
+        screenshotWatcher.onAccessChange = { [weak self] allowed in
+            if self?.needsScreenshotFolderAccess != !allowed { self?.needsScreenshotFolderAccess = !allowed }
+        }
         clipboardWatcher.onChange = { [weak self] pasteboard in self?.addFromPasteboard(pasteboard) }
         applySettings()
 
@@ -114,6 +119,15 @@ final class ShelfStore {
                     guard let url else { return }
                     Task { @MainActor [weak self] in self?.addFile(url, source: .dropped, folderID: folderID) }
                 }
+            } else if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
+                // Images without a file, e.g. the floating screenshot preview or a browser image.
+                accepted = true
+                let directory = directoryURL(for: folderID)
+                _ = provider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, _ in
+                    // The file only exists during this callback, so copy it into the Shelf right away.
+                    guard let url, let copy = try? ShelfFiles.copy(url, into: directory) else { return }
+                    Task { @MainActor [weak self] in self?.addReceivedFile(copy, folderID: folderID) }
+                }
             } else if provider.canLoadObject(ofClass: String.self) {
                 accepted = true
                 _ = provider.loadObject(ofClass: String.self) { text, _ in
@@ -123,6 +137,12 @@ final class ShelfStore {
             }
         }
         return accepted
+    }
+
+    /// A file that is already in the Shelf files folder (received from a drop).
+    private func addReceivedFile(_ url: URL, folderID: UUID?) {
+        insert(ShelfItem(content: .file(path: url.path, bookmark: try? url.bookmarkData()),
+                         source: .dropped, folderID: folderID, originalPath: url.path))
     }
 
     private func addFromPasteboard(_ pasteboard: NSPasteboard) {
