@@ -265,3 +265,56 @@ struct WriteFileTool: AssistantTool {
         }
     }
 }
+
+/// Changes part of a text file: replaces one exact piece of text with another.
+struct EditFileTool: AssistantTool {
+    let access: FileAccess
+
+    let name = "edit_file"
+    var displayName: String { L("Edit files") }
+    let description = """
+    Changes part of a text file: replaces `old_text` with `new_text`. `old_text` must appear in the file \
+    exactly once (include a few surrounding lines to make it unique). Read the file first. \
+    Prefer this over write_file for small changes to existing files.
+    """
+    var inputSchema: JSONValue {
+        ["type": "object",
+         "properties": [
+             "path": ["type": "string", "description": "File path (absolute, ~/…, or relative to the first project folder)."],
+             "old_text": ["type": "string", "description": "The exact text to replace, copied from the file."],
+             "new_text": ["type": "string", "description": "The text to put in its place (empty to remove it)."],
+         ],
+         "required": ["path", "old_text", "new_text"]]
+    }
+
+    func alwaysAsks(_ input: JSONValue) -> Bool { access.isOutsideProject(input["path"]?.string) }
+
+    func describe(_ input: JSONValue) -> String { L("Edit %@", input["path"]?.string ?? L("a file")) }
+
+    func detail(_ input: JSONValue) -> String? {
+        func lines(_ text: String?, _ mark: String) -> String {
+            let text = text ?? ""
+            let shown = text.count > 1_000 ? String(text.prefix(1_000)) + "\n…" : text
+            return shown.components(separatedBy: "\n").map { mark + $0 }.joined(separator: "\n")
+        }
+        return lines(input["old_text"]?.string, "- ") + "\n" + lines(input["new_text"]?.string, "+ ")
+    }
+
+    func run(_ input: JSONValue) async -> ToolOutput {
+        do {
+            let url = try access.resolve(try input.requiredString("path"))
+            let old = try input.requiredString("old_text")
+            let new = input["new_text"]?.string ?? ""
+            guard let text = try? String(contentsOf: url, encoding: .utf8) else { return .error("\(url.path) is not a UTF-8 text file or doesn't exist.") }
+            let count = text.components(separatedBy: old).count - 1
+            guard count == 1 else {
+                return .error(count == 0 ? "old_text was not found in \(url.path). Read the file and copy the text exactly."
+                                         : "old_text appears \(count) times in \(url.path). Include more surrounding text so it is unique.")
+            }
+            try text.replacingOccurrences(of: old, with: new).write(to: url, atomically: true, encoding: .utf8)
+            return ToolOutput(text: "Edited \(url.path).")
+        } catch {
+            return .error(error.localizedDescription)
+        }
+    }
+}

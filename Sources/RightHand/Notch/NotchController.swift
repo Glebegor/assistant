@@ -43,6 +43,7 @@ final class NotchController {
         self.chat = chat
         self.openSettings = openSettings
         self.openProjects = openProjects
+        chat.onApprovalNeeded = { [weak self] in self?.showChat() }
         rebuildNotches()
 
         // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
@@ -95,6 +96,16 @@ final class NotchController {
         guard let notch = notches.first(where: { $0.screen.frame.contains(mouse) }) ?? notches.first else { return }
         expand(notch)
         notch.model.isPinned = true
+    }
+
+    /// Opens the Assistant tab, e.g. when the AI asks for permission while the panel is closed.
+    func showChat() {
+        if let notch = expanded {
+            notch.model.selectedTab = .chat
+            return
+        }
+        showPinned()
+        expanded?.model.selectedTab = .chat
     }
 
     private func rebuildNotches() {
