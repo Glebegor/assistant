@@ -22,8 +22,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.notch = notch
         statusItem = StatusItemController(
             pomodoro: pomodoro,
+            eyeRest: eyeRest,
             showPanel: { notch.showPinned() },
-            takeEyeBreak: { eyeRest.takeBreakNow() },
             openSettings: { settings.show() }
         )
     }
