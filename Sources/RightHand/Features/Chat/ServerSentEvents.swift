@@ -1,34 +1,5 @@
 import Foundation
 
-struct ChatMessage: Identifiable {
-    enum Role { case user, assistant }
-
-    let id = UUID()
-    let role: Role
-    var text: String
-    /// For assistant messages: who answered.
-    var provider: ChatProvider?
-    var modelName: String?
-    var isStreaming = false
-    /// Claude's reply exactly as received (JSON array of content blocks), sent back unchanged
-    /// on the next turn. Claude checks that earlier turns of a chat were not edited.
-    var claudeContent: Data?
-    /// The AI declined to answer (safety check).
-    var isDeclined = false
-    var errorMessage: String?
-
-    /// Whether this answer (and the question before it) is part of what the AI remembers.
-    var belongsInHistory: Bool {
-        role == .user || (!isDeclined && errorMessage == nil && !isStreaming && (!text.isEmpty || claudeContent != nil))
-    }
-}
-
-/// Something that happened while an answer streamed in.
-enum ChatEvent: Sendable {
-    case text(String)
-    case finished(claudeContent: Data?, declined: Bool)
-}
-
 struct ChatError: LocalizedError {
     let message: String
     var errorDescription: String? { message }
@@ -58,9 +29,9 @@ enum ServerSentEvents {
             .flatMap { $0["error"] as? [String: Any] }
             .flatMap { $0["message"] as? String }
         switch status {
-        case 401: return "The API key was rejected. Check it in Settings → Assistant."
-        case 429: return message ?? "Too many requests or no credit left. Try again later."
-        default: return message.map { "Error \(status): \($0)" } ?? "Error \(status)."
+        case 401: return L("The API key was rejected. Check it in Settings → Assistant.")
+        case 429: return message ?? L("Too many requests or no credit left. Try again later.")
+        default: return message.map { L("Error %lld: %@", status, $0) } ?? L("Error %lld.", status)
         }
     }
 }

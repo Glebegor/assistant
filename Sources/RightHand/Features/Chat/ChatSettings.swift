@@ -1,7 +1,7 @@
 import Foundation
 
 /// Which AI answers in the Assistant tab.
-enum ChatProvider: String, CaseIterable, Identifiable, Sendable {
+enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
     case claude, openAI
 
     var id: Self { self }
@@ -79,4 +79,13 @@ enum ChatSettings {
     You are RightHand, a helpful assistant that lives in the notch of the user's Mac. \
     Answer clearly and concisely. Use Markdown for code and short lists.
     """
+}
+
+/// What you wrote about yourself in Settings → Assistant; every chat starts with it.
+enum AboutMe {
+    static let key = "assistant.aboutMe"
+
+    static var text: String {
+        (UserDefaults.standard.string(forKey: key) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }

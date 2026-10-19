@@ -17,6 +17,13 @@ scripts/install.sh        # build (release) and install into /Applications, then
 Requires macOS 14+ and Xcode (or Command Line Tools) with Swift 5.10+.
 For editing in VS Code install the **Swift** extension (`swiftlang.swift-vscode`).
 
+## Signing
+
+Local builds are signed with a self-made certificate, "RightHand Local Signing", which
+`scripts/setup-signing.sh` creates in your login keychain on the first build. Because every
+build has the same signature, macOS keeps the app's permissions (Desktop folder, browser
+control, Keychain) after rebuilds. CI builds use an ad-hoc signature.
+
 ## Releases
 
 Versions come from commit messages since the last release (`v*` tag):
@@ -31,6 +38,12 @@ scripts/package.sh                # build build/RightHand-<version>.zip locally
 
 Pushing to `master` runs `.github/workflows/release.yml`, which builds the app, tags `vX.Y.Z`
 and publishes a GitHub release with the zip.
+
+## Languages
+
+The interface is available in English, Ukrainian, Czech and Russian (Settings → General).
+Translations are in `scripts/localization/translations.py`; after changing them run
+`python3 scripts/localization/generate.py` to update `Support/Localization/*.lproj`.
 
 ## Project layout
 
@@ -47,7 +60,11 @@ Sources/RightHand/
   Features/
     Pomodoro/                 Timer logic, settings, view
     Shelf/                    Files, screenshots and clipboard history
-    Chat/                     AI assistant (placeholder)
+    Tasks/                    Notion and ClickUp tasks in the notch
+    Integrations/             Notion, ClickUp and Google (Gmail, Drive) for the AI
+    Chat/                     AI chat in the notch
+    Projects/                 Projects window and the conversation engine
+    Tools/                    What the AI can do on the Mac (files, commands, memory)
 ```
 
 ## Roadmap
@@ -57,8 +74,13 @@ Sources/RightHand/
 - [x] Shelf: drag & drop files, auto-capture screenshots, clipboard history, folders (saved between launches)
 - [x] Eye rest: full-screen 20-20-20 break reminders
 - [x] Site blocking during Pomodoro focus (Safari, Chrome, Arc, Brave, Edge, Vivaldi)
-- [x] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
-- [ ] Assistant tools: apps & system control, files, screen & clipboard
-- [ ] Action approval: ask before every action, with "always allow" per tool
-- [ ] Integrations: Calendar / Reminders / Notes (EventKit), Notion, more
+- [x] AI chat in the notch: Claude + ChatGPT (switchable), uses the same tools as projects, API keys in Keychain
+- [x] Projects window: instructions, files, folders, memory, automatic summarizing
+- [x] Assistant tools: files anywhere on the Mac (read, write, edit, move, copy, delete to Trash), Terminal commands, opening apps and links
+- [x] Action approval: ask before every action, with "always allow" per tool; commands, deletions and anything outside the project folders always ask
+- [ ] Assistant tools: screen & clipboard, system control
+- [x] Tasks tab: open Notion tasks (yours or unassigned), overdue and high priority first, tick to mark done
+- [x] AI tools for Notion, ClickUp, Gmail (read) and Google Drive; ClickUp tasks in the Tasks tab
+- [x] "About me" profile that every chat starts with
+- [ ] Integrations: Calendar / Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

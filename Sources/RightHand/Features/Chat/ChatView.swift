@@ -1,10 +1,11 @@
 import AppKit
 import SwiftUI
 
-/// Assistant tab: chat with Claude or ChatGPT.
+/// Assistant tab: chat with Claude or ChatGPT, which can use tools on the Mac (asking first).
 struct ChatView: View {
     let store: ChatStore
     let openSettings: () -> Void
+    let openProjects: () -> Void
     @State private var draft = ""
     @FocusState private var isInputFocused: Bool
 
@@ -13,12 +14,15 @@ struct ChatView: View {
             toolbar
             if !store.hasKey {
                 missingKey
-            } else if store.messages.isEmpty {
+            } else if store.isEmpty {
                 PlaceholderView(systemImage: "sparkles",
-                                title: "Ask \(store.provider.title) anything",
-                                message: "Return sends, Option-Return adds a new line.")
+                                title: L("Ask %@ anything", store.provider.title),
+                                message: "Return sends, Shift-Return adds a new line.")
             } else {
                 conversation
+            }
+            if let approval = store.engine.pendingApproval {
+                NotchApprovalCard(approval: approval, provider: store.engine.chat.provider, engine: store.engine)
             }
             inputBar
         }
@@ -37,13 +41,17 @@ struct ChatView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()
+            Button("Projects", systemImage: "rectangle.stack") { openProjects() }
+                .buttonStyle(.notchPill())
+                .labelStyle(.iconOnly)
+                .help("Open the Projects window for long work")
             Button("New Chat", systemImage: "square.and.pencil") {
                 store.newChat()
                 isInputFocused = true
             }
             .buttonStyle(.notchPill())
             .labelStyle(.iconOnly)
-            .disabled(store.messages.isEmpty)
+            .disabled(store.isEmpty)
             .help("New chat")
         }
     }
@@ -61,18 +69,36 @@ struct ChatView: View {
     }
 
     private var conversation: some View {
-        ScrollViewReader { proxy in
+        let engine = store.engine
+        return ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    ForEach(store.messages) { MessageRow(message: $0) }
+                LazyVStack(alignment: .leading, spacing: 10) {
+                    ForEach(engine.display) { NotchMessageRow(item: $0, modelName: store.modelName) }
+                    if engine.isRunning {
+                        if !engine.streamingText.isEmpty {
+                            NotchMessageRow(item: .assistant(id: "streaming", text: engine.streamingText), modelName: store.modelName)
+                        }
+                        if let activity = engine.activity, engine.pendingApproval == nil {
+                            HStack(spacing: 6) {
+                                ProgressView().controlSize(.small)
+                                Text(activity).foregroundStyle(.secondary).lineLimit(1)
+                            }
+                            .font(.callout)
+                        }
+                    }
+                    if let error = engine.errorMessage {
+                        Label(error, systemImage: "xmark.octagon.fill")
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
                     Color.clear.frame(height: 1).id("bottom")
                 }
                 .padding(.vertical, 4)
             }
             .scrollIndicators(.never)
-            .onChange(of: store.messages.last?.text) { _, _ in
-                proxy.scrollTo("bottom", anchor: .bottom)
-            }
+            .onChange(of: engine.streamingText) { _, _ in proxy.scrollTo("bottom", anchor: .bottom) }
+            .onChange(of: engine.chat.messages.count) { _, _ in proxy.scrollTo("bottom", anchor: .bottom) }
+            .onChange(of: engine.activity) { _, _ in proxy.scrollTo("bottom", anchor: .bottom) }
             .onAppear { proxy.scrollTo("bottom", anchor: .bottom) }
         }
     }
@@ -84,6 +110,7 @@ struct ChatView: View {
                 .lineLimit(1...5)
                 .focused($isInputFocused)
                 .onSubmit(send)
+                .shiftReturnAddsNewLine()
                 .padding(.horizontal, 12)
                 .padding(.vertical, 9)
                 .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -118,64 +145,138 @@ private extension View {
     }
 }
 
-/// One question or answer in the conversation.
-private struct MessageRow: View {
-    let message: ChatMessage
-    @State private var isHovered = false
+/// "Claude wants to: Run a command" with the command, and Deny / Always Allow / Allow Once.
+private struct NotchApprovalCard: View {
+    let approval: ToolApproval
+    let provider: ChatProvider
+    let engine: ConversationEngine
 
     var body: some View {
-        if message.role == .user {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: "hand.raised.fill").foregroundStyle(.orange)
+                Text("\(provider.title) wants to: \(approval.action)")
+                    .fontWeight(.medium)
+                    .lineLimit(2)
+                Spacer(minLength: 4)
+            }
+            if let detail = approval.detail {
+                ScrollView {
+                    Text(verbatim: detail)
+                        .font(.system(.caption, design: .monospaced))
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(maxHeight: 70)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(8)
+                .background(.black.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
+            }
+            HStack(spacing: 8) {
+                Spacer()
+                Button("Deny") { engine.resolveApproval(.deny) }
+                    .buttonStyle(.notchPill())
+                if approval.canAlwaysAllow {
+                    Button("Always Allow") { engine.resolveApproval(.alwaysAllow) }
+                        .buttonStyle(.notchPill())
+                        .help("Don't ask again for “\(approval.toolDisplayName)” (change it in Settings → Assistant)")
+                }
+                Button("For This Chat") { engine.resolveApproval(.allowForChat) }
+                    .buttonStyle(.notchPill())
+                    .help("Allow “\(approval.toolDisplayName)” without asking until you start a new chat")
+                Button("Allow Once") { engine.resolveApproval(.allowOnce) }
+                    .buttonStyle(.notchPill(prominent: true, tint: .white))
+                    .keyboardShortcut(.defaultAction)
+            }
+        }
+        .font(.callout)
+        .padding(10)
+        .background(.orange.opacity(0.15), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+/// One question, answer or tool step in the conversation.
+private struct NotchMessageRow: View {
+    let item: ChatDisplayItem
+    let modelName: String
+    @State private var isHovered = false
+    @State private var showsDetails = false
+
+    var body: some View {
+        switch item {
+        case .user(_, let text):
             HStack {
                 Spacer(minLength: 60)
-                Text(message.text)
+                Text(text)
                     .textSelection(.enabled)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .background(Color.accentColor.opacity(0.85), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
-        } else {
+        case .assistant(_, let text):
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Text(message.modelName ?? "")
+                    Text(modelName)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
-                    if isHovered, !message.text.isEmpty {
+                    if isHovered, !text.isEmpty {
                         Button("Copy", systemImage: "doc.on.doc") {
                             NSPasteboard.general.clearContents()
-                            NSPasteboard.general.setString(message.text, forType: .string)
+                            NSPasteboard.general.setString(text, forType: .string)
                         }
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.plain)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
                         .help("Copy answer")
+                        SpeakButton(text: text)
                     }
                 }
-                if message.text.isEmpty && message.isStreaming {
-                    HStack(spacing: 6) {
-                        ProgressView().controlSize(.small)
-                        Text("Thinking…").foregroundStyle(.secondary)
-                    }
-                } else if !message.text.isEmpty {
-                    Text(Self.markdown(message.text))
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                if message.isDeclined {
-                    Label("\(message.provider?.title ?? "The AI") declined this request. Try rephrasing it.",
-                          systemImage: "exclamationmark.triangle.fill")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
-                }
-                if let error = message.errorMessage {
-                    Label(error, systemImage: "xmark.octagon.fill")
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                }
+                .labelStyle(.iconOnly)
+                .buttonStyle(.plain)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                Text(Self.markdown(text))
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.trailing, 40)
             .onHover { isHovered = $0 }
+        case .tool(_, let name, let input, let result, let isError):
+            VStack(alignment: .leading, spacing: 4) {
+                Button {
+                    showsDetails.toggle()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: result == nil ? "gearshape" : (isError ? "xmark.circle.fill" : "checkmark.circle.fill"))
+                            .foregroundStyle(result == nil ? Color.secondary : (isError ? Color.orange : Color.green))
+                        Text(verbatim: Toolbox.displayName(of: name)).fontWeight(.medium)
+                        Text(verbatim: Self.shortInput(input)).foregroundStyle(.secondary).lineLimit(1)
+                        Image(systemName: showsDetails ? "chevron.up" : "chevron.down").font(.caption2).foregroundStyle(.secondary)
+                    }
+                    .font(.caption)
+                }
+                .buttonStyle(.plain)
+                if showsDetails {
+                    Text(verbatim: result.map { String($0.prefix(3000)) } ?? input)
+                        .font(.system(.caption2, design: .monospaced))
+                        .textSelection(.enabled)
+                        .padding(8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.black.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 8))
+        case .summarized, .projectUpdated:
+            EmptyView()
         }
+    }
+
+    /// The most telling part of the input: the command, path or query.
+    private static func shortInput(_ input: String) -> String {
+        guard let object = JSONValue.parse(input)?.object else { return "" }
+        for key in ["command", "path", "from", "query", "target"] {
+            if let value = object[key]?.string { return value }
+        }
+        return ""
     }
 
     /// Bold, italics, `code` and links; line breaks are kept.

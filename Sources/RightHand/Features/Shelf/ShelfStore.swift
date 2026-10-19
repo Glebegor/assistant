@@ -194,7 +194,7 @@ final class ShelfStore {
 
     @discardableResult
     func createFolder() -> ShelfFolder {
-        let folder = ShelfFolder(name: uniqueFolderName("New Folder"))
+        let folder = ShelfFolder(name: uniqueFolderName(L("New Folder")))
         folders.insert(folder, at: 0)
         try? FileManager.default.createDirectory(at: ShelfFiles.directory(for: folder), withIntermediateDirectories: true)
         save()

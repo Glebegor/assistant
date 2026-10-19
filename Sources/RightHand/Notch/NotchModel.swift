@@ -2,21 +2,23 @@ import AppKit
 import Observation
 
 enum NotchTab: CaseIterable, Identifiable {
-    case pomodoro, shelf, chat
+    case pomodoro, tasks, shelf, chat
 
     var id: Self { self }
 
     var title: String {
         switch self {
-        case .pomodoro: "Pomodoro"
-        case .shelf: "Shelf"
-        case .chat: "Assistant"
+        case .pomodoro: L("Pomodoro")
+        case .tasks: L("Tasks")
+        case .shelf: L("Shelf")
+        case .chat: L("Assistant")
         }
     }
 
     var systemImage: String {
         switch self {
         case .pomodoro: "timer"
+        case .tasks: "checklist"
         case .shelf: "tray.full"
         case .chat: "sparkles"
         }
@@ -26,6 +28,7 @@ enum NotchTab: CaseIterable, Identifiable {
     var panelSize: CGSize {
         switch self {
         case .pomodoro: CGSize(width: 560, height: 230)
+        case .tasks: CGSize(width: 560, height: 360)
         case .chat: CGSize(width: 600, height: 440)
         case .shelf: CGSize(width: 560, height: 325) // two rows: clipboard and files
         }

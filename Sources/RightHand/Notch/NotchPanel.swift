@@ -24,6 +24,16 @@ final class NotchPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
 
+    // You type in the panel without RightHand becoming the active app, so the Edit menu
+    // doesn't see ⌘C/⌘V/…; send them to the text field directly.
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        if event.type == .keyDown, let shortcut = EditShortcut.matching(event),
+           NSApp.sendAction(shortcut.action, to: firstResponder, from: self) {
+            return true
+        }
+        return super.performKeyEquivalent(with: event)
+    }
+
     // Allow placing the window over the menu bar instead of being pushed below it.
     override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect { frameRect }
 }

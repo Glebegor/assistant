@@ -51,7 +51,7 @@ struct ShelfItem: Identifiable, Codable, Equatable {
             let firstLine = text.split(whereSeparator: \.isNewline).first.map(String.init) ?? text
             return String(firstLine.trimmingCharacters(in: .whitespaces).prefix(80))
         case .image:
-            return "Copied image"
+            return L("Copied image")
         }
     }
 

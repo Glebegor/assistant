@@ -5,8 +5,10 @@ struct NotchRootView: View {
     let model: NotchModel
     let pomodoro: PomodoroTimer
     let shelf: ShelfStore
+    let tasks: TaskStore
     let chat: ChatStore
     let openSettings: () -> Void
+    let openProjects: () -> Void
     @State private var isDropTargeted = false
 
     var body: some View {
@@ -38,8 +40,9 @@ struct NotchRootView: View {
             Group {
                 switch model.selectedTab {
                 case .pomodoro: PomodoroView(timer: pomodoro)
+                case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)
-                case .chat: ChatView(store: chat, openSettings: openSettings)
+                case .chat: ChatView(store: chat, openSettings: openSettings, openProjects: openProjects)
                 }
             }
             .padding(.horizontal, 20)
@@ -91,6 +94,6 @@ struct NotchRootView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help(help)
+        .help(Text(LocalizedStringKey(help)))
     }
 }

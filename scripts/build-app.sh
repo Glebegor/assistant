@@ -15,6 +15,8 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/RightHand" "$APP/Contents/MacOS/RightHand"
 cp Support/Info.plist "$APP/Contents/Info.plist"
+# Interface translations (en, uk, cs, ru).
+cp -R Support/Localization/*.lproj "$APP/Contents/Resources/"
 
 # Release builds pass VERSION=x.y.z (see scripts/package.sh).
 if [ -n "${VERSION:-}" ]; then
@@ -33,7 +35,16 @@ done
 iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
 rm -rf "$ICONSET"
 
-# Ad-hoc signature so macOS treats it as a proper app (notifications, permissions).
-codesign --force --sign - "$APP" >/dev/null
+# Sign with the local certificate, so macOS keeps permissions (Desktop folder, browser control,
+# Keychain) between builds. It is created on the first build; CI uses an ad-hoc signature.
+IDENTITY="RightHand Local Signing"
+if [ -z "${CI:-}" ] && ! security find-certificate -c "$IDENTITY" >/dev/null 2>&1; then
+    "$(dirname "$0")/setup-signing.sh"
+fi
+if [ -z "${CI:-}" ] && security find-certificate -c "$IDENTITY" >/dev/null 2>&1; then
+    codesign --force --sign "$IDENTITY" "$APP" >/dev/null
+else
+    codesign --force --sign - "$APP" >/dev/null
+fi
 
 echo "Built $APP"

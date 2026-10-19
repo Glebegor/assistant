@@ -43,7 +43,7 @@ struct ShelfView: View {
         }
     }
 
-    private func section(_ title: String, systemImage: String, count: Int,
+    private func section(_ title: LocalizedStringKey, systemImage: String, count: Int,
                          @ViewBuilder accessory: () -> some View) -> some View {
         HStack(spacing: 5) {
             Image(systemName: systemImage)
@@ -58,7 +58,7 @@ struct ShelfView: View {
     }
 
     /// One horizontally scrolling row of cards.
-    private func row(items: [ShelfItem], folders: [ShelfFolder] = [], empty: String) -> some View {
+    private func row(items: [ShelfItem], folders: [ShelfFolder] = [], empty: LocalizedStringKey) -> some View {
         Group {
             if items.isEmpty && folders.isEmpty {
                 Text(empty)

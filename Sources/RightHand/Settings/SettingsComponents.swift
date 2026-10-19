@@ -18,9 +18,9 @@ struct SettingsRowLabel: View {
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                 if let subtitle {
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -49,7 +49,7 @@ struct SettingsStepperRow: View {
     var body: some View {
         LabeledContent {
             HStack(spacing: 6) {
-                Text("\(value) \(unit)")
+                Text(verbatim: "\(value) \(L(unit))")
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
                 Stepper(title, value: $value, in: range, step: step)
@@ -101,7 +101,7 @@ struct SettingsFooter: View {
     }
 
     var body: some View {
-        Text(text)
+        Text(LocalizedStringKey(text))
             .font(.callout)
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.leading)
