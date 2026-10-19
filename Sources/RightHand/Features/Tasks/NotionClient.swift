@@ -24,21 +24,47 @@ struct NotionClient: Sendable {
 
     /// Databases shared with the integration, named "Parent page / Database".
     func databases() async throws -> [NotionDatabaseInfo] {
-        let response = try await request("POST", "search", body: [
-            "filter": ["property": "object", "value": "database"],
-            "page_size": 100,
-        ])
+        var found: [JSONValue] = []
+        var cursor: String?
+        repeat {
+            var body: [String: JSONValue] = ["filter": ["property": "object", "value": "database"], "page_size": 100]
+            if let cursor { body["start_cursor"] = .string(cursor) }
+            let response = try await request("POST", "search", body: .object(body))
+            found += response["results"]?.array ?? []
+            cursor = response["has_more"]?.bool == true ? response["next_cursor"]?.string : nil
+        } while cursor != nil && found.count < 500
+
+        var pageTitles: [String: String?] = [:] // parent id → page title, shared by databases on one page
         var result: [NotionDatabaseInfo] = []
-        for database in response["results"]?.array ?? [] {
+        for database in found {
             guard let id = database["id"]?.string else { continue }
-            let title = Self.plainText(database["title"]).nonEmpty ?? L("Untitled")
+            let title = Self.plainText(database["title"]).trimmingCharacters(in: .whitespaces).nonEmpty ?? L("Untitled")
             var parent: String?
-            if database["parent"]?["type"]?.string == "page_id", let pageID = database["parent"]?["page_id"]?.string {
-                parent = try? await pageTitle(pageID)
+            if let parentID = database["parent"]?["page_id"]?.string ?? database["parent"]?["block_id"]?.string {
+                if let cached = pageTitles[parentID] {
+                    parent = cached
+                } else {
+                    parent = try? await pageTitle(containing: parentID)
+                    pageTitles[parentID] = parent
+                }
             }
             result.append(NotionDatabaseInfo(id: id, title: title, parentTitle: parent))
         }
         return result
+    }
+
+    /// Title of the page a block sits on. A board placed in a page (or in its columns) has the
+    /// block as parent, so walk up until the page.
+    private func pageTitle(containing id: String) async throws -> String? {
+        var current = id
+        for _ in 0..<6 {
+            if let title = try? await pageTitle(current) { return title }
+            let block = try await request("GET", "blocks/\(current)")
+            let parent = block["parent"]
+            guard let next = parent?["page_id"]?.string ?? parent?["block_id"]?.string else { return nil }
+            current = next
+        }
+        return nil
     }
 
     func schema(of databaseID: String) async throws -> NotionSchema {

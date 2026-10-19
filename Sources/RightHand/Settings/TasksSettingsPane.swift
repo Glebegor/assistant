@@ -73,6 +73,10 @@ struct TasksSettingsPane: View {
             }
         }
         .formStyle(.grouped)
+        // Databases connected in Notion after setup show up without pressing Reload.
+        .task {
+            for connection in connections { await reload(connection.id) }
+        }
         .onChange(of: connections) { _, connections in
             TasksSettings.connections = connections
             store.refresh()
@@ -116,7 +120,8 @@ struct TasksSettingsPane: View {
         connection.databases = try await client.databases().sorted { $0.fullName.localizedStandardCompare($1.fullName) == .orderedAscending }
         for database in connection.databases where !known.contains(database.id) {
             let name = database.title.lowercased()
-            if ["task", "todo", "to-do", "задач", "завдан", "úkol"].contains(where: name.contains) {
+            let isArchive = ["archive", "archiv", "архив", "архів"].contains(where: name.contains)
+            if !isArchive, ["task", "todo", "to-do", "задач", "завдан", "úkol"].contains(where: name.contains) {
                 connection.enabledDatabaseIDs.insert(database.id)
             }
         }
