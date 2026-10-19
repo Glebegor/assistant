@@ -134,7 +134,8 @@ private final class LoopbackReceiver: @unchecked Sendable {
         parameters.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.loopback), port: .any)
         let receiver = LoopbackReceiver(listener: try NWListener(using: parameters))
         try await withCheckedThrowingContinuation { (ready: CheckedContinuation<Void, Error>) in
-            var resumed = false
+            // Runs on the receiver's serial queue, so this flag needs no lock.
+            nonisolated(unsafe) var resumed = false
             receiver.listener.stateUpdateHandler = { state in
                 guard !resumed else { return }
                 switch state {

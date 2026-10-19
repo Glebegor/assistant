@@ -63,6 +63,7 @@
 "Clipboard" = "Буфер обміну";
 "Clipboard history" = "Історія буфера обміну";
 "Close" = "Закрити";
+"Close tab" = "Закрити вкладку";
 "Connect" = "Підключити";
 "Connect Notion" = "Підключити Notion";
 "Connect Notion or ClickUp to see your tasks" = "Підключи Notion або ClickUp, щоб бачити задачі";
@@ -167,6 +168,7 @@
 "New Project" = "Новий проєкт";
 "New chat" = "Новий чат";
 "New chat in %@" = "Новий чат у «%@»";
+"New chat in a new tab" = "Новий чат у новій вкладці";
 "New folder" = "Нова папка";
 "New project" = "Новий проєкт";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Нові знімки екрана (⌘⇧3, ⌘⇧4, ⌘⇧5) з'являються на Полиці.";

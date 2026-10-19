@@ -10,8 +10,9 @@ struct ChatView: View {
     @FocusState private var isInputFocused: Bool
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 8) {
             toolbar
+            ChatTabStrip(store: store)
             if !store.hasKey {
                 missingKey
             } else if store.isEmpty {
@@ -45,14 +46,14 @@ struct ChatView: View {
                 .buttonStyle(.notchPill())
                 .labelStyle(.iconOnly)
                 .help("Open the Projects window for long work")
-            Button("New Chat", systemImage: "square.and.pencil") {
+            Button("New Chat", systemImage: "plus") {
                 store.newChat()
                 isInputFocused = true
             }
             .buttonStyle(.notchPill())
             .labelStyle(.iconOnly)
             .disabled(store.isEmpty)
-            .help("New chat")
+            .help("New chat in a new tab")
         }
     }
 
@@ -142,6 +143,67 @@ private extension View {
             .buttonStyle(.plain)
             .font(.system(size: 26))
             .foregroundStyle(.white)
+    }
+}
+
+/// The open chats as tabs. Each keeps its conversation, also after restarting; × closes one.
+private struct ChatTabStrip: View {
+    let store: ChatStore
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                HStack(spacing: 4) {
+                    ForEach(store.tabs, id: \.chat.id) { tab in
+                        ChatTab(engine: tab, isSelected: tab.chat.id == store.selectedID,
+                                select: { store.select(tab.chat.id) },
+                                close: { store.close(tab.chat.id) })
+                            .id(tab.chat.id)
+                    }
+                }
+            }
+            .scrollIndicators(.never)
+            .onChange(of: store.selectedID) { _, id in withAnimation { proxy.scrollTo(id) } }
+            .onAppear { proxy.scrollTo(store.selectedID) }
+        }
+        .frame(height: 24)
+    }
+}
+
+private struct ChatTab: View {
+    let engine: ConversationEngine
+    let isSelected: Bool
+    let select: () -> Void
+    let close: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        HStack(spacing: 5) {
+            if engine.isRunning {
+                ProgressView().controlSize(.mini)
+            } else {
+                Image(systemName: engine.chat.provider == .claude ? "sparkle" : "bubble.left.and.bubble.right.fill")
+                    .font(.system(size: 9))
+                    .foregroundStyle(engine.pendingApproval != nil ? .orange : .secondary)
+            }
+            Text(engine.chat.messages.isEmpty ? L("New chat") : engine.chat.title)
+                .lineLimit(1)
+                .frame(maxWidth: 120, alignment: .leading)
+            Button(action: close) {
+                Image(systemName: "xmark").font(.system(size: 8, weight: .bold))
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .opacity(isHovered || isSelected ? 1 : 0)
+            .help("Close tab")
+        }
+        .font(.caption)
+        .padding(.horizontal, 8)
+        .frame(height: 22)
+        .background(.white.opacity(isSelected ? 0.16 : (isHovered ? 0.08 : 0.04)), in: Capsule())
+        .contentShape(Capsule())
+        .onTapGesture(perform: select)
+        .onHover { isHovered = $0 }
     }
 }
 

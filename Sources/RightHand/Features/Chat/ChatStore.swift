@@ -1,38 +1,42 @@
 import Foundation
 import Observation
 
-/// The conversation in the Assistant tab. It runs on the same engine as project chats, so the
-/// AI can use tools on the Mac (files, Terminal commands, opening apps), asking you first.
+/// The conversations in the Assistant tab, one per tab. They run on the same engine as project
+/// chats, so the AI can use tools on the Mac (asking you first), and they are saved to disk:
+/// after quitting RightHand or restarting the Mac every tab comes back with its whole context.
+/// A tab is only removed when you close it.
 @Observable
 @MainActor
 final class ChatStore {
     /// The notch chat is a built-in project without folders; its memory is kept between chats.
     nonisolated static let projectID = UUID(uuidString: "00000000-0000-0000-0000-00000000A551")!
     private static let project = Project(id: projectID, name: "Assistant")
+    private static let selectedKey = "chat.selectedTab"
 
-    private(set) var engine: ConversationEngine
+    /// Open tabs, oldest first.
+    private(set) var tabs: [ConversationEngine] = []
+    private(set) var selectedID: UUID
     /// Providers that have an API key in the Keychain.
     private(set) var configuredProviders: Set<ChatProvider> = []
     /// Called when the AI asks for permission, so the panel can open and show the question.
     @ObservationIgnored var onApprovalNeeded: (() -> Void)?
-
-    var provider: ChatProvider {
-        didSet {
-            ChatSettings.provider = provider
-            if engine.chat.provider != provider { newChat() }
-        }
-    }
 
     /// Bumped when Settings change, so the model name shown in the chat refreshes.
     private var settingsRevision = 0
 
     init() {
         ChatSettings.registerDefaults()
-        let provider = ChatSettings.provider
-        self.provider = provider
-        engine = Self.makeEngine(provider: provider)
+        let saved = ProjectStorage.loadChats(of: Self.projectID)
+            .filter { !$0.messages.isEmpty }
+            .sorted { $0.createdAt < $1.createdAt }
+        let first = saved.isEmpty ? [Self.newChat(provider: ChatSettings.provider)] : saved
+        selectedID = first.last!.id
+        tabs = first.map(makeEngine)
+        if let id = UserDefaults.standard.string(forKey: Self.selectedKey).flatMap(UUID.init(uuidString:)),
+           tabs.contains(where: { $0.chat.id == id }) {
+            selectedID = id
+        }
         reloadKeys()
-        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
         NotificationCenter.default.addObserver(forName: Keychain.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.reloadKeys() }
         }
@@ -41,17 +45,27 @@ final class ChatStore {
         }
     }
 
+    /// The tab you are looking at.
+    var engine: ConversationEngine {
+        tabs.first { $0.chat.id == selectedID } ?? tabs[0]
+    }
+
+    var provider: ChatProvider {
+        get { engine.chat.provider }
+        set { switchProvider(to: newValue) }
+    }
+
     var hasKey: Bool { configuredProviders.contains(provider) }
     var isSending: Bool { engine.isRunning }
     var isEmpty: Bool { engine.chat.messages.isEmpty }
     var modelName: String {
         _ = settingsRevision
-        return ChatSettings.modelName(for: provider)
+        return ChatSettings.claudeModels.first { $0.id == engine.chat.model }?.name ?? engine.chat.model
     }
 
     func send(_ text: String) {
-        // A model chosen in Settings applies from the next new chat; an empty chat picks it up now.
-        if isEmpty, engine.chat.model != ChatSettings.model(for: provider) { newChat() }
+        // A model chosen in Settings applies to new chats; an empty one picks it up now.
+        if isEmpty, engine.chat.model != ChatSettings.model(for: provider) { replaceSelected(with: provider) }
         engine.send(text)
     }
 
@@ -60,21 +74,69 @@ final class ChatStore {
         engine.stop()
     }
 
+    /// Opens a new tab (or reuses the current one if it's still empty).
     func newChat() {
+        guard !isEmpty else { return }
+        let engine = makeEngine(Self.newChat(provider: provider))
+        tabs.append(engine)
+        select(engine.chat.id)
+    }
+
+    func select(_ id: UUID) {
+        selectedID = id
+        UserDefaults.standard.set(id.uuidString, forKey: Self.selectedKey)
+    }
+
+    /// Closes a tab and deletes its saved conversation.
+    func close(_ id: UUID) {
+        guard let index = tabs.firstIndex(where: { $0.chat.id == id }) else { return }
+        let engine = tabs.remove(at: index)
         engine.stop()
-        engine = Self.makeEngine(provider: provider)
-        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
+        if !engine.chat.messages.isEmpty { ProjectStorage.delete(engine.chat) }
+        if tabs.isEmpty { tabs = [makeEngine(Self.newChat(provider: engine.chat.provider))] }
+        if selectedID == id { select(tabs[min(index, tabs.count - 1)].chat.id) }
     }
 
     func reloadKeys() {
         configuredProviders = Set(ChatProvider.allCases.filter { Keychain.read($0.keychainAccount) != nil })
     }
 
-    private static func makeEngine(provider: ChatProvider) -> ConversationEngine {
-        let chat = ProjectChat(projectID: projectID, provider: provider, model: ChatSettings.model(for: provider),
-                               system: ProjectContext.systemPrompt(for: project, provider: provider),
-                               contextFingerprint: ProjectContext.fingerprint(of: project))
-        // The notch chat lives only until you start a new one, so nothing is saved.
-        return ConversationEngine(chat: chat, project: { project }, onSave: { _ in })
+    // MARK: Private
+
+    /// An empty tab just changes its provider; otherwise go to (or open) a tab of that provider.
+    private func switchProvider(to provider: ChatProvider) {
+        ChatSettings.provider = provider
+        guard provider != engine.chat.provider else { return }
+        if isEmpty {
+            replaceSelected(with: provider)
+        } else if let tab = tabs.last(where: { $0.chat.provider == provider && $0.chat.messages.isEmpty }) {
+            select(tab.chat.id)
+        } else {
+            let engine = makeEngine(Self.newChat(provider: provider))
+            tabs.append(engine)
+            select(engine.chat.id)
+        }
+    }
+
+    private func replaceSelected(with provider: ChatProvider) {
+        guard let index = tabs.firstIndex(where: { $0.chat.id == selectedID }) else { return }
+        tabs[index].stop()
+        tabs[index] = makeEngine(Self.newChat(provider: provider))
+        select(tabs[index].chat.id)
+    }
+
+    private func makeEngine(_ chat: ProjectChat) -> ConversationEngine {
+        let engine = ConversationEngine(chat: chat, project: { Self.project }, onSave: { chat in
+            // Empty tabs aren't written; they disappear on restart.
+            if !chat.messages.isEmpty { ProjectStorage.save(chat) }
+        })
+        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
+        return engine
+    }
+
+    private static func newChat(provider: ChatProvider) -> ProjectChat {
+        ProjectChat(projectID: projectID, provider: provider, model: ChatSettings.model(for: provider),
+                    system: ProjectContext.systemPrompt(for: project, provider: provider),
+                    contextFingerprint: ProjectContext.fingerprint(of: project))
     }
 }

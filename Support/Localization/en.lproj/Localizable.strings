@@ -63,6 +63,7 @@
 "Clipboard" = "Clipboard";
 "Clipboard history" = "Clipboard history";
 "Close" = "Close";
+"Close tab" = "Close tab";
 "Connect" = "Connect";
 "Connect Notion" = "Connect Notion";
 "Connect Notion or ClickUp to see your tasks" = "Connect Notion or ClickUp to see your tasks";
@@ -167,6 +168,7 @@
 "New Project" = "New Project";
 "New chat" = "New chat";
 "New chat in %@" = "New chat in %@";
+"New chat in a new tab" = "New chat in a new tab";
 "New folder" = "New folder";
 "New project" = "New project";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf.";
