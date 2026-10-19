@@ -269,6 +269,15 @@ final class ShelfStore {
         save()
     }
 
+    /// Removes the clipboard history on the top level of the Shelf.
+    func clearClipboard() {
+        let history = items.filter { $0.source == .clipboard && $0.folderID == nil }
+        history.forEach(ShelfPersistence.deleteStoredFile)
+        let ids = Set(history.map(\.id))
+        items.removeAll { ids.contains($0.id) }
+        save()
+    }
+
     /// Removes the items in `folderID`, or everything (folders too) when nil.
     /// Copies go to the Trash; linked originals are not touched.
     func clear(folderID: UUID?) {

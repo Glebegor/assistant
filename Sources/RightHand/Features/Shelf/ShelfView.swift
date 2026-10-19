@@ -1,7 +1,8 @@
 import QuickLookThumbnailing
 import SwiftUI
 
-/// Shelf tab: files, screenshots and clipboard entries kept at hand, optionally grouped in folders.
+/// Shelf tab, in two rows: what you copied (clipboard) and what you put here (files,
+/// screenshots and folders). Inside a folder there is one row with its contents.
 struct ShelfView: View {
     let store: ShelfStore
     @State private var renamingFolderID: UUID?
@@ -9,18 +10,54 @@ struct ShelfView: View {
     var body: some View {
         let folder = store.openFolder
         let items = store.items(in: folder?.id)
-        let folders = folder == nil ? store.folders : []
 
         VStack(alignment: .leading, spacing: 10) {
-            header(folder: folder, count: items.count + folders.count)
+            header(folder: folder, count: folder == nil ? items.count + store.folders.count : items.count)
+            if folder != nil {
+                row(items: items, empty: "Empty folder. Drop files or Shelf items here.")
+            } else {
+                let clipboard = items.filter { $0.source == .clipboard }
+                let files = items.filter { $0.source != .clipboard }
+
+                section("Clipboard", systemImage: "doc.on.clipboard", count: clipboard.count) {
+                    Button("Clear") { store.clearClipboard() }
+                        .buttonStyle(.plain)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .disabled(clipboard.isEmpty)
+                        .help("Remove all copied items")
+                }
+                row(items: clipboard, empty: "Text, images and files you copy appear here.")
+
+                section("Files", systemImage: "doc", count: files.count + store.folders.count) { EmptyView() }
+                row(items: files, folders: store.folders, empty: "Drop files here. New screenshots appear here too.")
+            }
+        }
+    }
+
+    private func section(_ title: String, systemImage: String, count: Int,
+                         @ViewBuilder accessory: () -> some View) -> some View {
+        HStack(spacing: 5) {
+            Image(systemName: systemImage)
+            Text(title).fontWeight(.semibold)
+            Text("\(count)").foregroundStyle(.secondary)
+            Spacer()
+            accessory()
+        }
+        .font(.caption)
+        .foregroundStyle(.white.opacity(0.8))
+        .padding(.bottom, -4)
+    }
+
+    /// One horizontally scrolling row of cards.
+    private func row(items: [ShelfItem], folders: [ShelfFolder] = [], empty: String) -> some View {
+        Group {
             if items.isEmpty && folders.isEmpty {
-                PlaceholderView(
-                    systemImage: folder == nil ? "tray" : "folder",
-                    title: folder == nil ? "Nothing here yet" : "Empty folder",
-                    message: folder == nil
-                        ? "Drop files here. Screenshots and copied items appear automatically."
-                        : "Drop files or Shelf items here."
-                )
+                Text(empty)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 10))
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 10) {
@@ -34,6 +71,7 @@ struct ShelfView: View {
                 }
             }
         }
+        .frame(height: ShelfCard.height)
     }
 
     private func header(folder: ShelfFolder?, count: Int) -> some View {
@@ -69,6 +107,15 @@ struct ShelfView: View {
     }
 }
 
+/// Card sizes shared by item and folder cards.
+private enum ShelfCard {
+    static let width: CGFloat = 92
+    static let previewHeight: CGFloat = 62
+    static let titleHeight: CGFloat = 24
+    static let spacing: CGFloat = 6
+    static var height: CGFloat { previewHeight + spacing + titleHeight }
+}
+
 /// A folder on the Shelf. Click to open it; drop files or Shelf items on it to put them inside.
 private struct ShelfFolderCard: View {
     let folder: ShelfFolder
@@ -81,11 +128,11 @@ private struct ShelfFolderCard: View {
     private var isRenaming: Bool { renamingFolderID == folder.id }
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: ShelfCard.spacing) {
             Image(systemName: isDropTargeted ? "folder.fill.badge.plus" : "folder.fill")
                 .font(.system(size: 36))
                 .foregroundStyle(.blue)
-                .frame(width: 100, height: 76)
+                .frame(width: ShelfCard.width, height: ShelfCard.previewHeight)
                 .background(isDropTargeted ? .blue.opacity(0.3) : .white.opacity(0.08))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(alignment: .bottomTrailing) {
@@ -110,13 +157,13 @@ private struct ShelfFolderCard: View {
                     .onChange(of: isNameFocused) { _, focused in
                         if !focused { finishRenaming() }
                     }
-                    .frame(width: 100, height: 26, alignment: .top)
+                    .frame(width: ShelfCard.width, height: ShelfCard.titleHeight, alignment: .top)
             } else {
                 Text(folder.name)
                     .font(.caption2)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
-                    .frame(width: 100, height: 26, alignment: .top)
+                    .frame(width: ShelfCard.width, height: ShelfCard.titleHeight, alignment: .top)
             }
         }
         .contentShape(Rectangle())
@@ -150,9 +197,9 @@ private struct ShelfItemCard: View {
     @State private var showsCopied = false
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: ShelfCard.spacing) {
             preview
-                .frame(width: 100, height: 76)
+                .frame(width: ShelfCard.width, height: ShelfCard.previewHeight)
                 .background(.white.opacity(0.08))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(alignment: .bottomLeading) { sourceBadge }
@@ -161,7 +208,7 @@ private struct ShelfItemCard: View {
                 .font(.caption2)
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
-                .frame(width: 100, height: 26, alignment: .top)
+                .frame(width: ShelfCard.width, height: ShelfCard.titleHeight, alignment: .top)
         }
         .overlay(alignment: .topTrailing) {
             if isHovered {
@@ -216,7 +263,7 @@ private struct ShelfItemCard: View {
     @ViewBuilder private var sourceBadge: some View {
         let symbol: String? = switch item.source {
         case .screenshot: "camera.viewfinder"
-        case .clipboard: "doc.on.clipboard"
+        case .clipboard: nil // already in the Clipboard row
         case .dropped: nil
         }
         if let symbol {
@@ -272,7 +319,7 @@ private struct FileThumbnail: View {
                 thumbnail = cached
                 return
             }
-            let request = QLThumbnailGenerator.Request(fileAt: url, size: CGSize(width: 100, height: 76),
+            let request = QLThumbnailGenerator.Request(fileAt: url, size: CGSize(width: ShelfCard.width, height: ShelfCard.previewHeight),
                                                        scale: 2, representationTypes: .thumbnail)
             guard let image = try? await QLThumbnailGenerator.shared.generateBestRepresentation(for: request).nsImage
             else { return }
