@@ -16,7 +16,7 @@ struct TasksView: View {
                     ProgressView().controlSize(.small).frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     PlaceholderView(systemImage: "checkmark.circle", title: L("Nothing to do"),
-                                    message: "No open tasks for you in Notion.")
+                                    message: "No open tasks for you.")
                 }
             } else {
                 ScrollView {
@@ -58,7 +58,7 @@ struct TasksView: View {
                     .buttonStyle(.notchPill())
                     .labelStyle(.iconOnly)
                     .disabled(store.isLoading)
-                    .help("Load tasks from Notion again")
+                    .help("Load tasks again")
             }
         }
     }
@@ -66,8 +66,8 @@ struct TasksView: View {
     private var notConnected: some View {
         VStack(spacing: 10) {
             Image(systemName: "checklist").font(.system(size: 28)).foregroundStyle(.secondary)
-            Text("Connect Notion to see your tasks").font(.headline)
-            Text("Add your Notion integration and choose task databases in Settings → Tasks.")
+            Text("Connect Notion or ClickUp to see your tasks").font(.headline)
+            Text("Connect them in Settings → Services.")
                 .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
             Button("Open Settings", action: openSettings)
                 .buttonStyle(.notchPill(prominent: true, tint: .white))
@@ -111,11 +111,11 @@ private struct TaskRow: View {
             }
             Spacer(minLength: 0)
             if isHovered, let url = task.url {
-                Button("Open in Notion", systemImage: "arrow.up.right.square") { NSWorkspace.shared.open(url) }
+                Button(task.source == .notion ? "Open in Notion" : "Open in ClickUp", systemImage: "arrow.up.right.square") { NSWorkspace.shared.open(url) }
                     .labelStyle(.iconOnly)
                     .buttonStyle(.plain)
                     .foregroundStyle(.secondary)
-                    .help("Open in Notion")
+                    .help(task.source == .notion ? "Open in Notion" : "Open in ClickUp")
             }
         }
         .padding(.horizontal, 8)

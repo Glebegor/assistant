@@ -80,3 +80,12 @@ enum ChatSettings {
     Answer clearly and concisely. Use Markdown for code and short lists.
     """
 }
+
+/// What you wrote about yourself in Settings → Assistant; every chat starts with it.
+enum AboutMe {
+    static let key = "assistant.aboutMe"
+
+    static var text: String {
+        (UserDefaults.standard.string(forKey: key) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}

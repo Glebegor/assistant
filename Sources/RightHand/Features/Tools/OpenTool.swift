@@ -81,6 +81,7 @@ enum Toolbox {
         }
         if wholeMac { tools.append(RunCommandTool(access: access)) }
         tools.append(OpenTool(access: access))
+        tools += Integrations.tools(access: access)
         return tools
     }
 
@@ -96,7 +97,7 @@ enum Toolbox {
          ("move_file", L("Move and copy files")),
          ("delete_file", L("Delete files")),
          ("run_command", L("Run Terminal commands")),
-         ("open", L("Open apps, links and files"))]
+         ("open", L("Open apps, links and files"))] + Integrations.catalog
     }
 
     /// Deleting and running commands ask every time.

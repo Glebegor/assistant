@@ -10,9 +10,21 @@ struct AssistantSettingsPane: View {
     @State private var voices: [ElevenLabs.Voice] = []
     @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
     @AppStorage(ComputerAccess.key) private var wholeMac = true
+    @AppStorage(AboutMe.key) private var aboutMe = ""
 
     var body: some View {
         Form {
+            Section {
+                TextEditor(text: $aboutMe)
+                    .font(.body)
+                    .frame(minHeight: 110)
+                    .scrollContentBackground(.hidden)
+            } header: {
+                Text("About me")
+            } footer: {
+                SettingsFooter("Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.")
+            }
+
             Section {
                 APIKeyRow(account: ChatProvider.claude.keychainAccount, keysURL: ChatProvider.claude.keysURL,
                           color: .orange, systemImage: "sparkle")
