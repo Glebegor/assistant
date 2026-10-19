@@ -48,10 +48,6 @@ final class NotchController {
         chat.onApprovalNeeded = { [weak self] in self?.showChat() }
         rebuildNotches()
 
-        // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
-        mouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged]) { [weak self] _ in
-            MainActor.assumeIsolated { self?.checkHoverZones() }
-        }
         // A click outside the open panel closes it (also when it's kept open for typing).
         clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
             MainActor.assumeIsolated { self?.closeAfterOutsideClick() }
@@ -79,6 +75,22 @@ final class NotchController {
         for notch in notches {
             notch.model.hidesWhenCollapsed = notch.screen.displayID.map(fullScreen.contains) ?? false
             updateCatcher(of: notch)
+        }
+        updateMouseMonitor()
+    }
+
+    /// Hovering the closed notch is noticed by its catcher window, which costs nothing while the
+    /// mouse is elsewhere. Only in full screen (no catcher) every mouse move is watched instead.
+    private func updateMouseMonitor() {
+        let needed = notches.contains { $0.model.hidesWhenCollapsed }
+        if needed, mouseMonitor == nil {
+            // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
+            mouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged]) { [weak self] _ in
+                MainActor.assumeIsolated { self?.checkHoverZones() }
+            }
+        } else if !needed, let monitor = mouseMonitor {
+            NSEvent.removeMonitor(monitor)
+            mouseMonitor = nil
         }
     }
 
