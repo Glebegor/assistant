@@ -17,6 +17,8 @@ final class NotchController {
         let screen: NSScreen
         let panel: NotchPanel
         let model: NotchModel
+        /// Notices drags and hovering over the closed notch.
+        let catcher: NotchDropCatcher
     }
 
     private let pomodoro: PomodoroTimer
@@ -70,6 +72,7 @@ final class NotchController {
         let fullScreen = FullScreenDetector.fullScreenDisplays()
         for notch in notches {
             notch.model.hidesWhenCollapsed = notch.screen.displayID.map(fullScreen.contains) ?? false
+            updateCatcher(of: notch)
         }
     }
 
@@ -93,7 +96,10 @@ final class NotchController {
 
     private func rebuildNotches() {
         collapse()
-        notches.forEach { $0.panel.close() }
+        notches.forEach {
+            $0.panel.close()
+            $0.catcher.close()
+        }
         notches = NSScreen.screens.map(makeNotch)
         updateFullScreenState()
     }
@@ -111,7 +117,19 @@ final class NotchController {
                               height: size.height),
                        display: true)
         panel.orderFrontRegardless()
-        return ScreenNotch(screen: screen, panel: panel, model: model)
+
+        let catcher = NotchDropCatcher()
+        catcher.setFrame(model.geometry.hoverZone(on: screen), display: false)
+        let notch = ScreenNotch(screen: screen, panel: panel, model: model, catcher: catcher)
+        catcher.onActivate = { [weak self, weak panel] in
+            guard let self, let match = self.notches.first(where: { $0.panel === panel }) else { return }
+            // A drag from another app is almost always meant for the Shelf.
+            let isDragging = NSEvent.pressedMouseButtons != 0
+            self.expand(match)
+            if isDragging { match.model.selectedTab = .shelf }
+        }
+        updateCatcher(of: notch)
+        return notch
     }
 
     private func checkHoverZones() {
@@ -131,6 +149,7 @@ final class NotchController {
         notch.panel.ignoresMouseEvents = false
         notch.panel.orderFrontRegardless()
         notch.model.isExpanded = true
+        updateCatcher(of: notch)
         startExitPolling()
     }
 
@@ -142,7 +161,18 @@ final class NotchController {
         notch.model.isPinned = false
         notch.panel.ignoresMouseEvents = true
         expanded = nil
+        updateCatcher(of: notch)
         returnKeyboardFocus(from: notch)
+    }
+
+    /// The catcher sits over the closed notch only: not while the panel is open, and not
+    /// over full-screen apps (where it would block clicks at the top of the screen).
+    private func updateCatcher(of notch: ScreenNotch) {
+        if notch.model.isExpanded || notch.model.hidesWhenCollapsed {
+            notch.catcher.orderOut(nil)
+        } else {
+            notch.catcher.orderFrontRegardless()
+        }
     }
 
     /// After typing in the panel (e.g. a folder name) it holds the keyboard. Once it has

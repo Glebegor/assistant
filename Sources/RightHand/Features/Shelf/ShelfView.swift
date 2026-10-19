@@ -29,7 +29,15 @@ struct ShelfView: View {
                 }
                 row(items: clipboard, empty: "Text, images and files you copy appear here.")
 
-                section("Files", systemImage: "doc", count: files.count + store.folders.count) { EmptyView() }
+                section("Files", systemImage: "doc", count: files.count + store.folders.count) {
+                    if store.needsScreenshotFolderAccess {
+                        Button("Allow screenshots…", systemImage: "exclamationmark.triangle.fill", action: PrivacySettings.openFilesAndFolders)
+                            .buttonStyle(.plain)
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                            .help("RightHand needs access to your Desktop to add screenshots automatically")
+                    }
+                }
                 row(items: files, folders: store.folders, empty: "Drop files here. New screenshots appear here too.")
             }
         }
