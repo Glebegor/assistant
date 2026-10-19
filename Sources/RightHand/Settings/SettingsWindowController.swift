@@ -21,6 +21,7 @@ final class SettingsWindowController {
         tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
         tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
         tabs.addTabViewItem(pane(BlockerSettingsPane(), title: "Blocking", systemImage: "hand.raised"))
+        tabs.addTabViewItem(pane(AssistantSettingsPane(), title: "Assistant", systemImage: "sparkles"))
         tabs.addTabViewItem(pane(AboutPane(), title: "About", systemImage: "info.circle"))
 
         let window = NSWindow(contentViewController: tabs)
