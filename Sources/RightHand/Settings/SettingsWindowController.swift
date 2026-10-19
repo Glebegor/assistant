@@ -7,6 +7,7 @@ final class SettingsWindowController {
     static let paneWidth: CGFloat = 500
 
     private var window: NSWindow?
+    private weak var tabs: SettingsTabViewController?
     private let tasks: TaskStore
 
     init(tasks: TaskStore) {
@@ -22,6 +23,7 @@ final class SettingsWindowController {
     private func makeWindow() -> NSWindow {
         let tabs = SettingsTabViewController()
         tabs.tabStyle = .toolbar
+        self.tabs = tabs
         tabs.addTabViewItem(pane(GeneralSettingsPane(), title: "General", systemImage: "gearshape"))
         tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
         tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
@@ -41,12 +43,43 @@ final class SettingsWindowController {
     }
 
     private func pane(_ content: some View, title: String, systemImage: String) -> NSTabViewItem {
-        let controller = NSHostingController(rootView: content.frame(width: Self.paneWidth).fixedSize())
+        let root = SettingsPaneContainer(content: content, width: Self.paneWidth) { [weak self] in
+            self?.tabs?.fitWindowToSelectedPane(animated: true)
+        }
+        let controller = NSHostingController(rootView: root)
         controller.title = L(title)
         let item = NSTabViewItem(viewController: controller)
         item.label = L(title)
         item.image = NSImage(systemSymbolName: systemImage, accessibilityDescription: title)
         return item
+    }
+}
+
+/// A pane as tall as its content but never taller than the screen; the rest scrolls.
+private struct SettingsPaneContainer<Content: View>: View {
+    let content: Content
+    let width: CGFloat
+    /// Called when the content grows or shrinks (e.g. Notion databases loaded), to resize the window.
+    let onHeightChange: @MainActor () -> Void
+
+    /// Leaves room for the menu bar, the window's toolbar and a margin.
+    private var maxHeight: CGFloat {
+        (NSScreen.main?.visibleFrame.height ?? 800) - 140
+    }
+
+    var body: some View {
+        ScrollView {
+            content
+                .frame(width: width)
+                .fixedSize(horizontal: false, vertical: true)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { _ in
+                    DispatchQueue.main.async { onHeightChange() }
+                }
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .frame(width: width)
+        .frame(maxHeight: maxHeight)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -64,6 +97,10 @@ final class SettingsTabViewController: NSTabViewController {
         let contentSize = pane.fittingSize
         var frame = window.frameRect(forContentRect: NSRect(origin: .zero, size: contentSize))
         frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
+        // Keep the whole window on screen: move it up when it would reach below the Dock.
+        if let visible = (window.screen ?? NSScreen.main)?.visibleFrame {
+            frame.origin.y = min(max(frame.origin.y, visible.minY), visible.maxY - frame.height)
+        }
         window.setFrame(frame, display: true, animate: animated && window.isVisible)
     }
 }
