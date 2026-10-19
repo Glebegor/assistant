@@ -7,6 +7,11 @@ final class SettingsWindowController {
     static let paneWidth: CGFloat = 500
 
     private var window: NSWindow?
+    private let tasks: TaskStore
+
+    init(tasks: TaskStore) {
+        self.tasks = tasks
+    }
 
     func show() {
         if window == nil { window = makeWindow() }
@@ -20,6 +25,7 @@ final class SettingsWindowController {
         tabs.addTabViewItem(pane(GeneralSettingsPane(), title: "General", systemImage: "gearshape"))
         tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
         tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
+        tabs.addTabViewItem(pane(TasksSettingsPane(store: tasks), title: "Tasks", systemImage: "checklist"))
         tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
         tabs.addTabViewItem(pane(BlockerSettingsPane(), title: "Blocking", systemImage: "hand.raised"))
         tabs.addTabViewItem(pane(AssistantSettingsPane(), title: "Assistant", systemImage: "sparkles"))

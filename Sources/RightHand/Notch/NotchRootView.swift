@@ -5,6 +5,7 @@ struct NotchRootView: View {
     let model: NotchModel
     let pomodoro: PomodoroTimer
     let shelf: ShelfStore
+    let tasks: TaskStore
     let chat: ChatStore
     let openSettings: () -> Void
     let openProjects: () -> Void
@@ -39,6 +40,7 @@ struct NotchRootView: View {
             Group {
                 switch model.selectedTab {
                 case .pomodoro: PomodoroView(timer: pomodoro)
+                case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)
                 case .chat: ChatView(store: chat, openSettings: openSettings, openProjects: openProjects)
                 }
