@@ -19,6 +19,7 @@
 "Allow Once" = "Povolit jednou";
 "Allow screenshots…" = "Povolit snímky obrazovky…";
 "Always Allow" = "Vždy povolit";
+"Always asks" = "Vždy se ptá";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Libovolný název modelu z tvého účtu OpenAI, např. gpt-5.";
 "Ask %@ anything" = "Zeptej se %@ na cokoli";
 "Ask before the AI uses a tool" = "Ptát se, než AI použije nástroj";
@@ -46,15 +47,19 @@
 "Copied image" = "Zkopírovaný obrázek";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Zkopírují se do projektu. Text těchto souborů je součástí každého nového chatu (PDF, Markdown, kód, poznámky…).";
 "Copy" = "Kopírovat";
+"Copy %@ to %@" = "Zkopírovat %@ do %@";
 "Copy answer" = "Kopírovat odpověď";
 "Couldn't play the audio." = "Zvuk se nepodařilo přehrát.";
 "Create %@" = "Vytvořit %@";
+"Create folder %@" = "Vytvořit složku %@";
+"Create folders" = "Vytváření složek";
 "Cut" = "Vyjmout";
 "Delete" = "Smazat";
 "Delete Chat" = "Smazat chat";
 "Delete Folder" = "Smazat složku";
 "Delete Project" = "Smazat projekt";
 "Delete Project…" = "Smazat projekt…";
+"Delete files" = "Mazání souborů";
 "Delete memory %@" = "Smazat z paměti %@";
 "Delete “%@”?" = "Smazat „%@“?";
 "Deny" = "Zakázat";
@@ -85,6 +90,7 @@
 "Get one at %@" = "Získáš na %@";
 "Hi! I'm RightHand, your right hand on the Mac." = "Ahoj! Jsem RightHand, tvoje pravá ruka na Macu.";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Jak má AI v tomto projektu pracovat, např. „Pomáhej mi s diplomkou. Odpovídej česky a stručně.“";
+"In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "V projektech může AI číst, vytvářet, přesouvat a mazat soubory kdekoli na tvém Macu a spouštět příkazy Terminálu. Před každou akcí mimo složky projektu a před každým příkazem a smazáním se tě zeptá. Smazané soubory jdou do koše.";
 "Instructions" = "Pokyny";
 "Its chats, files and memory are moved to the Trash." = "Jeho chaty, soubory a paměť se přesunou do Koše.";
 "Keep panel open" = "Nechat panel otevřený";
@@ -101,6 +107,9 @@
 "Message %@…" = "Zpráva pro %@…";
 "Minimize" = "Minimalizovat";
 "Model" = "Model";
+"Move %@ to %@" = "Přesunout %@ do %@";
+"Move %@ to the Trash" = "Přesunout %@ do koše";
+"Move and copy files" = "Přesouvání a kopírování souborů";
 "Move to" = "Přesunout do";
 "Multilingual v2 (best quality)" = "Multilingual v2 (nejlepší kvalita)";
 "Name" = "Název";
@@ -175,6 +184,8 @@
 "Resume Eye Rest (paused until %@)" = "Obnovit odpočinek očí (pozastaveno do %@)";
 "Return sends, Option-Return adds a new line." = "Return odešle, Option-Return přidá nový řádek.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand potřebuje přístup k Ploše, aby mohl automaticky přidávat snímky obrazovky";
+"Run Terminal commands" = "Příkazy Terminálu";
+"Run a command in %@" = "Spustit příkaz v %@";
 "Save" = "Uložit";
 "Saved" = "Uloženo";
 "Schedule" = "Plán";
@@ -231,6 +242,7 @@
 "Volume" = "Hlasitost";
 "Waiting for your permission…" = "Čekám na tvé svolení…";
 "Window" = "Okno";
+"Work with the whole Mac" = "Pracovat s celým Macem";
 "Write files" = "Zápis souborů";
 "Write memory note %@" = "Zapsat poznámku do paměti %@";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Tvoje pravá ruka na Macu: Pomodoro, Polička a AI asistent ve výřezu.";

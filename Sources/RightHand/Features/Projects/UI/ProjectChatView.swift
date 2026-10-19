@@ -108,18 +108,34 @@ private struct ApprovalCard: View {
     let engine: ConversationEngine
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "hand.raised.fill").font(.title2).foregroundStyle(.orange)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("\(provider.title) wants to: \(approval.action)").fontWeight(.medium)
-                Text(approval.toolDisplayName).font(.caption).foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Image(systemName: "hand.raised.fill").font(.title2).foregroundStyle(.orange)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(provider.title) wants to: \(approval.action)").fontWeight(.medium)
+                    Text(approval.toolDisplayName).font(.caption).foregroundStyle(.secondary)
+                }
+                Spacer()
+                Button("Deny") { engine.resolveApproval(.deny) }
+                if approval.canAlwaysAllow {
+                    Button("Always Allow") { engine.resolveApproval(.alwaysAllow) }
+                        .help("Don't ask again for “\(approval.toolDisplayName)” (change it in Settings → Assistant)")
+                }
+                Button("Allow Once") { engine.resolveApproval(.allowOnce) }
+                    .keyboardShortcut(.defaultAction)
             }
-            Spacer()
-            Button("Deny") { engine.resolveApproval(.deny) }
-            Button("Always Allow") { engine.resolveApproval(.alwaysAllow) }
-                .help("Don't ask again for “\(approval.toolDisplayName)” (change it in Settings → Assistant)")
-            Button("Allow Once") { engine.resolveApproval(.allowOnce) }
-                .keyboardShortcut(.defaultAction)
+            if let detail = approval.detail {
+                ScrollView {
+                    Text(verbatim: detail)
+                        .font(.system(.callout, design: .monospaced))
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(maxHeight: 160)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(10)
+                .background(.background.opacity(0.7), in: RoundedRectangle(cornerRadius: 8))
+            }
         }
         .padding(12)
         .background(.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
@@ -214,7 +230,7 @@ struct ProjectMessageRow: View {
     /// The most telling part of the input, e.g. the path or the query.
     private static func shortInput(_ input: String) -> String {
         guard let object = JSONValue.parse(input)?.object else { return "" }
-        for key in ["path", "query", "target", "command"] {
+        for key in ["command", "path", "from", "query", "target"] {
             if let value = object[key]?.string { return value }
         }
         return ""

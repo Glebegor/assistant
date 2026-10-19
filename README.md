@@ -53,7 +53,9 @@ Sources/RightHand/
   Features/
     Pomodoro/                 Timer logic, settings, view
     Shelf/                    Files, screenshots and clipboard history
-    Chat/                     AI assistant (placeholder)
+    Chat/                     AI chat in the notch
+    Projects/                 Projects window and the conversation engine
+    Tools/                    What the AI can do on the Mac (files, commands, memory)
 ```
 
 ## Roadmap
@@ -64,7 +66,9 @@ Sources/RightHand/
 - [x] Eye rest: full-screen 20-20-20 break reminders
 - [x] Site blocking during Pomodoro focus (Safari, Chrome, Arc, Brave, Edge, Vivaldi)
 - [x] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
-- [ ] Assistant tools: apps & system control, files, screen & clipboard
-- [ ] Action approval: ask before every action, with "always allow" per tool
+- [x] Projects window: instructions, files, folders, memory, automatic summarizing
+- [x] Assistant tools: files anywhere on the Mac (read, write, move, copy, delete to Trash), Terminal commands, opening apps and links
+- [x] Action approval: ask before every action, with "always allow" per tool; commands, deletions and anything outside the project folders always ask
+- [ ] Assistant tools: screen & clipboard, system control
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), Notion, more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

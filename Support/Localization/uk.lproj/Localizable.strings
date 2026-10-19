@@ -19,6 +19,7 @@
 "Allow Once" = "Дозволити раз";
 "Allow screenshots…" = "Дозволити знімки екрана…";
 "Always Allow" = "Дозволяти завжди";
+"Always asks" = "Завжди питає";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Будь-яка назва моделі з твого акаунта OpenAI, напр. gpt-5.";
 "Ask %@ anything" = "Запитай %@ про що завгодно";
 "Ask before the AI uses a tool" = "Питати, перш ніж AI використає інструмент";
@@ -46,15 +47,19 @@
 "Copied image" = "Скопійоване зображення";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Копіюються в проєкт. Текст цих файлів є в кожному новому чаті (PDF, Markdown, код, нотатки…).";
 "Copy" = "Копіювати";
+"Copy %@ to %@" = "Скопіювати %@ у %@";
 "Copy answer" = "Копіювати відповідь";
 "Couldn't play the audio." = "Не вдалося відтворити аудіо.";
 "Create %@" = "Створити %@";
+"Create folder %@" = "Створити папку %@";
+"Create folders" = "Створення папок";
 "Cut" = "Вирізати";
 "Delete" = "Видалити";
 "Delete Chat" = "Видалити чат";
 "Delete Folder" = "Видалити папку";
 "Delete Project" = "Видалити проєкт";
 "Delete Project…" = "Видалити проєкт…";
+"Delete files" = "Видалення файлів";
 "Delete memory %@" = "Видалити з пам'яті %@";
 "Delete “%@”?" = "Видалити «%@»?";
 "Deny" = "Заборонити";
@@ -85,6 +90,7 @@
 "Get one at %@" = "Отримати на %@";
 "Hi! I'm RightHand, your right hand on the Mac." = "Привіт! Я RightHand, твоя права рука на Mac.";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Як AI має працювати в цьому проєкті, напр. «Допомагай з дипломом. Відповідай українською, коротко.»";
+"In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "У проєктах AI може читати, створювати, переміщувати й видаляти файли будь-де на твоєму Mac і виконувати команди Терміналу. Він питає тебе перед кожною дією поза папками проєкту, а також перед кожною командою й видаленням. Видалені файли потрапляють у Кошик.";
 "Instructions" = "Інструкції";
 "Its chats, files and memory are moved to the Trash." = "Його чати, файли й пам'ять буде переміщено в Кошик.";
 "Keep panel open" = "Тримати панель відкритою";
@@ -101,6 +107,9 @@
 "Message %@…" = "Повідомлення для %@…";
 "Minimize" = "Згорнути";
 "Model" = "Модель";
+"Move %@ to %@" = "Перемістити %@ у %@";
+"Move %@ to the Trash" = "Перемістити %@ у Кошик";
+"Move and copy files" = "Переміщення й копіювання файлів";
 "Move to" = "Перемістити в";
 "Multilingual v2 (best quality)" = "Multilingual v2 (найкраща якість)";
 "Name" = "Назва";
@@ -175,6 +184,8 @@
 "Resume Eye Rest (paused until %@)" = "Відновити відпочинок очей (пауза до %@)";
 "Return sends, Option-Return adds a new line." = "Return — надіслати, Option-Return — новий рядок.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand потрібен доступ до Робочого столу, щоб додавати знімки екрана автоматично";
+"Run Terminal commands" = "Команди Терміналу";
+"Run a command in %@" = "Виконати команду в %@";
 "Save" = "Зберегти";
 "Saved" = "Збережено";
 "Schedule" = "Розклад";
@@ -231,6 +242,7 @@
 "Volume" = "Гучність";
 "Waiting for your permission…" = "Чекаю на твій дозвіл…";
 "Window" = "Вікно";
+"Work with the whole Mac" = "Працювати з усім Mac";
 "Write files" = "Запис файлів";
 "Write memory note %@" = "Записати нотатку в пам'ять %@";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Твоя права рука на Mac: Pomodoro, Полиця й AI-асистент у нотчі.";

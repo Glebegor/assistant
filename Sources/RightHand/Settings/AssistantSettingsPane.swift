@@ -9,6 +9,7 @@ struct AssistantSettingsPane: View {
     @AppStorage(VoiceSettings.Key.model) private var voiceModel = VoiceSettings.Default.model
     @State private var voices: [ElevenLabs.Voice] = []
     @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
+    @AppStorage(ComputerAccess.key) private var wholeMac = true
 
     var body: some View {
         Form {
@@ -81,15 +82,31 @@ struct AssistantSettingsPane: View {
             .task { await loadVoices() }
 
             Section {
+                Toggle(isOn: $wholeMac) {
+                    SettingsRowLabel("Work with the whole Mac", systemImage: "desktopcomputer", color: .gray)
+                }
+            } footer: {
+                SettingsFooter("In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash.")
+            }
+
+            Section {
                 ForEach(Toolbox.catalog, id: \.name) { tool in
-                    Toggle(isOn: Binding(
-                        get: { !alwaysAllowed.contains(tool.name) },
-                        set: { ask in
-                            ToolPermissions.setAlwaysAllowed(tool.name, !ask)
-                            alwaysAllowed = ToolPermissions.alwaysAllowed
+                    if Toolbox.canAlwaysAllow(tool.name) {
+                        Toggle(isOn: Binding(
+                            get: { !alwaysAllowed.contains(tool.name) },
+                            set: { ask in
+                                ToolPermissions.setAlwaysAllowed(tool.name, !ask)
+                                alwaysAllowed = ToolPermissions.alwaysAllowed
+                            }
+                        )) {
+                            Text(verbatim: tool.displayName)
                         }
-                    )) {
-                        Text(verbatim: tool.displayName)
+                    } else {
+                        LabeledContent {
+                            Text("Always asks").foregroundStyle(.secondary)
+                        } label: {
+                            Text(verbatim: tool.displayName)
+                        }
                     }
                 }
             } header: {
