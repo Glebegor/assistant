@@ -7,7 +7,6 @@ import AppKit
 /// blocks the menu bar. SwiftUI animates the black shape between notch size and panel size.
 @MainActor
 final class NotchController {
-    static let expandedSize = CGSize(width: 560, height: 230)
     /// How long the mouse may stay outside the open panel before it closes.
     private static let closeDelay: TimeInterval = 0.1
     /// Length of the close animation in `NotchRootView`.
@@ -98,7 +97,7 @@ final class NotchController {
         panel.contentView = FirstClickHostingView(
             rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, openSettings: openSettings)
         )
-        let size = Self.expandedSize
+        let size = NotchTab.maxPanelSize
         panel.setFrame(NSRect(x: screen.frame.midX - size.width / 2,
                               y: screen.frame.maxY - size.height,
                               width: size.width,
@@ -169,12 +168,20 @@ final class NotchController {
     private func checkMouseLeft() {
         guard let notch = expanded, !notch.model.isPinned else { mouseOutsideSince = nil; return }
         // Stay open while a mouse button is held, so dragging files in or out isn't interrupted.
-        if NSEvent.pressedMouseButtons != 0 || notch.panel.frame.insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
+        if NSEvent.pressedMouseButtons != 0 || visibleFrame(of: notch).insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
             mouseOutsideSince = nil
         } else if let since = mouseOutsideSince {
             if Date().timeIntervalSince(since) > Self.closeDelay { collapse() }
         } else {
             mouseOutsideSince = Date()
         }
+    }
+
+    /// Screen area of the open panel on its current tab (the window itself is bigger).
+    private func visibleFrame(of notch: ScreenNotch) -> NSRect {
+        let size = notch.model.selectedTab.panelSize
+        let window = notch.panel.frame
+        return NSRect(x: window.midX - size.width / 2, y: window.maxY - size.height,
+                      width: size.width, height: size.height)
     }
 }
