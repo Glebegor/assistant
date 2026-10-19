@@ -21,6 +21,7 @@ final class NotchController {
 
     private let pomodoro: PomodoroTimer
     private let shelf: ShelfStore
+    private let chat: ChatStore
     private let openSettings: () -> Void
 
     private var notches: [ScreenNotch] = []
@@ -28,18 +29,24 @@ final class NotchController {
     /// Tab to show when a panel opens, so switching screens keeps the same tab.
     private var lastTab: NotchTab = .pomodoro
     private var mouseMonitor: Any?
+    private var clickMonitor: Any?
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, openSettings: @escaping () -> Void) {
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, chat: ChatStore, openSettings: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.shelf = shelf
+        self.chat = chat
         self.openSettings = openSettings
         rebuildNotches()
 
         // Fires for mouse moves in other apps — exactly the case while the mouse is not over an open panel.
         mouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged]) { [weak self] _ in
             MainActor.assumeIsolated { self?.checkHoverZones() }
+        }
+        // A click outside the open panel closes it (also when it's kept open for typing).
+        clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+            MainActor.assumeIsolated { self?.closeAfterOutsideClick() }
         }
 
         // Monitors plugged in, unplugged or rearranged.
@@ -95,7 +102,7 @@ final class NotchController {
         let model = NotchModel(geometry: NotchGeometry(screen: screen))
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, openSettings: openSettings)
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, chat: chat, openSettings: openSettings)
         )
         let size = NotchTab.maxPanelSize
         panel.setFrame(NSRect(x: screen.frame.midX - size.width / 2,
@@ -166,7 +173,7 @@ final class NotchController {
     }
 
     private func checkMouseLeft() {
-        guard let notch = expanded, !notch.model.isPinned else { mouseOutsideSince = nil; return }
+        guard let notch = expanded, !notch.model.isPinned, !isTyping(in: notch) else { mouseOutsideSince = nil; return }
         // Stay open while a mouse button is held, so dragging files in or out isn't interrupted.
         if NSEvent.pressedMouseButtons != 0 || visibleFrame(of: notch).insetBy(dx: -8, dy: -8).contains(NSEvent.mouseLocation) {
             mouseOutsideSince = nil
@@ -183,5 +190,17 @@ final class NotchController {
         let window = notch.panel.frame
         return NSRect(x: window.midX - size.width / 2, y: window.maxY - size.height,
                       width: size.width, height: size.height)
+    }
+
+    /// While you type in the chat the panel stays open even if the mouse leaves; a click outside closes it.
+    private func isTyping(in notch: ScreenNotch) -> Bool {
+        notch.model.selectedTab == .chat && notch.panel.isKeyWindow
+    }
+
+    private func closeAfterOutsideClick() {
+        guard let notch = expanded, !notch.model.isPinned,
+              !visibleFrame(of: notch).contains(NSEvent.mouseLocation)
+        else { return }
+        collapse()
     }
 }

@@ -5,6 +5,7 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let pomodoro = PomodoroTimer()
     private let shelf = ShelfStore()
+    private let chat = ChatStore()
     private let settingsWindow = SettingsWindowController()
     private var eyeRest: EyeRestController?
     private var blocker: URLBlocker?
@@ -18,7 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let eyeRest = EyeRestController(pomodoro: pomodoro)
         self.eyeRest = eyeRest
         blocker = URLBlocker(pomodoro: pomodoro)
-        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, openSettings: { settings.show() })
+        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, chat: chat, openSettings: { settings.show() })
         self.notch = notch
         statusItem = StatusItemController(
             pomodoro: pomodoro,

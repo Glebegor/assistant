@@ -57,7 +57,7 @@ Sources/RightHand/
 - [x] Shelf: drag & drop files, auto-capture screenshots, clipboard history, folders (saved between launches)
 - [x] Eye rest: full-screen 20-20-20 break reminders
 - [x] Site blocking during Pomodoro focus (Safari, Chrome, Arc, Brave, Edge, Vivaldi)
-- [ ] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
+- [x] AI chat: Claude + ChatGPT (switchable), API keys in Keychain
 - [ ] Assistant tools: apps & system control, files, screen & clipboard
 - [ ] Action approval: ask before every action, with "always allow" per tool
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), Notion, more
