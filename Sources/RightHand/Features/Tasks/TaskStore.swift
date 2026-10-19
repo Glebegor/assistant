@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import os
 
 /// A task from Notion or ClickUp.
 struct TaskItem: Identifiable, Hashable, Sendable {
@@ -86,6 +87,7 @@ final class TaskStore {
     private(set) var completing: Set<String> = []
 
     @ObservationIgnored private var schemas: [String: NotionSchema] = [:]
+    private static let log = Logger(subsystem: "com.hlibarseniuk.RightHand", category: "tasks")
     @ObservationIgnored private var refreshTask: Task<Void, Never>?
 
     var isConfigured: Bool {
@@ -146,28 +148,44 @@ final class TaskStore {
 
     /// Marks a task done in Notion or ClickUp; it disappears from the list once saved.
     func complete(_ task: TaskItem) {
+        Self.log.info("Mark done: \(task.title, privacy: .private) (\(String(describing: task.source)))")
         if task.source == .clickUp { return completeInClickUp(task) }
-        guard task.canComplete, !completing.contains(task.id),
-              let connection = TasksSettings.connections.first(where: { $0.databases.contains { $0.id == task.databaseID } }),
-              let token = Keychain.read(connection.keychainAccount),
-              let update = schemas[task.databaseID]?.doneUpdate
-        else { return }
+        guard !completing.contains(task.id) else { return }
+        guard let connection = TasksSettings.connections.first(where: { $0.databases.contains { $0.id == task.databaseID } }),
+              let token = Keychain.read(connection.keychainAccount)
+        else { return fail(L("Notion isn't connected for this database. Check Settings → Services.")) }
         completing.insert(task.id)
+        errorMessage = nil
         Task {
             do {
-                try await NotionClient(token: token).update(page: task.id, properties: update)
+                let client = NotionClient(token: token)
+                // Read the database again if needed, so a done status is always found.
+                let schema: NotionSchema
+                if let cached = schemas[task.databaseID] { schema = cached } else { schema = try await client.schema(of: task.databaseID) }
+                guard let update = schema.doneUpdate else {
+                    throw ChatError(message: L("This database has no status or checkbox to mark it done"))
+                }
+                try await client.update(page: task.id, properties: update)
+                Self.log.info("Marked done in Notion")
                 try? await Task.sleep(for: .milliseconds(500))
                 tasks.removeAll { $0.id == task.id }
             } catch {
-                errorMessage = error.localizedDescription
+                fail(error.localizedDescription)
             }
             completing.remove(task.id)
         }
     }
 
+    private func fail(_ message: String) {
+        Self.log.error("Mark done failed: \(message, privacy: .public)")
+        errorMessage = message
+    }
+
     private func completeInClickUp(_ task: TaskItem) {
-        guard !completing.contains(task.id), let token = ClickUpSettings.token else { return }
+        guard !completing.contains(task.id) else { return }
+        guard let token = ClickUpSettings.token else { return fail(L("ClickUp isn't connected. Check Settings → Services.")) }
         completing.insert(task.id)
+        errorMessage = nil
         Task {
             do {
                 let client = ClickUpClient(token: token)
@@ -175,10 +193,11 @@ final class TaskStore {
                     throw ChatError(message: L("This ClickUp list has no done status."))
                 }
                 _ = try await client.updateTask(task.id, fields: ["status": .string(done)])
+                Self.log.info("Marked done in ClickUp")
                 try? await Task.sleep(for: .milliseconds(500))
                 tasks.removeAll { $0.id == task.id }
             } catch {
-                errorMessage = error.localizedDescription
+                fail(error.localizedDescription)
             }
             completing.remove(task.id)
         }

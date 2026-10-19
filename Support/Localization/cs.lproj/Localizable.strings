@@ -56,6 +56,7 @@
 "Change…" = "Změnit…";
 "Choose a project or chat" = "Vyber projekt nebo chat";
 "Clear" = "Vymazat";
+"ClickUp isn't connected. Check Settings → Services." = "ClickUp není připojený. Zkontroluj Nastavení → Služby.";
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp token odmítl. Zkontroluj ho v Nastavení → Služby.";
 "ClickUp → Settings → Apps → API Token" = "ClickUp → Settings → Apps → API Token";
 "Client ID" = "Client ID";
@@ -181,6 +182,7 @@
 "Nothing yet. The AI writes notes here as you work." = "Zatím nic. AI sem bude během práce zapisovat poznámky.";
 "Notion can't find this database. Connect it to your integration (••• → Connections)." = "Notion tuto databázi nenašel. Připoj ji ke své integraci (••• → Connections).";
 "Notion is busy. Try again in a minute." = "Notion je vytížený. Zkus to za minutu.";
+"Notion isn't connected for this database. Check Settings → Services." = "Notion není pro tuto databázi připojený. Zkontroluj Nastavení → Služby.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion token odmítl. Zkontroluj ho v Nastavení → Úkoly.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Jednou v Google Cloud: 1. Vytvoř projekt. 2. Zapni „Gmail API“ a „Google Drive API“. 3. Google Auth Platform → nastav aplikaci jako External, přidej sebe jako uživatele, pak Audience → Publish app (jinak přihlášení každých 7 dní vyprší). 4. Clients → Create client → Desktop app a vlož sem jeho ID a secret. Google upozorní, že aplikace není ověřená: je to tvoje vlastní aplikace, zvol Continue. AI bude moct hledat a číst e-maily a hledat, číst, vytvářet, nahrávat a stahovat soubory na Disku.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Jen během soustředění Pomodoro. O přestávkách bez omezení.";
