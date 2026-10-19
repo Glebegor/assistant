@@ -19,6 +19,7 @@
 "Allow Once" = "Allow Once";
 "Allow screenshots…" = "Allow screenshots…";
 "Always Allow" = "Always Allow";
+"Always asks" = "Always asks";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Any model name from your OpenAI account, e.g. gpt-5.";
 "Ask %@ anything" = "Ask %@ anything";
 "Ask before the AI uses a tool" = "Ask before the AI uses a tool";
@@ -46,15 +47,19 @@
 "Copied image" = "Copied image";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…).";
 "Copy" = "Copy";
+"Copy %@ to %@" = "Copy %@ to %@";
 "Copy answer" = "Copy answer";
 "Couldn't play the audio." = "Couldn't play the audio.";
 "Create %@" = "Create %@";
+"Create folder %@" = "Create folder %@";
+"Create folders" = "Create folders";
 "Cut" = "Cut";
 "Delete" = "Delete";
 "Delete Chat" = "Delete Chat";
 "Delete Folder" = "Delete Folder";
 "Delete Project" = "Delete Project";
 "Delete Project…" = "Delete Project…";
+"Delete files" = "Delete files";
 "Delete memory %@" = "Delete memory %@";
 "Delete “%@”?" = "Delete “%@”?";
 "Deny" = "Deny";
@@ -85,6 +90,7 @@
 "Get one at %@" = "Get one at %@";
 "Hi! I'm RightHand, your right hand on the Mac." = "Hi! I'm RightHand, your right hand on the Mac.";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”";
+"In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash.";
 "Instructions" = "Instructions";
 "Its chats, files and memory are moved to the Trash." = "Its chats, files and memory are moved to the Trash.";
 "Keep panel open" = "Keep panel open";
@@ -101,6 +107,9 @@
 "Message %@…" = "Message %@…";
 "Minimize" = "Minimize";
 "Model" = "Model";
+"Move %@ to %@" = "Move %@ to %@";
+"Move %@ to the Trash" = "Move %@ to the Trash";
+"Move and copy files" = "Move and copy files";
 "Move to" = "Move to";
 "Multilingual v2 (best quality)" = "Multilingual v2 (best quality)";
 "Name" = "Name";
@@ -175,6 +184,8 @@
 "Resume Eye Rest (paused until %@)" = "Resume Eye Rest (paused until %@)";
 "Return sends, Option-Return adds a new line." = "Return sends, Option-Return adds a new line.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand needs access to your Desktop to add screenshots automatically";
+"Run Terminal commands" = "Run Terminal commands";
+"Run a command in %@" = "Run a command in %@";
 "Save" = "Save";
 "Saved" = "Saved";
 "Schedule" = "Schedule";
@@ -231,6 +242,7 @@
 "Volume" = "Volume";
 "Waiting for your permission…" = "Waiting for your permission…";
 "Window" = "Window";
+"Work with the whole Mac" = "Work with the whole Mac";
 "Write files" = "Write files";
 "Write memory note %@" = "Write memory note %@";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch.";

@@ -1,22 +1,39 @@
 import Foundation
 
-/// The folders a project's tools may touch. Paths outside them are refused.
+/// Where a project's tools may touch files: the project folders, or the whole Mac when
+/// "Work with the whole Mac" is on (paths outside the project folders then always ask first).
 struct FileAccess: Sendable {
     let roots: [URL]
+    let anywhere: Bool
 
-    init(folders: [String]) {
+    init(folders: [String], anywhere: Bool = false) {
         roots = folders.map { URL(filePath: ($0 as NSString).expandingTildeInPath, directoryHint: .isDirectory) }
+        self.anywhere = anywhere
     }
+
+    /// Relative paths start here: the first project folder, or the home folder.
+    var base: URL? { roots.first ?? (anywhere ? URL(filePath: NSHomeDirectory(), directoryHint: .isDirectory) : nil) }
 
     /// Absolute, `~/…`, or relative to the first folder.
     func resolve(_ path: String) throws -> URL {
-        guard let first = roots.first else { throw ToolError("No folders are added to this project. Ask the user to add one in the project settings.") }
+        guard let base else { throw ToolError("No folders are added to this project. Ask the user to add one in the project settings.") }
         let expanded = (path as NSString).expandingTildeInPath
-        let target = Self.canonicalPath(expanded.hasPrefix("/") ? URL(filePath: expanded) : first.appending(path: expanded))
-        guard roots.contains(where: { Self.isInside(target, Self.canonicalPath($0)) }) else {
+        let target = Self.canonicalPath(expanded.hasPrefix("/") ? URL(filePath: expanded) : base.appending(path: expanded))
+        guard anywhere || isInsideProject(target) else {
             throw ToolError("\(path) is outside the project folders: \(roots.map(\.path).joined(separator: ", ")).")
         }
         return URL(filePath: target)
+    }
+
+    /// Whether a path is inside one of the project folders.
+    func isInsideProject(_ canonical: String) -> Bool {
+        roots.contains { Self.isInside(canonical, Self.canonicalPath($0)) }
+    }
+
+    /// True when `path` can't be checked or points outside the project folders.
+    func isOutsideProject(_ path: String?) -> Bool {
+        guard let path, let url = try? resolve(path) else { return true }
+        return !isInsideProject(url.path)
     }
 
     /// The real location of a path: `.` and `..` removed and symlinks resolved, also for files
@@ -52,7 +69,7 @@ struct ListFilesTool: AssistantTool {
     let name = "list_files"
     var displayName: String { L("List files") }
     let description = """
-    Lists files and folders in the project folders on the user's Mac. \
+    Lists files and folders on the user's Mac (the project folders, or anywhere when the user allows it). \
     Call this to explore a folder before reading or searching files in it.
     """
     var inputSchema: JSONValue {
@@ -63,11 +80,13 @@ struct ListFilesTool: AssistantTool {
          ]]
     }
 
+    func alwaysAsks(_ input: JSONValue) -> Bool { access.isOutsideProject(input["path"]?.string ?? access.roots.first?.path) }
+
     func describe(_ input: JSONValue) -> String { L("List %@", input["path"]?.string ?? L("the project folder")) }
 
     func run(_ input: JSONValue) async -> ToolOutput {
         do {
-            let folder = try access.resolve(input["path"]?.string ?? access.roots.first?.path ?? "")
+            let folder = try access.resolve(input["path"]?.string ?? access.base?.path ?? "")
             let depth = min(3, max(1, input["depth"]?.int ?? 1))
             var lines: [String] = []
             list(folder, prefix: "", depth: depth, into: &lines)
@@ -103,7 +122,7 @@ struct ReadFileTool: AssistantTool {
     let name = "read_file"
     var displayName: String { L("Read files") }
     let description = """
-    Reads a text file (code, notes, Markdown, PDF text, …) from the project folders, with line numbers. \
+    Reads a text file (code, notes, Markdown, PDF text, …) from the user's Mac, with line numbers. \
     Call this whenever the answer depends on what a file contains. For long files, read a range of lines.
     """
     var inputSchema: JSONValue {
@@ -115,6 +134,8 @@ struct ReadFileTool: AssistantTool {
          ],
          "required": ["path"]]
     }
+
+    func alwaysAsks(_ input: JSONValue) -> Bool { access.isOutsideProject(input["path"]?.string ?? access.roots.first?.path) }
 
     func describe(_ input: JSONValue) -> String { L("Read %@", input["path"]?.string ?? L("a file")) }
 
@@ -148,7 +169,7 @@ struct SearchFilesTool: AssistantTool {
     let name = "search_files"
     var displayName: String { L("Search files") }
     let description = """
-    Searches the project folders for files whose name or text contains the query (case-insensitive). \
+    Searches a folder (by default the project folders) for files whose name or text contains the query (case-insensitive). \
     Call this to find where something is mentioned or which file to read.
     """
     var inputSchema: JSONValue {
@@ -160,12 +181,14 @@ struct SearchFilesTool: AssistantTool {
          "required": ["query"]]
     }
 
+    func alwaysAsks(_ input: JSONValue) -> Bool { access.isOutsideProject(input["path"]?.string ?? access.roots.first?.path) }
+
     func describe(_ input: JSONValue) -> String { L("Search files for “%@”", input["query"]?.string ?? "") }
 
     func run(_ input: JSONValue) async -> ToolOutput {
         do {
             let query = try input.requiredString("query").lowercased()
-            let folders = try input["path"]?.string.map { [try access.resolve($0)] } ?? access.roots
+            let folders = try input["path"]?.string.map { [try access.resolve($0)] } ?? (access.roots.isEmpty ? [try access.resolve(".")] : access.roots)
             var results: [String] = []
             var scanned = 0
             for folder in folders {
@@ -202,7 +225,7 @@ struct WriteFileTool: AssistantTool {
     let name = "write_file"
     var displayName: String { L("Write files") }
     let description = """
-    Creates or overwrites a text file in the project folders with the given content. \
+    Creates or overwrites a text file with the given content. \
     Use it when the user asks you to save, create or change a file. Read the file first when changing it.
     """
     var inputSchema: JSONValue {
@@ -212,6 +235,12 @@ struct WriteFileTool: AssistantTool {
              "content": ["type": "string", "description": "The full new content of the file."],
          ],
          "required": ["path", "content"]]
+    }
+
+    func alwaysAsks(_ input: JSONValue) -> Bool { access.isOutsideProject(input["path"]?.string) }
+
+    func detail(_ input: JSONValue) -> String? {
+        input["content"]?.string.map { $0.count > 2_000 ? String($0.prefix(2_000)) + "\n…" : $0 }
     }
 
     func describe(_ input: JSONValue) -> String {

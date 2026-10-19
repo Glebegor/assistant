@@ -36,6 +36,18 @@ enum ProjectContext {
             """)
         }
 
+        if ComputerAccess.isEnabled {
+            parts.append("""
+            # Working on the Mac
+
+            You can also work outside the project folders anywhere on the user's Mac (home folder: \(NSHomeDirectory())): \
+            list, read, search, write, move, copy and delete files, create folders, and run Terminal commands with \
+            `run_command`. The user approves each of these actions before it runs, and may decline; then don't retry \
+            it, ask what they want instead. Deleted files go to the Trash. Do only what the user asked for, and say \
+            what you are about to change before changing it.
+            """)
+        }
+
         parts.append(provider == .claude
             ? "# Memory\n\nUse your memory tool to keep notes about this project (decisions, progress, preferences) so later chats can continue the work."
             : "# Memory\n\nUse the `memory` tool to keep notes about this project (decisions, progress, preferences) so later chats can continue the work. Check your memory at the start of a task.")
@@ -45,6 +57,7 @@ enum ProjectContext {
     /// Changes whenever something the system prompt is built from changes.
     static func fingerprint(of project: Project) -> String {
         var text = project.name + "\n" + project.instructions + "\n" + project.folders.joined(separator: "\n")
+            + "\nwholeMac=\(ComputerAccess.isEnabled)"
         for file in attachedFiles(of: project) {
             let modified = (try? file.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
             text += "\n\(file.lastPathComponent)@\(modified.timeIntervalSince1970)"

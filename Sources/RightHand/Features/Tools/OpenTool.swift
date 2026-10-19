@@ -8,12 +8,17 @@ struct OpenTool: AssistantTool {
     var displayName: String { L("Open apps, links and files") }
     let description = """
     Opens something on the user's Mac: a web address (https://…), an app by name (e.g. "Safari", "Notes"), \
-    or a file or folder from the project folders. Use it when the user asks to open or show something.
+    or a file or folder on the Mac. Use it when the user asks to open or show something.
     """
     var inputSchema: JSONValue {
         ["type": "object",
          "properties": ["target": ["type": "string", "description": "A URL, an app name, or a file/folder path."]],
          "required": ["target"]]
+    }
+
+    func alwaysAsks(_ input: JSONValue) -> Bool {
+        guard let target = input["target"]?.string, target.contains("/"), !target.contains("://") else { return false }
+        return access.isOutsideProject(target)
     }
 
     func describe(_ input: JSONValue) -> String { L("Open %@", input["target"]?.string ?? L("something")) }
@@ -55,15 +60,26 @@ struct OpenTool: AssistantTool {
     }
 }
 
+/// "Work with the whole Mac": file tools reach outside the project folders and Terminal
+/// commands are available. Every such action still asks you first.
+enum ComputerAccess {
+    static let key = "tools.wholeMac"
+
+    static var isEnabled: Bool { UserDefaults.standard.object(forKey: key) as? Bool ?? true }
+}
+
 /// The tools available in a project.
 enum Toolbox {
     static func tools(for project: Project) -> [AssistantTool] {
-        let access = FileAccess(folders: project.folders)
+        let wholeMac = ComputerAccess.isEnabled
+        let access = FileAccess(folders: project.folders, anywhere: wholeMac)
         var tools: [AssistantTool] = [MemoryTool(root: ProjectStorage.memoryDirectory(of: project.id))]
-        if !project.folders.isEmpty {
+        if access.base != nil {
             tools += [ListFilesTool(access: access), ReadFileTool(access: access),
-                      SearchFilesTool(access: access), WriteFileTool(access: access)]
+                      SearchFilesTool(access: access), WriteFileTool(access: access),
+                      CreateFolderTool(access: access), MoveFileTool(access: access), DeleteFileTool(access: access)]
         }
+        if wholeMac { tools.append(RunCommandTool(access: access)) }
         tools.append(OpenTool(access: access))
         return tools
     }
@@ -75,7 +91,16 @@ enum Toolbox {
          ("read_file", L("Read files")),
          ("search_files", L("Search files")),
          ("write_file", L("Write files")),
+         ("create_folder", L("Create folders")),
+         ("move_file", L("Move and copy files")),
+         ("delete_file", L("Delete files")),
+         ("run_command", L("Run Terminal commands")),
          ("open", L("Open apps, links and files"))]
+    }
+
+    /// Deleting and running commands ask every time.
+    static func canAlwaysAllow(_ tool: String) -> Bool {
+        !["delete_file", "run_command"].contains(tool)
     }
 
     static func displayName(of tool: String) -> String {

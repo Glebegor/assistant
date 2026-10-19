@@ -7,6 +7,9 @@ struct ToolApproval: Identifiable {
     let toolName: String
     let toolDisplayName: String
     let action: String
+    /// The exact command or text, when there is one.
+    let detail: String?
+    let canAlwaysAllow: Bool
 }
 
 enum ApprovalDecision {
@@ -149,15 +152,16 @@ final class ConversationEngine {
         }
 
         let action = tool.describe(input)
-        if !ToolPermissions.isAlwaysAllowed(tool.name) {
+        if tool.alwaysAsks(input) || !tool.canAlwaysAllow || !ToolPermissions.isAlwaysAllowed(tool.name) {
             activity = L("Waiting for your permission…")
             let decision = await withCheckedContinuation { continuation in
                 approvalContinuation = continuation
-                pendingApproval = ToolApproval(toolName: tool.name, toolDisplayName: tool.displayName, action: action)
+                pendingApproval = ToolApproval(toolName: tool.name, toolDisplayName: tool.displayName, action: action,
+                                               detail: tool.detail(input), canAlwaysAllow: tool.canAlwaysAllow && !tool.alwaysAsks(input))
             }
             switch decision {
             case .deny: return .error("The user declined: \(action).")
-            case .alwaysAllow: ToolPermissions.setAlwaysAllowed(tool.name, true)
+            case .alwaysAllow: if tool.canAlwaysAllow { ToolPermissions.setAlwaysAllowed(tool.name, true) }
             case .allowOnce: break
             }
         }

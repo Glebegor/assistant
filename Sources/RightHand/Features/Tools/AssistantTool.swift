@@ -13,10 +13,20 @@ protocol AssistantTool: Sendable {
 
     /// What this call will do, in plain words ("Read README.md").
     func describe(_ input: JSONValue) -> String
+    /// More to look at before allowing it: the command to run, the text to write.
+    func detail(_ input: JSONValue) -> String?
+    /// Asks even when you chose "Always Allow", e.g. for paths outside the project folders.
+    func alwaysAsks(_ input: JSONValue) -> Bool
+    /// Whether "Always Allow" is offered. Running commands and deleting always ask.
+    var canAlwaysAllow: Bool { get }
     func run(_ input: JSONValue) async -> ToolOutput
 }
 
 extension AssistantTool {
+    func detail(_ input: JSONValue) -> String? { nil }
+    func alwaysAsks(_ input: JSONValue) -> Bool { false }
+    var canAlwaysAllow: Bool { true }
+
     /// How the tool is declared to Claude. Anthropic's own tools (memory) override this.
     var claudeDeclaration: JSONValue {
         ["name": .string(name), "description": .string(description), "input_schema": inputSchema]
@@ -55,7 +65,7 @@ enum ToolPermissions {
         Set((UserDefaults.standard.string(forKey: key) ?? "").split(separator: ",").map(String.init))
     }
 
-    static func isAlwaysAllowed(_ tool: String) -> Bool { alwaysAllowed.contains(tool) }
+    static func isAlwaysAllowed(_ tool: String) -> Bool { alwaysAllowed.contains(tool) && Toolbox.canAlwaysAllow(tool) }
 
     static func setAlwaysAllowed(_ tool: String, _ allowed: Bool) {
         var tools = alwaysAllowed
