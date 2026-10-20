@@ -26,6 +26,9 @@ final class NotchController {
     private let chat: ChatStore
     private let tasks: TaskStore
     private let voice: VoiceAssistant
+    private let recorder: ScreenRecorder
+    private let analyzer: MeetingAnalyzer
+    private let openReview: (URL) -> Void
     private let openSettings: () -> Void
     private let openProjects: () -> Void
 
@@ -38,17 +41,27 @@ final class NotchController {
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, chat: ChatStore, voice: VoiceAssistant,
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, chat: ChatStore, voice: VoiceAssistant, recorder: ScreenRecorder,
+         analyzer: MeetingAnalyzer, openReview: @escaping (URL) -> Void,
          openSettings: @escaping () -> Void, openProjects: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.shelf = shelf
         self.chat = chat
         self.tasks = tasks
         self.voice = voice
+        self.recorder = recorder
+        self.analyzer = analyzer
+        self.openReview = openReview
         self.openSettings = openSettings
         self.openProjects = openProjects
-        chat.onApprovalNeeded = { [weak self] in self?.showChat() }
+        chat.onApprovalNeeded = { [weak self] in self?.approvalRequested() }
         rebuildNotches()
+        // When a question is answered (or a new one comes), the notch stops or starts taking clicks.
+        observeChanges { [weak self] in
+            guard let self else { return }
+            _ = self.chat.waitingForApproval?.pendingApproval
+            self.updateApprovalClicks()
+        }
 
         // A click outside the open panel closes it (also when it's kept open for typing).
         clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
@@ -114,7 +127,24 @@ final class NotchController {
         notch.model.isPinned = true
     }
 
-    /// Opens the Assistant tab, e.g. when the AI asks for permission while the panel is closed.
+    /// A permission question: an open panel switches to the chat (the card is there); a closed
+    /// notch grows into a small card with the buttons, which then has to take clicks.
+    private func approvalRequested() {
+        if let notch = expanded { notch.model.selectedTab = .chat }
+        updateApprovalClicks()
+    }
+
+    /// Closed notches showing the permission card take clicks; otherwise clicks go through to your apps.
+    private func updateApprovalClicks() {
+        let waiting = chat.waitingForApproval != nil
+        for notch in notches where notch.panel !== expanded?.panel {
+            let asks = waiting && (chat.approvalDisplayID == nil || chat.approvalDisplayID == notch.model.displayID)
+            notch.panel.ignoresMouseEvents = !asks
+            if asks { notch.panel.orderFrontRegardless() }
+        }
+    }
+
+    /// Opens the Assistant tab, e.g. from the menu bar.
     func showChat() {
         if let notch = expanded {
             notch.model.selectedTab = .chat
@@ -139,7 +169,8 @@ final class NotchController {
         model.displayID = screen.displayID
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice,
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice, recorder: recorder,
+                                   analyzer: analyzer, openReview: openReview,
                                    openSettings: openSettings, openProjects: openProjects)
         )
         let size = NotchTab.maxPanelSize
@@ -203,6 +234,7 @@ final class NotchController {
         notch.model.isPinned = false
         notch.panel.ignoresMouseEvents = true
         expanded = nil
+        updateApprovalClicks()
         updateCatcher(of: notch)
         returnKeyboardFocus(from: notch)
     }

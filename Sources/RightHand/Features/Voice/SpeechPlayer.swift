@@ -13,12 +13,16 @@ enum VoiceSettings {
         static let shortcut = "voice.shortcut"
         static let listenLanguage = "voice.listenLanguage"
         static let listenLanguages = "voice.listenLanguages"
+        static let wakeWord = "voice.wakeWord"
+        static let enabled = "voice.enabled"
     }
 
     /// "" = pick the best installed voice for the language of each answer.
     static var voiceID: String { UserDefaults.standard.string(forKey: Key.voiceID) ?? "" }
     /// 0.5 is normal speed.
     static var rate: Float { UserDefaults.standard.object(forKey: Key.rate) as? Float ?? 0.52 }
+    /// Ellipse as a whole: shortcut, wake word, record buttons.
+    static var isEnabled: Bool { UserDefaults.standard.object(forKey: Key.enabled) as? Bool ?? true }
     static var speakVoiceAnswers: Bool { UserDefaults.standard.object(forKey: Key.speakVoiceAnswers) as? Bool ?? true }
 
     /// Installed voices worth offering: no novelty voices (Bells, Bubbles, …).

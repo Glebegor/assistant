@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 import Observation
 
 /// The conversations in the Assistant tab, one per tab. They run on the same engine as project
@@ -20,6 +20,13 @@ final class ChatStore {
     private(set) var configuredProviders: Set<ChatProvider> = []
     /// Called when the AI asks for permission, so the panel can open and show the question.
     @ObservationIgnored var onApprovalNeeded: (() -> Void)?
+    /// The screen to ask on (the one the mouse was on when the question came).
+    private(set) var approvalDisplayID: CGDirectDisplayID?
+
+    /// The chat waiting for your permission, if any — the one you're looking at first.
+    var waitingForApproval: ConversationEngine? {
+        engine.pendingApproval != nil ? engine : tabs.first { $0.pendingApproval != nil }
+    }
 
     /// Bumped when Settings change, so the model name shown in the chat refreshes.
     private var settingsRevision = 0
@@ -45,10 +52,12 @@ final class ChatStore {
         }
     }
 
-    /// The tab you are looking at.
+    /// The tab you are looking at. `tabs` is never empty; the fallback is only for safety.
     var engine: ConversationEngine {
-        tabs.first { $0.chat.id == selectedID } ?? tabs[0]
+        tabs.first { $0.chat.id == selectedID } ?? tabs.first ?? fallback
     }
+
+    @ObservationIgnored private lazy var fallback = makeEngine(Self.newChat(provider: ChatSettings.provider))
 
     var provider: ChatProvider {
         get { engine.chat.provider }
@@ -90,11 +99,16 @@ final class ChatStore {
     /// Closes a tab and deletes its saved conversation.
     func close(_ id: UUID) {
         guard let index = tabs.firstIndex(where: { $0.chat.id == id }) else { return }
-        let engine = tabs.remove(at: index)
-        engine.stop()
-        if !engine.chat.messages.isEmpty { ProjectStorage.delete(engine.chat) }
-        if tabs.isEmpty { tabs = [makeEngine(Self.newChat(provider: engine.chat.provider))] }
-        if selectedID == id { select(tabs[min(index, tabs.count - 1)].chat.id) }
+        let closing = tabs[index]
+        // Build the new list first and swap it in at once: the view redraws as soon as `tabs`
+        // changes and must never see it empty (that crashed RightHand when closing the last tab).
+        var remaining = tabs
+        remaining.remove(at: index)
+        if remaining.isEmpty { remaining = [makeEngine(Self.newChat(provider: closing.chat.provider))] }
+        if selectedID == id { select(remaining[min(index, remaining.count - 1)].chat.id) }
+        tabs = remaining
+        closing.stop()
+        if !closing.chat.messages.isEmpty { ProjectStorage.delete(closing.chat) }
     }
 
     func reloadKeys() {
@@ -130,7 +144,10 @@ final class ChatStore {
             // Empty tabs aren't written; they disappear on restart.
             if !chat.messages.isEmpty { ProjectStorage.save(chat) }
         })
-        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
+        engine.onApprovalNeeded = { [weak self] in
+            self?.approvalDisplayID = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }?.displayID
+            self?.onApprovalNeeded?()
+        }
         return engine
     }
 

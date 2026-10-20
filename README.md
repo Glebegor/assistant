@@ -19,8 +19,9 @@ For editing in VS Code install the **Swift** extension (`swiftlang.swift-vscode`
 
 ## Ellipse, the voice assistant
 
-Ellipse is RightHand's voice assistant. Press **⌥Space** (or the 🎙 button in the notch chat, or
-the menu bar item), speak in English, Ukrainian, Czech or Russian, and press it again. The notch
+Ellipse is RightHand's voice assistant. Say **"Hey Ellipse"** ("Эй, Эллипс") and your request —
+it's sent when you pause — or press **⌥Space** (or the 🎙 button in the notch chat, or the menu
+bar item), speak in English, Ukrainian, Czech or Russian, and press it again. The notch
 glows while Ellipse listens and works, and the answer is read aloud by the Mac's own voice, so you
 can keep working in other windows. The conversation stays in the notch chat.
 
@@ -88,6 +89,8 @@ Sources/RightHand/
     Pomodoro/                 Timer logic, settings, view
     Shelf/                    Files, screenshots and clipboard history
     Tasks/                    Notion and ClickUp tasks in the notch
+    Recorder/                 Screen recording with separate voice and computer-sound tracks
+    Meetings/                 Whisper transcripts and AI reviews of recorded meetings
     Integrations/             Notion, ClickUp and Google (Gmail, Drive) for the AI
     Chat/                     AI chat in the notch
     Projects/                 Projects window and the conversation engine
@@ -110,5 +113,7 @@ Sources/RightHand/
 - [x] AI tools for Notion, ClickUp, Gmail (read) and Google Drive; ClickUp tasks in the Tasks tab
 - [x] "About me" profile that every chat starts with
 - [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
+- [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours
+- [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

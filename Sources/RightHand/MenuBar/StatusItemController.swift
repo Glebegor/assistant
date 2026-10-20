@@ -9,6 +9,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let showPanel: () -> Void
     private let openProjects: () -> Void
     private let voice: VoiceAssistant
+    private let recorder: ScreenRecorder
+    private let recordItem = NSMenuItem(title: "", action: #selector(record), keyEquivalent: "")
     private let talkItem = NSMenuItem(title: "", action: #selector(talk), keyEquivalent: "")
     private let openSettings: () -> Void
     private let toggleTimerItem = NSMenuItem(title: "", action: #selector(toggleTimer), keyEquivalent: "")
@@ -16,13 +18,14 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let eyeRestPauseItem = NSMenuItem(title: "", action: #selector(pauseOrResumeEyeRest), keyEquivalent: "")
     private let eyeBreakNowItem = NSMenuItem(title: L("Take an Eye Break Now"), action: #selector(takeEyeBreak), keyEquivalent: "")
 
-    init(pomodoro: PomodoroTimer, eyeRest: EyeRestController, voice: VoiceAssistant,
+    init(pomodoro: PomodoroTimer, eyeRest: EyeRestController, voice: VoiceAssistant, recorder: ScreenRecorder,
          showPanel: @escaping () -> Void, openProjects: @escaping () -> Void, openSettings: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.eyeRest = eyeRest
         self.showPanel = showPanel
         self.openProjects = openProjects
         self.voice = voice
+        self.recorder = recorder
         self.openSettings = openSettings
         super.init()
 
@@ -49,6 +52,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.addItem(.separator())
         talkItem.target = self
         menu.addItem(talkItem)
+        recordItem.target = self
+        menu.addItem(recordItem)
         menu.addItem(NSMenuItem(title: L("Show Panel"), action: #selector(showPanelAction), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: L("Projects…"), action: #selector(openProjectsAction), keyEquivalent: "p"))
         menu.addItem(NSMenuItem(title: L("Settings…"), action: #selector(openSettingsAction), keyEquivalent: ","))
@@ -67,6 +72,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     // Eye rest items are refreshed each time the menu opens.
     func menuNeedsUpdate(_ menu: NSMenu) {
+        talkItem.isHidden = !voice.isEnabled
+        recordItem.title = recorder.isRecording ? L("Stop Screen Recording (%@)", RecorderView.duration(recorder.elapsed)) : L("Record Screen")
         talkItem.title = voice.phase == .listening ? L("Stop Recording and Send") : L("Talk to %@ (%@)", VoiceAssistant.name, Shortcut.voice.displayName)
 
         let enabled = EyeRestSettings.enabled
@@ -91,6 +98,10 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     @objc private func showPanelAction() { showPanel() }
     @objc private func openProjectsAction() { openProjects() }
     @objc private func talk() { voice.toggle() }
+    @objc private func record() {
+        // Start uses the screen and sound chosen in the Record tab.
+        if !recorder.isRecording, recorder.displays.isEmpty { Task { await recorder.loadDisplays(); recorder.toggle() } } else { recorder.toggle() }
+    }
     @objc private func openSettingsAction() { openSettings() }
     @objc private func quit() { NSApp.terminate(nil) }
 }

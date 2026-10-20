@@ -122,11 +122,13 @@ struct ChatView: View {
             } else {
                 messageField
             }
+            if voice.isEnabled {
             Button(voice.phase == .listening ? "Send Recording" : "Record", systemImage: micSymbol) { voice.toggle() }
                 .help(voice.phase == .listening ? L("Stop recording and send (%@)", Shortcut.voice.displayName)
                                                : L("Speak your message (%@)", Shortcut.voice.displayName))
                 .iconButton(color: voice.phase == .listening ? .red : .white)
                 .disabled(!store.hasKey || voice.phase == .transcribing)
+            }
             sendOrStop
         }
     }
@@ -245,16 +247,18 @@ private struct ChatTab: View {
 }
 
 /// "Claude wants to: Run a command" with the command, and Deny / Always Allow / Allow Once.
-private struct NotchApprovalCard: View {
+struct NotchApprovalCard: View {
     let approval: ToolApproval
     let provider: ChatProvider
     let engine: ConversationEngine
+    /// "Claude", "ChatGPT", or "Ellipse" for a spoken request.
+    var who: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 Image(systemName: "hand.raised.fill").foregroundStyle(.orange)
-                Text("\(provider.title) wants to: \(approval.action)")
+                Text("\(who ?? provider.title) wants to: \(approval.action)")
                     .fontWeight(.medium)
                     .lineLimit(2)
                 Spacer(minLength: 4)

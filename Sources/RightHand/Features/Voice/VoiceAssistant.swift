@@ -27,6 +27,8 @@ final class VoiceAssistant {
     private(set) var level: Float = 0
     /// The screen the mouse was on when you started talking; the notch there shows the card.
     private(set) var displayID: CGDirectDisplayID?
+    /// Off in Settings: no shortcut, no wake word, no record buttons.
+    private(set) var isEnabled = VoiceSettings.isEnabled
 
     @ObservationIgnored private let chat: ChatStore
     @ObservationIgnored private let recognizer = VoiceRecognizer()
@@ -34,19 +36,34 @@ final class VoiceAssistant {
     @ObservationIgnored private var escapeKey: HotKey?
     @ObservationIgnored private var hideTask: Task<Void, Never>?
     @ObservationIgnored private var engine: ConversationEngine?
+    @ObservationIgnored private let wake = WakeWordListener()
+    /// Started by "Hey Ellipse": the request is sent by itself when you stop talking.
+    @ObservationIgnored private var sendsOnSilence = false
+    @ObservationIgnored private var lastHeard = Date()
+    @ObservationIgnored private var silenceWatch: Task<Void, Never>?
 
     init(chat: ChatStore) {
         self.chat = chat
-        recognizer.onPartial = { [weak self] in self?.transcript = $0 }
+        recognizer.onPartial = { [weak self] text in
+            guard let self else { return }
+            if text != self.transcript { self.lastHeard = Date() }
+            self.transcript = text
+        }
+        wake.onWake = { [weak self] in self?.wakeUp() }
         recognizer.onLevel = { [weak self] in self?.level = $0 }
         registerShortcut()
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.shortcutMayHaveChanged() }
+            MainActor.assumeIsolated {
+                self?.enabledMayHaveChanged()
+                self?.shortcutMayHaveChanged()
+                self?.updateWakeWord()
+            }
         }
         NotificationCenter.default.addObserver(forName: Self.pauseShortcutNotification, object: nil, queue: .main) { [weak self] note in
             let paused = note.object as? Bool ?? false
             MainActor.assumeIsolated { self?.pauseShortcut(paused) }
         }
+        updateWakeWord()
     }
 
     /// The engine answering the current voice request (for the notch's status line).
@@ -56,6 +73,7 @@ final class VoiceAssistant {
 
     /// The shortcut: start listening, or stop and send.
     func toggle() {
+        guard isEnabled else { return }
         switch phase {
         case .listening:
             Task { await finishListening() }
@@ -67,6 +85,7 @@ final class VoiceAssistant {
             hide()
         case .idle, .answer, .failed:
             displayID = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }?.displayID
+            sendsOnSilence = false
             Task { await startListening() }
         }
     }
@@ -79,6 +98,8 @@ final class VoiceAssistant {
         phase = .idle
         transcript = ""
         level = 0
+        silenceWatch?.cancel()
+        updateWakeWord()
     }
 
     /// While the Shortcut field in Settings records a new combination, the hotkey is off.
@@ -91,6 +112,7 @@ final class VoiceAssistant {
     private func startListening() async {
         hideTask?.cancel()
         SpeechPlayer.shared.stop()
+        wake.stop() // one listener at a time
         do {
             try await VoiceRecognizer.requestPermissions()
             transcript = ""
@@ -99,6 +121,7 @@ final class VoiceAssistant {
             phase = .listening
             setEscape(enabled: true)
             NSSound(named: "Tink")?.play()
+            if sendsOnSilence { watchForSilence() }
         } catch {
             show(.failed(error.localizedDescription))
         }
@@ -109,7 +132,8 @@ final class VoiceAssistant {
         phase = .transcribing
         level = 0
         NSSound(named: "Pop")?.play()
-        let text = await recognizer.finish()
+        silenceWatch?.cancel()
+        let text = Self.withoutWakeWord(await recognizer.finish())
         guard !text.isEmpty else { return show(.failed(L("I didn't hear anything. Press the shortcut and speak."))) }
         transcript = text
         send(text)
@@ -163,15 +187,76 @@ final class VoiceAssistant {
         }
     }
 
+    // MARK: Wake word
+
+    /// "Hey Ellipse" was heard: listen for the request and send it when you pause.
+    private func wakeUp() {
+        guard phase == .idle else { return }
+        displayID = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }?.displayID
+        sendsOnSilence = true
+        Task { await startListening() }
+    }
+
+    /// Sends after 1.5 seconds without new words; gives up after 8 seconds of silence.
+    private func watchForSilence() {
+        silenceWatch?.cancel()
+        let started = Date()
+        lastHeard = Date()
+        silenceWatch = Task {
+            while !Task.isCancelled, phase == .listening {
+                try? await Task.sleep(for: .milliseconds(200))
+                let quiet = Date().timeIntervalSince(lastHeard)
+                if !transcript.isEmpty, quiet > 1.5 { await finishListening(); return }
+                if transcript.isEmpty, Date().timeIntervalSince(started) > 8 { hide(); return }
+            }
+        }
+    }
+
+    /// Listens for the wake word whenever nothing else uses the microphone.
+    private func updateWakeWord() {
+        if isEnabled && WakeWordListener.isEnabled && phase == .idle {
+            // A moment later, so the microphone is free after recording or speaking.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+                guard let self, self.phase == .idle else { return }
+                self.wake.start()
+            }
+        } else if !isEnabled || !WakeWordListener.isEnabled {
+            wake.stop()
+        }
+    }
+
+    /// "Эллипс, сделай…" → "сделай…".
+    nonisolated static func withoutWakeWord(_ text: String) -> String {
+        let pattern = "^\\s*((эй|хей|ей|hey|hi)[\\s,]+)?(эллипс|элипс|еллипс|елипс|еліпс|ellipse|ellipsis|elips|eclipse)[\\s,.!?:]*"
+        return text.replacingOccurrences(of: pattern, with: "", options: [.regularExpression, .caseInsensitive])
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     // MARK: Shortcut
 
     @ObservationIgnored private var registered: Shortcut?
 
     private func registerShortcut() {
         hotKey?.unregister()
+        hotKey = nil
+        guard isEnabled else { return } // the combination stays free for other apps
         let shortcut = Shortcut.voice
         registered = shortcut
         hotKey = HotKey(shortcut) { [weak self] in self?.toggle() }
+    }
+
+    private func enabledMayHaveChanged() {
+        guard VoiceSettings.isEnabled != isEnabled else { return }
+        isEnabled = VoiceSettings.isEnabled
+        if isEnabled {
+            registerShortcut()
+        } else {
+            engine?.stop()
+            hide()
+            hotKey?.unregister()
+            hotKey = nil
+            wake.stop()
+        }
     }
 
     private func shortcutMayHaveChanged() {

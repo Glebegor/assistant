@@ -11,12 +11,16 @@ final class EyeRestController {
     private(set) var restRemaining = 0
     /// When the next eye break starts; nil while paused.
     private(set) var nextBreak: Date?
-    /// Eye breaks are paused until this time (from "Pause for 1 hour").
-    private(set) var pausedUntil: Date?
+    /// Eye breaks are paused until this time (from "Pause for 1 hour"); kept across restarts.
+    private(set) var pausedUntil: Date? = UserDefaults.standard.object(forKey: EyeRestSettings.Key.pausedUntil) as? Date {
+        didSet { UserDefaults.standard.set(pausedUntil, forKey: EyeRestSettings.Key.pausedUntil) }
+    }
 
     var isPaused: Bool { pausedUntil.map { $0 > Date() } ?? false }
 
     @ObservationIgnored private let pomodoro: PomodoroTimer
+    /// True while something mustn't be covered by a break, e.g. a screen recording.
+    @ObservationIgnored var holdsBreaks: () -> Bool = { false }
     @ObservationIgnored private var ticker: Timer?
     @ObservationIgnored private var overlays: [NSPanel] = []
 
@@ -79,6 +83,12 @@ final class EyeRestController {
     // MARK: Scheduling
 
     private func tick() {
+        if holdsBreaks() {
+            // No dimmed screens in a recording; the interval starts over afterwards.
+            finishRest(completed: false)
+            nextBreak = nil
+            return
+        }
         if isResting {
             restRemaining -= 1
             if restRemaining <= 0 { finishRest(completed: true) }

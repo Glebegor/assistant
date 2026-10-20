@@ -8,6 +8,8 @@ enum EyeRestSettings {
         static let breakSeconds = "eyeRest.breakSeconds"
         static let pauseDuringPomodoroBreaks = "eyeRest.pauseDuringPomodoroBreaks"
         static let endSound = "eyeRest.endSound"
+        /// "Pause 1 hour" is remembered, so restarting RightHand doesn't end the pause.
+        static let pausedUntil = "eyeRest.pausedUntil"
     }
 
     // The 20-20-20 rule: every 20 minutes, look 20 feet away for 20 seconds.
