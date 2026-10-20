@@ -3,6 +3,7 @@
 "%@ declined this request. Try rephrasing it." = "%@ відхилив цей запит. Спробуй сформулювати інакше.";
 "%@ is listening…" = "%@ слухає…";
 "%@ is used by macOS (for example Spotlight). Choose another." = "%@ використовує macOS (наприклад, Spotlight). Обери інше.";
+"%@ is writing the review from the transcript." = "%@ пише рев'ю за транскриптом.";
 "%@ to send · Esc to cancel" = "%@ — надіслати · Esc — скасувати";
 "%@ wants to: %@" = "%@ хоче: %@";
 "%@ · stops at %lld:00:00" = "%@ · зупиниться о %lld:00:00";
@@ -39,6 +40,8 @@
 "Allowed without asking" = "Дозволено без питань";
 "Always Allow" = "Дозволяти завжди";
 "Always asks" = "Завжди питає";
+"Analyze" = "Аналізувати";
+"Analyze Again" = "Проаналізувати знову";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Будь-яка назва моделі з твого акаунта OpenAI, напр. gpt-5.";
 "Anyone (show all tasks)" = "Будь-хто (показувати всі задачі)";
 "Ask %@ anything" = "Запитай %@ про що завгодно";
@@ -91,6 +94,7 @@
 "Copy %@ to %@" = "Скопіювати %@ у %@";
 "Copy answer" = "Копіювати відповідь";
 "Couldn't play the audio." = "Не вдалося відтворити аудіо.";
+"Couldn't read the recording." = "Не вдалося прочитати запис.";
 "Couldn't start recording: %@" = "Не вдалося почати запис: %@";
 "Create %@" = "Створити %@";
 "Create Google Doc “%@”" = "Створити Google Doc «%@»";
@@ -113,6 +117,7 @@
 "Done" = "Готово";
 "Download a Google Drive file to %@" = "Завантажити файл з Google Drive у %@";
 "Download from Google Drive" = "Завантаження з Google Drive";
+"Downloading speech model… %lld%%" = "Завантажую модель… %lld%%";
 "Drop files here. New screenshots appear here too." = "Перетягни сюди файли. Нові знімки екрана теж з'являються тут.";
 "Edit" = "Редагування";
 "Edit %@" = "Змінити %@";
@@ -127,6 +132,7 @@
 "Every" = "Кожні";
 "Eye Rest" = "Відпочинок очей";
 "Eye Rest Reminders" = "Нагадування про відпочинок очей";
+"Failed" = "Не вдалося";
 "Files" = "Файли";
 "Files folder" = "Папка для файлів";
 "Files you drop and new screenshots are copied into this folder. Each Shelf folder is a subfolder. Your originals stay where they are." = "Перетягнуті файли й нові знімки екрана копіюються в цю папку. Кожна папка Полиці — це підпапка. Оригінали лишаються на місці.";
@@ -167,12 +173,15 @@
 "Listening…" = "Слухаю…";
 "Load tasks again" = "Завантажити задачі знову";
 "Load tasks from Notion again" = "Завантажити задачі з Notion знову";
+"Loading speech model…" = "Завантажую модель розпізнавання…";
 "Long Break" = "Довга перерва";
 "Long break" = "Довга перерва";
 "Long break after" = "Довга перерва після";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Подивись на щось щонайменше за 6 м і кілька разів кліпни.";
 "Main screen" = "Основний екран";
 "Mark as done" = "Позначити виконаною";
+"Me" = "Я";
+"Meeting review is ready" = "Рев'ю зустрічі готове";
 "Memory" = "Пам'ять";
 "Message %@…" = "Повідомлення для %@…";
 "Minimize" = "Згорнути";
@@ -200,6 +209,7 @@
 "No open tasks for you." = "Для тебе немає відкритих задач.";
 "No recordings yet." = "Записів ще немає.";
 "No screen to record." = "Немає екрана для запису.";
+"No speech was found in this recording." = "У цьому записі не знайдено мовлення.";
 "None" = "Немає";
 "Not recorded" = "Не записується";
 "Notes the AI keeps about this project, shared by all its chats." = "Нотатки, які AI веде про цей проєкт; спільні для всіх його чатів.";
@@ -212,6 +222,7 @@
 "Off" = "Вимкнено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Вимкнено: ні сполучення клавіш, ні слова виклику, ні мікрофона, ні кнопок запису.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API» і «Google Drive API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive.";
+"Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Лише перший раз: модель розпізнавання (630 МБ) завантажується на твій Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Лише під час сесії фокусу Pomodoro. У перерви — без обмежень.";
 "Open" = "Відкрити";
@@ -220,12 +231,15 @@
 "Open Google Cloud" = "Відкрити Google Cloud";
 "Open Privacy & Security → Automation" = "Відкрити Конфіденційність і безпека → Автоматизація";
 "Open Settings" = "Відкрити Налаштування";
+"Open Video" = "Відкрити відео";
 "Open apps, links and files" = "Відкривання застосунків, посилань і файлів";
 "Open in ClickUp" = "Відкрити в ClickUp";
 "Open in Notion" = "Відкрити в Notion";
 "Open tasks assigned to you or to nobody" = "Відкриті задачі, призначені тобі або нікому";
 "Open the Projects window for long work" = "Відкрити вікно Проєкти для тривалої роботи";
+"Open the meeting review" = "Відкрити рев'ю зустрічі";
 "Opus is the smartest, Haiku the fastest and cheapest." = "Opus найрозумніший, Haiku найшвидший і найдешевший.";
+"Others" = "Співрозмовники";
 "Overdue · %@" = "Прострочено · %@";
 "Overview" = "Огляд";
 "Overwrite %@" = "Перезаписати %@";
@@ -243,6 +257,7 @@
 "Pomodoro" = "Pomodoro";
 "Postpone %lld min" = "Відкласти на %lld хв";
 "Preparing %@…" = "Готую: %@…";
+"Preparing the speech model. The first time this takes a few minutes." = "Готую модель розпізнавання. Перший раз це займає кілька хвилин.";
 "Press keys…" = "Натисни клавіші…";
 "Press once to talk, again to send. Esc cancels." = "Натисни раз, щоб говорити, ще раз — щоб надіслати. Esc скасовує.";
 "Project memory" = "Пам'ять проєкту";
@@ -302,6 +317,7 @@
 "Resume %@" = "Продовжити: %@";
 "Resume Eye Rest (paused until %@)" = "Відновити відпочинок очей (пауза до %@)";
 "Return sends, Shift-Return adds a new line." = "Return — надіслати, Shift-Return — новий рядок.";
+"Review" = "Рев'ю";
 "RightHand is connected to Google. You can close this tab." = "RightHand підключено до Google. Цю вкладку можна закрити.";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand потрібен доступ до Робочого столу, щоб додавати знімки екрана автоматично";
 "Run Terminal commands" = "Команди Терміналу";
@@ -387,6 +403,7 @@
 "This ClickUp list has no done status." = "У цьому списку ClickUp немає статусу «готово».";
 "This database has no status or checkbox to mark it done" = "У цій базі немає статусу чи прапорця, щоб позначити виконання";
 "This is me" = "Це я";
+"This recording has no sound." = "У цьому записі немає звуку.";
 "Time for a long break." = "Час для довгої перерви.";
 "Time for a short break." = "Час для короткої перерви.";
 "Timer" = "Таймер";
@@ -395,6 +412,9 @@
 "Today %@" = "Сьогодні %@";
 "Token" = "Токен";
 "Too many requests or no credit left. Try again later." = "Забагато запитів або закінчились кошти. Спробуй пізніше.";
+"Transcribe on your Mac and write a meeting review" = "Розпізнати на Mac і написати рев'ю зустрічі";
+"Transcribing… %lld%%" = "Розпізнаю… %lld%%";
+"Transcript" = "Транскрипт";
 "Try" = "Спробувати";
 "Turn Off" = "Вимкнути";
 "Turn on Ellipse" = "Увімкнути Ellipse";
@@ -412,13 +432,16 @@
 "Voice model" = "Голосова модель";
 "Volume" = "Гучність";
 "Waiting for your permission…" = "Чекаю на твій дозвіл…";
+"Waiting…" = "Чекаю…";
 "Wake word “Hey Ellipse”" = "Слово для виклику «Гей, Ellipse»";
 "What you hear: the other people in a call, videos…, on its own track" = "Те, що ти чуєш: співрозмовники у дзвінку, відео… — на окремій доріжці";
+"Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper слухає на твоєму Mac: близько 15–20 хвилин на двогодинну зустріч.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Хто ти, над чим працюєш, які відповіді любиш, посилання (GitHub, LinkedIn, сайт…). Claude і ChatGPT читають це на початку кожного чату.";
 "Window" = "Вікно";
 "Work with the whole Mac" = "Працювати з усім Mac";
 "Write files" = "Запис файлів";
 "Write memory note %@" = "Записати нотатку в пам'ять %@";
+"Writing the review…" = "Пишу рев'ю…";
 "Your microphone, on its own track" = "Твій мікрофон, на окремій доріжці";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Тут з'являться твої записи. Вони зберігаються у Фільми → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Твоя права рука на Mac: Pomodoro, Полиця й AI-асистент у нотчі.";

@@ -5,6 +5,8 @@ import SwiftUI
 /// and the latest recordings.
 struct RecorderView: View {
     let recorder: ScreenRecorder
+    let analyzer: MeetingAnalyzer
+    let openReview: (URL) -> Void
     @State private var recordings: [Recording] = []
 
     var body: some View {
@@ -123,7 +125,7 @@ struct RecorderView: View {
                     .padding(.vertical, 6)
             } else {
                 ForEach(recordings.prefix(2)) { recording in
-                    RecordingRow(recording: recording) { recorder.showInFinder(recording.url) }
+                    RecordingRow(recording: recording, analyzer: analyzer, openReview: openReview) { recorder.showInFinder(recording.url) }
                 }
             }
         }
@@ -226,6 +228,8 @@ private struct SourceTile<Accessory: View>: View {
 
 private struct RecordingRow: View {
     let recording: Recording
+    let analyzer: MeetingAnalyzer
+    let openReview: (URL) -> Void
     let reveal: () -> Void
     @State private var isHovered = false
 
@@ -241,6 +245,7 @@ private struct RecordingRow: View {
                 Text(ByteCountFormatter.string(fromByteCount: recording.size, countStyle: .file))
                     .monospacedDigit().foregroundStyle(.secondary).frame(width: 64, alignment: .trailing)
                 Image(systemName: "magnifyingglass").foregroundStyle(.secondary).opacity(isHovered ? 1 : 0)
+                analysis
             }
             .font(.caption)
             .padding(.vertical, 3)
@@ -249,6 +254,32 @@ private struct RecordingRow: View {
         .buttonStyle(.plain)
         .onHover { isHovered = $0 }
         .help("Show in Finder")
+    }
+
+    /// Analyze → progress → Review.
+    @ViewBuilder
+    private var analysis: some View {
+        if let status = analyzer.jobs[recording.url] {
+            HStack(spacing: 5) {
+                if case .failed = status {
+                    Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                } else {
+                    ProgressView().controlSize(.mini)
+                }
+                Text(AnalysisStatusView.title(of: status)).foregroundStyle(.secondary).lineLimit(1)
+            }
+            .frame(width: 150, alignment: .trailing)
+            .onTapGesture { openReview(recording.url) }
+            .help(status == .reviewing ? "" : "Open")
+        } else if analyzer.hasReview(recording.url) {
+            Button { openReview(recording.url) } label: { Label("Review", systemImage: "doc.text.magnifyingglass") }
+                .buttonStyle(.notchPill(prominent: true, tint: .white))
+                .help("Open the meeting review")
+        } else {
+            Button { analyzer.analyze(recording.url); openReview(recording.url) } label: { Label("Analyze", systemImage: "sparkles") }
+                .buttonStyle(.notchPill())
+                .help("Transcribe on your Mac and write a meeting review")
+        }
     }
 }
 

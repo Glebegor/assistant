@@ -90,6 +90,7 @@ Sources/RightHand/
     Shelf/                    Files, screenshots and clipboard history
     Tasks/                    Notion and ClickUp tasks in the notch
     Recorder/                 Screen recording with separate voice and computer-sound tracks
+    Meetings/                 Whisper transcripts and AI reviews of recorded meetings
     Integrations/             Notion, ClickUp and Google (Gmail, Drive) for the AI
     Chat/                     AI chat in the notch
     Projects/                 Projects window and the conversation engine
@@ -113,6 +114,6 @@ Sources/RightHand/
 - [x] "About me" profile that every chat starts with
 - [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
 - [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours
-- [ ] Meeting analysis from recordings (transcript, summary, tasks)
+- [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

@@ -34,6 +34,7 @@ final class ProjectsWindowController: NSObject, NSWindowDelegate {
     }
 
     func windowWillClose(_ notification: Notification) {
-        NSApp.setActivationPolicy(.accessory) // back to living only in the notch and menu bar
+        // Back to living only in the notch and menu bar (unless a meeting review is still open).
+        if let window = notification.object as? NSWindow { AppWindows.leaveDockIfNoWindows(except: window) }
     }
 }
