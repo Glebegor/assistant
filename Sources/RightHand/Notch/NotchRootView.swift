@@ -44,9 +44,12 @@ struct NotchRootView: View {
             : showsRecording ? CGSize(width: collapsed.width + 150, height: collapsed.height) : collapsed
         let radius: CGFloat = model.isExpanded ? 26 : (showsVoice || showsApproval ? 22 : 10)
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
-        let glows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
+        let voiceGlows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
             && (voice.phase == .listening || voice.phase == .transcribing || voice.phase == .working
                 || (voice.phase.isAnswer && SpeechPlayer.shared.currentText != nil))
+        // Also while Claude or ChatGPT thinks about a typed message (on the screen it was sent from).
+        let chatGlows = chat.isWorking && (chat.workingDisplayID == nil || chat.workingDisplayID == model.displayID)
+        let glows = voiceGlows || chatGlows
 
         ZStack(alignment: .top) {
             ZStack(alignment: .top) {
