@@ -359,6 +359,7 @@
 "Stop Reading" = "Остановить озвучивание";
 "Stop Recording and Send" = "Остановить запись и отправить";
 "Stop Screen Recording (%@)" = "Остановить запись экрана (%@)";
+"Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)" = "Выключить перерывы для глаз, пока не включишь снова (меню или Настройки → Отдых глаз)";
 "Stop recording" = "Остановить запись";
 "Stop recording and send (%@)" = "Остановить запись и отправить (%@)";
 "Stop the answer" = "Остановить ответ";
@@ -395,6 +396,7 @@
 "Token" = "Токен";
 "Too many requests or no credit left. Try again later." = "Слишком много запросов или закончились средства. Попробуй позже.";
 "Try" = "Попробовать";
+"Turn Off" = "Выключить";
 "Turn on Ellipse" = "Включить Ellipse";
 "Undo" = "Отменить";
 "Unpin panel" = "Открепить панель";

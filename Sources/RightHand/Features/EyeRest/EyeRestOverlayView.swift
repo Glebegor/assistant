@@ -47,6 +47,9 @@ struct EyeRestOverlayView: View {
                     Button("Skip", systemImage: "xmark") { controller.skip() }
                         .buttonStyle(.notchPill())
                         .keyboardShortcut(.cancelAction) // Esc
+                    Button("Turn Off", systemImage: "eye.slash") { controller.setEnabled(false) }
+                        .buttonStyle(.notchPill())
+                        .help("Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)")
                 }
             }
             .foregroundStyle(.white)

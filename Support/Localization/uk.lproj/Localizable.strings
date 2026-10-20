@@ -359,6 +359,7 @@
 "Stop Reading" = "Зупинити озвучування";
 "Stop Recording and Send" = "Зупинити запис і надіслати";
 "Stop Screen Recording (%@)" = "Зупинити запис екрана (%@)";
+"Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)" = "Вимкнути перерви для очей, доки не ввімкнеш знову (меню або Налаштування → Відпочинок очей)";
 "Stop recording" = "Зупинити запис";
 "Stop recording and send (%@)" = "Зупинити запис і надіслати (%@)";
 "Stop the answer" = "Зупинити відповідь";
@@ -395,6 +396,7 @@
 "Token" = "Токен";
 "Too many requests or no credit left. Try again later." = "Забагато запитів або закінчились кошти. Спробуй пізніше.";
 "Try" = "Спробувати";
+"Turn Off" = "Вимкнути";
 "Turn on Ellipse" = "Увімкнути Ellipse";
 "Undo" = "Скасувати";
 "Unpin panel" = "Відкріпити панель";

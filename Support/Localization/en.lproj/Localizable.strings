@@ -359,6 +359,7 @@
 "Stop Reading" = "Stop Reading";
 "Stop Recording and Send" = "Stop Recording and Send";
 "Stop Screen Recording (%@)" = "Stop Screen Recording (%@)";
+"Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)" = "Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)";
 "Stop recording" = "Stop recording";
 "Stop recording and send (%@)" = "Stop recording and send (%@)";
 "Stop the answer" = "Stop the answer";
@@ -395,6 +396,7 @@
 "Token" = "Token";
 "Too many requests or no credit left. Try again later." = "Too many requests or no credit left. Try again later.";
 "Try" = "Try";
+"Turn Off" = "Turn Off";
 "Turn on Ellipse" = "Turn on Ellipse";
 "Undo" = "Undo";
 "Unpin panel" = "Unpin panel";

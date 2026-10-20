@@ -359,6 +359,7 @@
 "Stop Reading" = "Zastavit předčítání";
 "Stop Recording and Send" = "Zastavit nahrávání a odeslat";
 "Stop Screen Recording (%@)" = "Zastavit nahrávání obrazovky (%@)";
+"Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)" = "Vypnout přestávky pro oči, dokud je znovu nezapneš (nabídka nebo Nastavení → Odpočinek očí)";
 "Stop recording" = "Zastavit nahrávání";
 "Stop recording and send (%@)" = "Zastavit nahrávání a odeslat (%@)";
 "Stop the answer" = "Zastavit odpověď";
@@ -395,6 +396,7 @@
 "Token" = "Token";
 "Too many requests or no credit left. Try again later." = "Příliš mnoho požadavků nebo došel kredit. Zkus to později.";
 "Try" = "Vyzkoušet";
+"Turn Off" = "Vypnout";
 "Turn on Ellipse" = "Zapnout Ellipse";
 "Undo" = "Zpět";
 "Unpin panel" = "Odepnout panel";

@@ -435,4 +435,6 @@ T = {
     'Stop recording': ('Зупинити запис', 'Zastavit nahrávání', 'Остановить запись'),
     'Start recording': ('Почати запис', 'Začít nahrávat', 'Начать запись'),
     'Screen': ('Екран', 'Obrazovka', 'Экран'),
+    'Turn Off': ('Вимкнути', 'Vypnout', 'Выключить'),
+    'Stop eye breaks until you turn them on again (menu bar or Settings → Eye Rest)': ('Вимкнути перерви для очей, доки не ввімкнеш знову (меню або Налаштування → Відпочинок очей)', 'Vypnout přestávky pro oči, dokud je znovu nezapneš (nabídka nebo Nastavení → Odpočinek očí)', 'Выключить перерывы для глаз, пока не включишь снова (меню или Настройки → Отдых глаз)'),
 }
