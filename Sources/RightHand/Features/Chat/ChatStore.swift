@@ -52,10 +52,12 @@ final class ChatStore {
         }
     }
 
-    /// The tab you are looking at.
+    /// The tab you are looking at. `tabs` is never empty; the fallback is only for safety.
     var engine: ConversationEngine {
-        tabs.first { $0.chat.id == selectedID } ?? tabs[0]
+        tabs.first { $0.chat.id == selectedID } ?? tabs.first ?? fallback
     }
+
+    @ObservationIgnored private lazy var fallback = makeEngine(Self.newChat(provider: ChatSettings.provider))
 
     var provider: ChatProvider {
         get { engine.chat.provider }
@@ -97,11 +99,16 @@ final class ChatStore {
     /// Closes a tab and deletes its saved conversation.
     func close(_ id: UUID) {
         guard let index = tabs.firstIndex(where: { $0.chat.id == id }) else { return }
-        let engine = tabs.remove(at: index)
-        engine.stop()
-        if !engine.chat.messages.isEmpty { ProjectStorage.delete(engine.chat) }
-        if tabs.isEmpty { tabs = [makeEngine(Self.newChat(provider: engine.chat.provider))] }
-        if selectedID == id { select(tabs[min(index, tabs.count - 1)].chat.id) }
+        let closing = tabs[index]
+        // Build the new list first and swap it in at once: the view redraws as soon as `tabs`
+        // changes and must never see it empty (that crashed RightHand when closing the last tab).
+        var remaining = tabs
+        remaining.remove(at: index)
+        if remaining.isEmpty { remaining = [makeEngine(Self.newChat(provider: closing.chat.provider))] }
+        if selectedID == id { select(remaining[min(index, remaining.count - 1)].chat.id) }
+        tabs = remaining
+        closing.stop()
+        if !closing.chat.messages.isEmpty { ProjectStorage.delete(closing.chat) }
     }
 
     func reloadKeys() {
