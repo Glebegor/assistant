@@ -7,10 +7,19 @@ struct VoiceHUD: View {
     /// Height of the camera area at the top of the card.
     let topInset: CGFloat
 
+    /// While the request is being processed the notch keeps its size (it only glows), so it
+    /// never covers the windows you're working in; the card shows while you speak and for the answer.
+    static func expands(_ phase: VoiceAssistant.Phase) -> Bool {
+        switch phase {
+        case .listening, .answer, .failed: true
+        case .idle, .transcribing, .working: false
+        }
+    }
+
     static func size(for phase: VoiceAssistant.Phase, collapsed: CGSize) -> CGSize {
         let width = max(collapsed.width + 160, 420)
         switch phase {
-        case .idle: return collapsed
+        case .idle, .transcribing, .working: return collapsed
         case .answer: return CGSize(width: width + 60, height: collapsed.height + 92)
         case .failed: return CGSize(width: width, height: collapsed.height + 62)
         default: return CGSize(width: width, height: collapsed.height + 56)

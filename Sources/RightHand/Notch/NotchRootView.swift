@@ -14,7 +14,8 @@ struct NotchRootView: View {
 
     /// The voice card shows on the closed notch of the screen you started talking on.
     private var showsVoice: Bool {
-        voice.isVisible && !model.isExpanded && (voice.displayID == nil || voice.displayID == model.displayID)
+        voice.isVisible && VoiceHUD.expands(voice.phase) && !model.isExpanded
+            && (voice.displayID == nil || voice.displayID == model.displayID)
     }
 
     var body: some View {
