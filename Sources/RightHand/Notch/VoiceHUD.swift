@@ -94,7 +94,6 @@ private struct LevelBars: View {
 
 /// The blue light around the notch while you talk; it slowly turns and breathes with your voice.
 struct NotchGlow: View {
-    let size: CGSize
     let radius: CGFloat
     let level: Float
     /// Calmer while the AI works, livelier while listening.
@@ -123,7 +122,6 @@ struct NotchGlow: View {
             shape.stroke(gradient, lineWidth: rimWidth).blur(radius: 4)
             shape.stroke(gradient, lineWidth: 1.5)
         }
-        .frame(width: size.width, height: size.height)
     }
 }
 

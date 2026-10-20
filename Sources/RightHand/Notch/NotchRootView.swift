@@ -26,10 +26,6 @@ struct NotchRootView: View {
             && [.listening, .transcribing, .working].contains(voice.phase)
 
         ZStack(alignment: .top) {
-            if glows {
-                NotchGlow(size: size, radius: radius, level: voice.level, isListening: voice.phase == .listening)
-                    .transition(.opacity)
-            }
             ZStack(alignment: .top) {
                 shape
                     .fill(.black)
@@ -44,6 +40,14 @@ struct NotchRootView: View {
             }
             .frame(width: size.width, height: size.height)
             .clipShape(shape)
+            // Behind the shape and outside the clip, so it grows, shrinks and rounds its corners
+            // together with the notch in the same animation.
+            .background {
+                if glows {
+                    NotchGlow(radius: radius, level: voice.level, isListening: voice.phase == .listening)
+                        .transition(.opacity)
+                }
+            }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: voice.phase)
         .animation(.easeInOut(duration: 0.3), value: glows)
