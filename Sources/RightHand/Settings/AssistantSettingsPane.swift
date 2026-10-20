@@ -166,7 +166,7 @@ private struct VoiceSettingsSection: View {
                     .monospaced()
                     .keyboardShortcut(isRecording ? .cancelAction : nil)
             } label: {
-                SettingsRowLabel("Talk shortcut", subtitle: shortcutMessage ?? L("%@. Press once to talk, again to send. Esc cancels.", shortcut.spokenName),
+                SettingsRowLabel("Talk to Ellipse", subtitle: shortcutMessage ?? L("%@. Press once to talk, again to send. Esc cancels.", shortcut.spokenName),
                                  systemImage: "mic.fill", color: shortcutMessage == nil ? .blue : .orange)
             }
             LabeledContent {
@@ -210,7 +210,7 @@ private struct VoiceSettingsSection: View {
                 SettingsRowLabel("Speed", systemImage: "hare.fill", color: .orange)
             }
         } header: {
-            Text("Voice")
+            Text("Ellipse — voice assistant")
         } footer: {
             SettingsFooter("Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.")
         }

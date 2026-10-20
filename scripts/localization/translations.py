@@ -395,4 +395,8 @@ T = {
     '%@ is used by macOS (for example Spotlight). Choose another.': ('%@ використовує macOS (наприклад, Spotlight). Обери інше.', '%@ používá macOS (třeba Spotlight). Vyber jinou.', '%@ использует macOS (например, Spotlight). Выбери другое.'),
     'Automatic (English, Українська, Čeština, Русский)': ('Автоматично (English, Українська, Čeština, Русский)', 'Automaticky (English, Українська, Čeština, Русский)', 'Автоматически (English, Українська, Čeština, Русский)'),
     'Automatic understands all four; choosing one is a bit faster': ('Автоматично розуміє всі чотири; одна мова — трохи швидше', 'Automaticky rozumí všem čtyřem; jeden jazyk je o něco rychlejší', 'Автоматически понимает все четыре; один язык — чуть быстрее'),
+    '%@ is listening…': ('%@ слухає…', '%@ poslouchá…', '%@ слушает…'),
+    'Talk to %@ (%@)': ('Поговорити з %@ (%@)', 'Mluvit s %@ (%@)', 'Поговорить с %@ (%@)'),
+    'Ellipse — voice assistant': ('Ellipse — голосовий помічник', 'Ellipse — hlasový asistent', 'Ellipse — голосовой помощник'),
+    'Talk to Ellipse': ('Говорити з Ellipse', 'Mluvit s Ellipse', 'Говорить с Ellipse'),
 }
