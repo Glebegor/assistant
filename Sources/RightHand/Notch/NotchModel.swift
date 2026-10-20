@@ -79,6 +79,8 @@ final class NotchModel {
     var isPinned = false
     var selectedTab: NotchTab = .pomodoro
     var geometry: NotchGeometry
+    /// The screen this notch is on.
+    var displayID: CGDirectDisplayID?
     /// True while an app is in full screen on this screen: the closed notch is not drawn.
     var hidesWhenCollapsed = false
 

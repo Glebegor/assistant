@@ -37,7 +37,8 @@ struct ClickUpClient: Sendable {
             if let assignee { path += "&assignees[]=\(assignee)" }
             let response = try await request("GET", path)
             let batch = response["tasks"]?.array ?? []
-            tasks += batch
+            // ClickUp's include_closed only hides "closed" statuses; "done" ones (e.g. "complete") are finished too.
+            tasks += includeClosed ? batch : batch.filter { !Self.isFinished($0) }
             if batch.count < 100 || response["last_page"]?.bool == true { break }
             page += 1
         }
@@ -82,6 +83,11 @@ struct ClickUpClient: Sendable {
     }
 
     // MARK: Reading tasks
+
+    /// Status type "done" (e.g. "complete") or "closed" (e.g. "cancelled").
+    static func isFinished(_ task: JSONValue) -> Bool {
+        ["done", "closed"].contains(task["status"]?["type"]?.string ?? "")
+    }
 
     /// A ClickUp task for the Tasks tab.
     static func taskItem(_ task: JSONValue) -> TaskItem? {

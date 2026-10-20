@@ -8,18 +8,21 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let eyeRest: EyeRestController
     private let showPanel: () -> Void
     private let openProjects: () -> Void
+    private let voice: VoiceAssistant
+    private let talkItem = NSMenuItem(title: "", action: #selector(talk), keyEquivalent: "")
     private let openSettings: () -> Void
     private let toggleTimerItem = NSMenuItem(title: "", action: #selector(toggleTimer), keyEquivalent: "")
     private let eyeRestEnabledItem = NSMenuItem(title: L("Eye Rest Reminders"), action: #selector(toggleEyeRest), keyEquivalent: "")
     private let eyeRestPauseItem = NSMenuItem(title: "", action: #selector(pauseOrResumeEyeRest), keyEquivalent: "")
     private let eyeBreakNowItem = NSMenuItem(title: L("Take an Eye Break Now"), action: #selector(takeEyeBreak), keyEquivalent: "")
 
-    init(pomodoro: PomodoroTimer, eyeRest: EyeRestController,
+    init(pomodoro: PomodoroTimer, eyeRest: EyeRestController, voice: VoiceAssistant,
          showPanel: @escaping () -> Void, openProjects: @escaping () -> Void, openSettings: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.eyeRest = eyeRest
         self.showPanel = showPanel
         self.openProjects = openProjects
+        self.voice = voice
         self.openSettings = openSettings
         super.init()
 
@@ -44,6 +47,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.addItem(eyeRestPauseItem)
         menu.addItem(eyeBreakNowItem)
         menu.addItem(.separator())
+        talkItem.target = self
+        menu.addItem(talkItem)
         menu.addItem(NSMenuItem(title: L("Show Panel"), action: #selector(showPanelAction), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: L("Projects…"), action: #selector(openProjectsAction), keyEquivalent: "p"))
         menu.addItem(NSMenuItem(title: L("Settings…"), action: #selector(openSettingsAction), keyEquivalent: ","))
@@ -62,6 +67,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     // Eye rest items are refreshed each time the menu opens.
     func menuNeedsUpdate(_ menu: NSMenu) {
+        talkItem.title = voice.phase == .listening ? L("Stop Recording and Send") : L("Talk to the AI (%@)", Shortcut.voice.displayName)
+
         let enabled = EyeRestSettings.enabled
         eyeRestEnabledItem.state = enabled ? .on : .off
 
@@ -83,6 +90,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     @objc private func takeEyeBreak() { eyeRest.takeBreakNow() }
     @objc private func showPanelAction() { showPanel() }
     @objc private func openProjectsAction() { openProjects() }
+    @objc private func talk() { voice.toggle() }
     @objc private func openSettingsAction() { openSettings() }
     @objc private func quit() { NSApp.terminate(nil) }
 }

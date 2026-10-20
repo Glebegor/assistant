@@ -4,6 +4,7 @@ import SwiftUI
 /// Assistant tab: chat with Claude or ChatGPT, which can use tools on the Mac (asking first).
 struct ChatView: View {
     let store: ChatStore
+    let voice: VoiceAssistant
     let openSettings: () -> Void
     let openProjects: () -> Void
     @State private var draft = ""
@@ -106,6 +107,39 @@ struct ChatView: View {
 
     private var inputBar: some View {
         HStack(alignment: .bottom, spacing: 8) {
+            if voice.phase == .listening || voice.phase == .transcribing {
+                // While recording, the field shows what you're saying.
+                HStack(spacing: 8) {
+                    Image(systemName: "waveform").foregroundStyle(.cyan).symbolEffect(.variableColor.iterative, isActive: voice.phase == .listening)
+                    Text(voice.transcript.isEmpty ? L("Listening…") : voice.transcript)
+                        .foregroundStyle(voice.transcript.isEmpty ? .secondary : .primary)
+                        .lineLimit(1...5)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 9)
+                .background(.cyan.opacity(0.12), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            } else {
+                messageField
+            }
+            Button(voice.phase == .listening ? "Send Recording" : "Record", systemImage: micSymbol) { voice.toggle() }
+                .help(voice.phase == .listening ? L("Stop recording and send (%@)", Shortcut.voice.displayName)
+                                               : L("Speak your message (%@)", Shortcut.voice.displayName))
+                .iconButton(color: voice.phase == .listening ? .red : .white)
+                .disabled(!store.hasKey || voice.phase == .transcribing)
+            sendOrStop
+        }
+    }
+
+    private var micSymbol: String {
+        switch voice.phase {
+        case .listening: "stop.circle.fill"
+        case .transcribing: "ellipsis.circle.fill"
+        default: "mic.circle.fill"
+        }
+    }
+
+    private var messageField: some View {
             TextField("Message \(store.provider.title)…", text: $draft, axis: .vertical)
                 .textFieldStyle(.plain)
                 .lineLimit(1...5)
@@ -116,6 +150,10 @@ struct ChatView: View {
                 .padding(.vertical, 9)
                 .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .disabled(!store.hasKey)
+    }
+
+    @ViewBuilder
+    private var sendOrStop: some View {
             if store.isSending {
                 Button("Stop", systemImage: "stop.circle.fill", action: store.stop)
                     .help("Stop the answer")
@@ -126,7 +164,6 @@ struct ChatView: View {
                     .help("Send (Return)")
                     .iconButton()
             }
-        }
     }
 
     private func send() {
@@ -138,11 +175,11 @@ struct ChatView: View {
 }
 
 private extension View {
-    func iconButton() -> some View {
+    func iconButton(color: Color = .white) -> some View {
         labelStyle(.iconOnly)
             .buttonStyle(.plain)
             .font(.system(size: 26))
-            .foregroundStyle(.white)
+            .foregroundStyle(color)
     }
 }
 
