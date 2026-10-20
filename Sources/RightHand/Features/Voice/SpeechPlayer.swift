@@ -12,6 +12,7 @@ enum VoiceSettings {
         static let speakVoiceAnswers = "voice.speakAnswers"
         static let shortcut = "voice.shortcut"
         static let listenLanguage = "voice.listenLanguage"
+        static let listenLanguages = "voice.listenLanguages"
     }
 
     /// "" = pick the best installed voice for the language of each answer.
@@ -57,7 +58,7 @@ final class SpeechPlayer {
     let isLoading = false
 
     @ObservationIgnored private let synthesizer = AVSpeechSynthesizer()
-    @ObservationIgnored private lazy var delegate = Delegate { [weak self] in self?.finished() }
+    @ObservationIgnored private lazy var delegate = Delegate { [weak self] in self?.finished($0) }
     @ObservationIgnored private var onFinish: (() -> Void)?
 
     func toggle(_ text: String) {
@@ -65,40 +66,109 @@ final class SpeechPlayer {
     }
 
     /// Speaks `text`; `onFinish` runs when it has been read to the end (not when stopped).
+    /// Mixed-language answers ("Задача “Vytvoření predikce financí” …") are read part by part,
+    /// each in a voice of its own language.
     func speak(_ text: String, onFinish: (() -> Void)? = nil) {
         stop()
-        let spoken = Self.plainText(text)
-        guard !spoken.isEmpty else { onFinish?(); return }
+        let parts = Self.parts(of: Self.plainText(text))
+        guard !parts.isEmpty else { onFinish?(); return }
         synthesizer.delegate = delegate
-        let utterance = AVSpeechUtterance(string: spoken)
-        utterance.voice = Self.voice(for: spoken)
-        utterance.rate = VoiceSettings.rate
         currentText = text
         self.onFinish = onFinish
-        synthesizer.speak(utterance)
+        var last: AVSpeechUtterance?
+        for part in parts {
+            let utterance = AVSpeechUtterance(string: part.text)
+            utterance.voice = Self.voice(for: part.language)
+            utterance.rate = VoiceSettings.rate
+            synthesizer.speak(utterance)
+            last = utterance
+        }
+        lastUtterance = last
     }
 
     func stop() {
         onFinish = nil
+        lastUtterance = nil
         if synthesizer.isSpeaking { synthesizer.stopSpeaking(at: .immediate) }
         currentText = nil
     }
 
-    private func finished() {
+    @ObservationIgnored private var lastUtterance: AVSpeechUtterance?
+
+    private func finished(_ utterance: AVSpeechUtterance) {
+        guard utterance === lastUtterance else { return }
+        lastUtterance = nil
         currentText = nil
         let done = onFinish
         onFinish = nil
         done?()
     }
 
-    private static func voice(for text: String) -> AVSpeechSynthesisVoice? {
-        if !VoiceSettings.voiceID.isEmpty, let chosen = AVSpeechSynthesisVoice(identifier: VoiceSettings.voiceID) { return chosen }
-        let language = NLLanguageRecognizer.dominantLanguage(for: text)?.rawValue ?? AppLanguage.current
+    /// The voice chosen in Settings for its own language; otherwise the best one for `language`.
+    private static func voice(for language: String) -> AVSpeechSynthesisVoice? {
+        if !VoiceSettings.voiceID.isEmpty, let chosen = AVSpeechSynthesisVoice(identifier: VoiceSettings.voiceID),
+           chosen.language.hasPrefix(language) {
+            return chosen
+        }
         return VoiceSettings.bestVoice(for: language)
     }
 
+    /// Splits text into runs of one language. Cyrillic is Russian or Ukrainian (decided for the
+    /// whole text), Latin is English or Czech per run; a few Latin words inside Cyrillic text
+    /// ("ClickUp", "on hold") stay with the surrounding voice, which reads them well enough.
+    nonisolated static func parts(of text: String) -> [(text: String, language: String)] {
+        enum Script { case cyrillic, latin, neutral }
+        func script(_ scalar: Unicode.Scalar) -> Script {
+            guard CharacterSet.letters.contains(scalar) else { return .neutral }
+            return (0x0400...0x052F).contains(scalar.value) ? .cyrillic : .latin
+        }
+        func detect(_ text: String, among languages: [String]) -> String {
+            let recognizer = NLLanguageRecognizer()
+            recognizer.languageConstraints = languages.map { NLLanguage($0) }
+            recognizer.processString(text)
+            return recognizer.dominantLanguage?.rawValue ?? languages[0]
+        }
+
+        // Runs of one script; spaces, digits and punctuation join the run they're in.
+        var runs: [(text: String, script: Script)] = []
+        for character in text {
+            let kind = character.unicodeScalars.first.map(script) ?? .neutral
+            if kind == .neutral || runs.last?.script == kind || runs.isEmpty {
+                if runs.isEmpty { runs.append((String(character), kind)) } else { runs[runs.count - 1].text.append(character) }
+                if runs[runs.count - 1].script == .neutral, kind != .neutral { runs[runs.count - 1].script = kind }
+            } else {
+                runs.append((String(character), kind))
+            }
+        }
+
+        let cyrillic = runs.filter { $0.script == .cyrillic }.map(\.text).joined(separator: " ")
+        let cyrillicLanguage = cyrillic.isEmpty ? nil : detect(cyrillic, among: ["ru", "uk"])
+        let main = cyrillicLanguage ?? detect(text, among: ["en", "cs", "uk", "ru"])
+        let czechLetters = CharacterSet(charactersIn: "áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ")
+
+        var parts: [(text: String, language: String)] = []
+        for run in runs {
+            var language = main
+            if run.script == .latin {
+                let words = run.text.split(whereSeparator: { !$0.isLetter }).count
+                let looksCzech = run.text.unicodeScalars.contains { czechLetters.contains($0) }
+                if cyrillicLanguage == nil {
+                    language = looksCzech ? "cs" : detect(run.text, among: ["en", "cs"])
+                } else if looksCzech || words >= 3 {
+                    language = looksCzech ? "cs" : detect(run.text, among: ["en", "cs"])
+                }
+            }
+            if let last = parts.last, last.language == language {
+                parts[parts.count - 1].text += run.text
+            } else {
+                parts.append((run.text, language))
+            }
+        }
+        return parts.map { ($0.text.trimmingCharacters(in: .whitespaces), $0.language) }.filter { $0.text.contains(where: \.isLetter) }
+    }
+
     /// Markdown symbols and links would be read out loud; drop them.
-    static func plainText(_ markdown: String) -> String {
+    nonisolated static func plainText(_ markdown: String) -> String {
         var text = markdown
         text = text.replacingOccurrences(of: "```[\\s\\S]*?```", with: " ", options: .regularExpression)
         text = text.replacingOccurrences(of: "\\[([^\\]]+)\\]\\([^)]+\\)", with: "$1", options: .regularExpression)
@@ -108,10 +178,11 @@ final class SpeechPlayer {
     }
 
     private final class Delegate: NSObject, AVSpeechSynthesizerDelegate {
-        let onFinish: @MainActor () -> Void
-        init(onFinish: @escaping @MainActor () -> Void) { self.onFinish = onFinish }
+        let onFinish: @MainActor (AVSpeechUtterance) -> Void
+        init(onFinish: @escaping @MainActor (AVSpeechUtterance) -> Void) { self.onFinish = onFinish }
         func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-            Task { @MainActor in onFinish() }
+            nonisolated(unsafe) let utterance = utterance
+            Task { @MainActor in onFinish(utterance) }
         }
     }
 }

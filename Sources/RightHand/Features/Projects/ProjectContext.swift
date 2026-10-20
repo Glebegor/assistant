@@ -60,13 +60,7 @@ enum ProjectContext {
 
         if let services = Integrations.systemPrompt { parts.append(services) }
 
-        parts.append("""
-        # Voice
-
-        Messages that start with \(VoiceAssistant.voicePrefix.trimmingCharacters(in: .whitespaces)) were spoken and your answer is read aloud: \
-        answer in one to three short plain sentences, without Markdown, lists or links, in the language the user spoke. \
-        You can still use your tools to do what was asked.
-        """)
+        parts.append(VoiceAssistant.ellipsePrompt)
 
         parts.append(provider == .claude
             ? "# Memory\n\nUse your memory tool to keep notes about this project (decisions, progress, preferences) so later chats can continue the work."

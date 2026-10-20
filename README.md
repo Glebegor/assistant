@@ -17,6 +17,33 @@ scripts/install.sh        # build (release) and install into /Applications, then
 Requires macOS 14+ and Xcode (or Command Line Tools) with Swift 5.10+.
 For editing in VS Code install the **Swift** extension (`swiftlang.swift-vscode`).
 
+## Ellipse, the voice assistant
+
+Ellipse is RightHand's voice assistant. Press **⌥Space** (or the 🎙 button in the notch chat, or
+the menu bar item), speak in English, Ukrainian, Czech or Russian, and press it again. The notch
+glows while Ellipse listens and works, and the answer is read aloud by the Mac's own voice, so you
+can keep working in other windows. The conversation stays in the notch chat.
+
+What Ellipse does:
+
+- **Quick answers**: questions and explanations in a sentence or two.
+- **Your Mac**: opens apps, links and files; finds, reads, creates, edits, moves and deletes files;
+  runs Terminal commands.
+- **Tasks** in Notion and ClickUp: what's due or overdue, what to do next, marking tasks done,
+  changing status, priority or due date, adding notes.
+- **Gmail and Google Drive** (when connected): finds and summarizes emails and documents, creates
+  Google Docs, uploads and downloads files.
+- **Planning the day** from open tasks, deadlines and priorities.
+- **Memory**: remembers what you ask it to keep, and knows what you wrote in *About me*.
+
+How it behaves: it answers in the language you spoke, in one to three short sentences; it does
+the task first and then says what it did; with many results it gives the most important two or
+three; it asks one short question when the request is unclear. Anything that changes files, tasks
+or runs commands asks for your approval in the notch first.
+
+Speech recognition is Apple's (on the Mac for English and Russian, Apple's free service for
+Ukrainian and Czech); speech is made offline by macOS. Settings → Assistant → Ellipse.
+
 ## Signing
 
 Local builds are signed with a self-made certificate, "RightHand Local Signing", which

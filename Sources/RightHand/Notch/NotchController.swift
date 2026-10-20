@@ -150,6 +150,16 @@ final class NotchController {
                        display: true)
         panel.orderFrontRegardless()
 
+        panel.onCloseChat = { [weak self, weak model] in
+            guard let self, let model else { return }
+            if model.selectedTab == .chat { self.chat.close(self.chat.selectedID) } else { self.collapse() }
+        }
+        panel.onNewChat = { [weak self, weak model] in
+            guard let self else { return }
+            model?.selectedTab = .chat
+            self.chat.newChat()
+        }
+
         let catcher = NotchDropCatcher()
         catcher.setFrame(model.geometry.hoverZone(on: screen), display: false)
         let notch = ScreenNotch(screen: screen, panel: panel, model: model, catcher: catcher)

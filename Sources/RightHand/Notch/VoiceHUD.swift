@@ -57,7 +57,7 @@ struct VoiceHUD: View {
     private var content: some View {
         switch voice.phase {
         case .listening:
-            Text(voice.transcript.isEmpty ? L("Listening…") : voice.transcript)
+            Text(voice.transcript.isEmpty ? L("%@ is listening…", VoiceAssistant.name) : voice.transcript)
                 .lineLimit(1).truncationMode(.head)
                 .foregroundStyle(voice.transcript.isEmpty ? .secondary : .primary)
             Text(L("%@ to send · Esc to cancel", Shortcut.voice.displayName)).font(.caption2).foregroundStyle(.secondary)

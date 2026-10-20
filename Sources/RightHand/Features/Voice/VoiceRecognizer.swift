@@ -45,10 +45,18 @@ final class VoiceRecognizer {
     private var channels: [Channel] = []
     private var finalResult: CheckedContinuation<String, Never>?
 
-    /// The languages to listen in: the one chosen in Settings, or all of them (Automatic).
+    /// The languages switched on in Settings (all four by default). With one, nothing has to be guessed.
     static var languages: [String] {
-        let chosen = UserDefaults.standard.string(forKey: VoiceSettings.Key.listenLanguage) ?? ""
-        return chosen.isEmpty ? automaticLanguages : [chosen]
+        get {
+            if let saved = UserDefaults.standard.string(forKey: VoiceSettings.Key.listenLanguages) {
+                let languages = automaticLanguages.filter { saved.split(separator: ",").map(String.init).contains($0) }
+                return languages.isEmpty ? automaticLanguages : languages
+            }
+            // Earlier versions had one "Listen in" choice.
+            let single = UserDefaults.standard.string(forKey: VoiceSettings.Key.listenLanguage) ?? ""
+            return single.isEmpty ? automaticLanguages : [single]
+        }
+        set { UserDefaults.standard.set(newValue.joined(separator: ","), forKey: VoiceSettings.Key.listenLanguages) }
     }
 
     static func requestPermissions() async throws {
@@ -149,22 +157,32 @@ final class VoiceRecognizer {
 
     /// The transcript that is most clearly in its own language.
     private func best() -> Channel? {
-        channels.filter { !$0.transcript.isEmpty }.max { Self.score($0) < Self.score($1) }
+        let heard = channels.filter { !$0.transcript.isEmpty }
+        let mostWords = heard.map { Self.wordCount($0.transcript) }.max() ?? 1
+        return heard.max {
+            Self.score(transcript: $0.transcript, language: $0.language, confidence: $0.confidence, mostWords: mostWords)
+                < Self.score(transcript: $1.transcript, language: $1.language, confidence: $1.confidence, mostWords: mostWords)
+        }
     }
 
-    private static func score(_ channel: Channel) -> Double {
-        score(transcript: channel.transcript, language: channel.language, confidence: channel.confidence)
+    nonisolated static func wordCount(_ text: String) -> Int {
+        text.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).count
     }
 
-    /// How likely `transcript` is real speech in `language` (higher is better). Three signals:
-    /// the share of words found in that language's spelling dictionary, how much the text reads like
-    /// the language, and the recognizer's own confidence (low when it heard a language it doesn't know).
-    static func score(transcript: String, language: String, confidence: Float) -> Double {
+    /// How likely `transcript` is real speech in `language` (higher is better). Signals:
+    /// - how many words it heard compared with the other languages: a recognizer that doesn't know
+    ///   the language you speak catches far fewer words (the strongest signal);
+    /// - the share of words in that language's spelling dictionary;
+    /// - how much the text reads like the language;
+    /// - the recognizer's own confidence (on-device recognizers often report none: then it doesn't count).
+    static func score(transcript: String, language: String, confidence: Float, mostWords: Int) -> Double {
         let recognizer = NLLanguageRecognizer()
         recognizer.languageConstraints = automaticLanguages.map { NLLanguage($0) }
         recognizer.processString(transcript)
         let probability = recognizer.languageHypotheses(withMaximum: 4)[NLLanguage(language)] ?? 0
-        return 0.45 * knownWords(in: transcript, language: language) + 0.2 * probability + 0.35 * Double(confidence)
+        let coverage = Double(wordCount(transcript)) / Double(max(1, mostWords))
+        let sureness = confidence > 0 ? Double(confidence) : 0.6
+        return 0.4 * coverage + 0.3 * knownWords(in: transcript, language: language) + 0.15 * probability + 0.15 * sureness
     }
 
     /// Share of words (2+ letters) the system dictionary of `language` knows.
