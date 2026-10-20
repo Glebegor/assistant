@@ -70,6 +70,11 @@
 "Change a Notion task: %@" = "Změnit úkol v Notionu: %@";
 "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it." = "Mění jazyk nabídek, nastavení a panelu RightHand. AI odpovídá jazykem, kterým mu píšeš.";
 "Change…" = "Změnit…";
+"Check Now" = "Zkontrolovat";
+"Check for Updates…" = "Zkontrolovat aktualizace…";
+"Check for updates automatically" = "Kontrolovat aktualizace automaticky";
+"Checked %@" = "Zkontrolováno %@";
+"Checking for updates…" = "Hledám aktualizace…";
 "Choose a project or chat" = "Vyber projekt nebo chat";
 "Choose the microphone" = "Vybrat mikrofon";
 "Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude a ChatGPT: co o tobě vědí a co smějí dělat na tvém Macu.";
@@ -97,7 +102,10 @@
 "Copy" = "Kopírovat";
 "Copy %@ to %@" = "Zkopírovat %@ do %@";
 "Copy answer" = "Kopírovat odpověď";
+"Couldn't check for updates" = "Aktualizace se nepodařilo zkontrolovat";
+"Couldn't install the update: %@" = "Aktualizaci se nepodařilo nainstalovat: %@";
 "Couldn't play the audio." = "Zvuk se nepodařilo přehrát.";
+"Couldn't read the latest release from GitHub." = "Nepodařilo se načíst poslední vydání z GitHubu.";
 "Couldn't read the recording." = "Nahrávku se nepodařilo přečíst.";
 "Couldn't start recording: %@" = "Nahrávání se nepodařilo spustit: %@";
 "Create %@" = "Vytvořit %@";
@@ -124,6 +132,8 @@
 "Download a Google Drive file to %@" = "Stáhnout soubor z Google Drive do %@";
 "Download from Google Drive" = "Stahování z Google Drive";
 "Downloading speech model… %lld%%" = "Stahuji model… %lld%%";
+"Downloading update…" = "Stahuji aktualizaci…";
+"Downloading update… %lld%%" = "Stahuji aktualizaci… %lld%%";
 "Drop files here. New screenshots appear here too." = "Přetáhni sem soubory. Objeví se tu i nové snímky obrazovky.";
 "Edit" = "Úpravy";
 "Edit %@" = "Upravit %@";
@@ -169,6 +179,10 @@
 "I didn't hear anything. Press the shortcut and speak." = "Nic jsem neslyšel. Stiskni zkratku a mluv.";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "V projektech může AI číst, vytvářet, přesouvat a mazat soubory kdekoli na tvém Macu a spouštět příkazy Terminálu. Před každou akcí mimo složky projektu a před každým příkazem a smazáním se tě zeptá. Smazané soubory jdou do koše.";
 "In this project these tools run without asking, also outside the project folders." = "V tomto projektu tyto nástroje běží bez ptaní, i mimo složky projektu.";
+"Install" = "Nainstalovat";
+"Install and Restart" = "Nainstalovat a restartovat";
+"Install it from the ✋ menu or Settings → About." = "Nainstaluj ho z nabídky ✋ nebo v Nastavení → O aplikaci.";
+"Installing update…" = "Instaluji aktualizaci…";
 "Instructions" = "Pokyny";
 "Integration token from %@" = "Token integrace z %@";
 "Its chats, files and memory are moved to the Trash." = "Jeho chaty, soubory a paměť se přesunou do Koše.";
@@ -177,6 +191,7 @@
 "Keys are stored securely in your Mac's Keychain." = "Klíče jsou bezpečně uložené v Klíčence tvého Macu.";
 "Language" = "Jazyk";
 "Language of RightHand." = "Jazyk RightHand.";
+"Later" = "Později";
 "List %@" = "Zobrazit obsah %@";
 "List ClickUp tasks" = "Vypsat úkoly v ClickUp";
 "List files" = "Výpis souborů";
@@ -337,7 +352,9 @@
 "Resume Eye Rest (paused until %@)" = "Obnovit odpočinek očí (pozastaveno do %@)";
 "Return sends, Shift-Return adds a new line." = "Return odešle, Shift-Return přidá nový řádek.";
 "Review" = "Shrnutí";
+"RightHand %@ is available" = "Je k dispozici RightHand %@";
 "RightHand is connected to Google. You can close this tab." = "RightHand je připojený ke Googlu. Tuto kartu můžeš zavřít.";
+"RightHand is up to date" = "RightHand je aktuální";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand potřebuje přístup k Ploše, aby mohl automaticky přidávat snímky obrazovky";
 "Run Terminal commands" = "Příkazy Terminálu";
 "Run a command in %@" = "Spustit příkaz v %@";
@@ -381,6 +398,7 @@
 "Sites blocked during focus." = "Weby blokované během soustředění.";
 "Skip" = "Přeskočit";
 "Skip Phase" = "Přeskočit fázi";
+"Skip This Version" = "Přeskočit tuto verzi";
 "Skip to next phase" = "Přejít na další fázi";
 "Sounds" = "Zvuky";
 "Speak your message (%@)" = "Namluvit zprávu (%@)";
@@ -418,6 +436,8 @@
 "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good." = "AI může v těchto složkách procházet, hledat, číst a zapisovat soubory. Před každou akcí se zeptá, pokud nástroj nepovolíš natrvalo.";
 "The API key was rejected. Check it in Settings → Assistant." = "Klíč API byl odmítnut. Zkontroluj ho v Nastavení → Asistent.";
 "The ElevenLabs API key was rejected." = "Klíč API ElevenLabs byl odmítnut.";
+"The download doesn't contain RightHand." = "Stažený soubor neobsahuje RightHand.";
+"The download failed." = "Stahování se nezdařilo.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Napoprvé se macOS zeptá, zda RightHand smí ovládat každý prohlížeč. Klikni na OK.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "Mikrofon nedává zvuk. Vyber jiný v Nastavení → Ellipse.";
 "The project's instructions, files and memory are already part of this chat." = "Pokyny, soubory a paměť projektu už jsou součástí tohoto chatu.";
@@ -448,11 +468,14 @@
 "Unpin panel" = "Odepnout panel";
 "Untitled" = "Bez názvu";
 "Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks" = "Až %lld hodiny · asi 1,5 GB za hodinu · hlas a zvuk počítače na samostatných stopách";
+"Update to %@…" = "Aktualizovat na %@…";
+"Updates" = "Aktualizace";
 "Upload %@ to Google Drive" = "Nahrát %@ na Google Drive";
 "Upload to Google Drive" = "Nahrávání na Google Drive";
 "Use This Folder" = "Použít tuto složku";
 "Use project memory" = "Použít paměť projektu";
 "Use ⌘, ⌥ or ⌃ together with a key." = "Použij ⌘, ⌥ nebo ⌃ spolu s klávesou.";
+"Version %@" = "Verze %@";
 "Version %@ (%@)" = "Verze %@ (%@)";
 "Version and links." = "Verze a odkazy.";
 "Voice" = "Hlas";
@@ -471,6 +494,8 @@
 "Write files" = "Zápis souborů";
 "Write memory note %@" = "Zapsat poznámku do paměti %@";
 "Writing the review…" = "Píšu shrnutí…";
+"You have %@." = "Máš %@.";
+"You have %@. RightHand downloads the new version, replaces itself in Applications and starts again." = "Máš %@. RightHand stáhne novou verzi, nahradí se v Aplikacích a znovu se spustí.";
 "Your microphone, on its own track" = "Tvůj mikrofon, na samostatné stopě";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Tady se objeví tvoje nahrávky. Ukládají se do Filmy → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Tvoje pravá ruka na Macu: Pomodoro, Polička a AI asistent ve výřezu.";

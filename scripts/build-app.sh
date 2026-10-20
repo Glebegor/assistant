@@ -18,7 +18,17 @@ cp Support/Info.plist "$APP/Contents/Info.plist"
 # Interface translations (en, uk, cs, ru).
 cp -R Support/Localization/*.lproj "$APP/Contents/Resources/"
 
-# Release builds pass VERSION=x.y.z (see scripts/package.sh).
+# Release builds pass VERSION=x.y.z (see scripts/package.sh). Local builds use the latest
+# release tag, so the update check only offers versions that are really newer.
+if [ -z "${VERSION:-}" ]; then
+    # Tags made by the release workflow live on GitHub; fetch them quietly (offline is fine).
+    git fetch --tags --quiet 2>/dev/null &
+    FETCH=$!; ( sleep 5; kill $FETCH 2>/dev/null ) & wait $FETCH 2>/dev/null || true
+    NEXT="$("$(dirname "$0")/next-version.sh" 2>/dev/null || true)"
+    LATEST="$(git tag -l 'v[0-9]*' --sort=-v:refname | head -1 | sed 's/^v//')"
+    # The higher of "what this code would be released as" and "the newest release".
+    VERSION="$(printf '%s\n%s\n' "$NEXT" "$LATEST" | grep . | sort -V | tail -1)"
+fi
 if [ -n "${VERSION:-}" ]; then
     plutil -replace CFBundleShortVersionString -string "$VERSION" "$APP/Contents/Info.plist"
     plutil -replace CFBundleVersion -string "$(git rev-list --count HEAD)" "$APP/Contents/Info.plist"
