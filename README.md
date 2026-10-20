@@ -6,25 +6,6 @@ and an AI assistant that works with your Mac, Notion, ClickUp and Google — by 
 
 ![The AI in the notch working through Notion tasks](assets/screenshots/notch-chat-notion.jpg)
 
-<table>
-  <tr>
-    <td width="50%"><img src="assets/screenshots/notch-recorder.png" alt="Recording a meeting: screen, your voice and the computer sound on separate tracks"></td>
-    <td width="50%"><img src="assets/screenshots/settings-ellipse.png" alt="Settings for Ellipse, the voice assistant"></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>Record meetings: screen, your voice and computer sound apart</sub></td>
-    <td align="center"><sub>Ellipse, the voice assistant: shortcut, wake word, languages</sub></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="assets/screenshots/settings-about.png" alt="Settings: About and updates"></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>Updates itself from GitHub releases</sub></td>
-    <td></td>
-  </tr>
-</table>
-
 ## Run
 
 Run `make` to list all commands (`make run`, `make install`, `make release`, …).
@@ -38,6 +19,16 @@ scripts/install.sh        # build (release) and install into /Applications, then
 
 Requires macOS 14+ and Xcode (or Command Line Tools) with Swift 5.10+.
 For editing in VS Code install the **Swift** extension (`swiftlang.swift-vscode`).
+
+## Meeting recordings
+
+The **Record** tab in the notch records a screen with your voice and the computer sound (the
+other people in a call) on separate tracks — HEVC, about 3 GB for two hours, up to four hours.
+**Analyze** turns a recording into a transcript with Whisper on your Mac (English, Ukrainian,
+Czech and Russian, detected per phrase) and asks Claude or ChatGPT for a review: summary,
+decisions, tasks, open questions and an assessment of the meeting. Only the text leaves the Mac.
+
+![The Record tab in the notch](assets/screenshots/notch-recorder.png)
 
 ## Ellipse, the voice assistant
 
@@ -91,6 +82,8 @@ and publishes a GitHub release with the zip. RightHand checks the latest release
 every six hours, notifies you, and installs it on request (download, re-sign with the local
 certificate so permissions stay, replace in Applications, restart). Local builds take the version
 this code would be released as, so they aren't offered their own release.
+
+![Settings → About with the update check](assets/screenshots/settings-about.png)
 
 ## Languages
 
