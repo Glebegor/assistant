@@ -47,6 +47,7 @@
 "Ask %@ anything" = "Zeptej se %@ na cokoli";
 "Ask Again" = "Znovu se ptát";
 "Ask before the AI uses a tool" = "Ptát se, než AI použije nástroj";
+"Assessment" = "Hodnocení";
 "Assistant" = "Asistent";
 "Automatic (English, Українська, Čeština, Русский)" = "Automaticky (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Automaticky (jazyk Macu)";
@@ -70,6 +71,8 @@
 "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it." = "Mění jazyk nabídek, nastavení a panelu RightHand. AI odpovídá jazykem, kterým mu píšeš.";
 "Change…" = "Změnit…";
 "Choose a project or chat" = "Vyber projekt nebo chat";
+"Choose the microphone" = "Vybrat mikrofon";
+"Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude a ChatGPT: co o tobě vědí a co smějí dělat na tvém Macu.";
 "Clear" = "Vymazat";
 "ClickUp isn't connected. Check Settings → Services." = "ClickUp není připojený. Zkontroluj Nastavení → Služby.";
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp token odmítl. Zkontroluj ho v Nastavení → Služby.";
@@ -78,6 +81,7 @@
 "Client secret" = "Client secret";
 "Clipboard" = "Schránka";
 "Clipboard history" = "Historie schránky";
+"Clipboard history, files and screenshots." = "Historie schránky, soubory a snímky obrazovky.";
 "Close" = "Zavřít";
 "Close tab" = "Zavřít kartu";
 "Computer sound" = "Zvuk z počítače";
@@ -102,6 +106,8 @@
 "Create folder %@" = "Vytvořit složku %@";
 "Create folders" = "Vytváření složek";
 "Cut" = "Vyjmout";
+"Decisions" = "Rozhodnutí";
+"Default microphone" = "Výchozí mikrofon";
 "Delete" = "Smazat";
 "Delete Chat" = "Smazat chat";
 "Delete Folder" = "Smazat složku";
@@ -125,6 +131,7 @@
 "Edit memory note %@" = "Upravit poznámku v paměti %@";
 "ElevenLabs (read answers aloud)" = "ElevenLabs (předčítání odpovědí)";
 "ElevenLabs error %lld%@" = "Chyba ElevenLabs %lld%@";
+"Ellipse" = "Ellipse";
 "Ellipse — voice assistant" = "Ellipse — hlasový asistent";
 "Empty folder. Drop files or Shelf items here." = "Prázdná složka. Přetáhni sem soubory nebo položky z Poličky.";
 "Error %lld." = "Chyba %lld.";
@@ -140,10 +147,12 @@
 "Firefox doesn't let other apps see its address bar, so it isn't blocked yet." = "Firefox nedovolí jiným aplikacím vidět adresní řádek, takže se zatím neblokuje.";
 "Flash v2.5 (fast, cheaper)" = "Flash v2.5 (rychlé, levnější)";
 "Focus" = "Soustředění";
+"Focus and break lengths, sounds." = "Délka soustředění a přestávek, zvuky.";
 "Focus finished" = "Soustředění skončilo";
 "Focus session done" = "Soustředění dokončeno";
 "Folder name" = "Název složky";
 "Folders on your Mac" = "Složky na tvém Macu";
+"For Ellipse and the “My voice” track of recordings" = "Pro Ellipse a stopu „Můj hlas“ v nahrávkách";
 "For This Chat" = "Pro tento chat";
 "For This Project" = "Pro projekt";
 "General" = "Obecné";
@@ -155,6 +164,7 @@
 "Google sign-in timed out. Try again." = "Čas na přihlášení ke Googlu vypršel. Zkus to znovu.";
 "Google sign-in was cancelled (%@)." = "Přihlášení ke Googlu bylo zrušeno (%@).";
 "Hi! I'm RightHand, your right hand on the Mac." = "Ahoj! Jsem RightHand, tvoje pravá ruka na Macu.";
+"How productive the meeting was" = "Jak produktivní schůzka byla";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Jak má AI v tomto projektu pracovat, např. „Pomáhej mi s diplomkou. Odpovídej česky a stručně.“";
 "I didn't hear anything. Press the shortcut and speak." = "Nic jsem neslyšel. Stiskni zkratku a mluv.";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "V projektech může AI číst, vytvářet, přesouvat a mazat soubory kdekoli na tvém Macu a spouštět příkazy Terminálu. Před každou akcí mimo složky projektu a před každým příkazem a smazáním se tě zeptá. Smazané soubory jdou do koše.";
@@ -166,6 +176,7 @@
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Uchovává posledních %lld zkopírovaných položek. Hesla ze správců hesel se přeskakují.";
 "Keys are stored securely in your Mac's Keychain." = "Klíče jsou bezpečně uložené v Klíčence tvého Macu.";
 "Language" = "Jazyk";
+"Language of RightHand." = "Jazyk RightHand.";
 "List %@" = "Zobrazit obsah %@";
 "List ClickUp tasks" = "Vypsat úkoly v ClickUp";
 "List files" = "Výpis souborů";
@@ -178,12 +189,14 @@
 "Long break" = "Dlouhá přestávka";
 "Long break after" = "Dlouhá přestávka po";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Podívej se na něco aspoň 6 m daleko a několikrát mrkni.";
+"Mac default" = "Výchozí v Macu";
 "Main screen" = "Hlavní obrazovka";
 "Mark as done" = "Označit jako hotové";
 "Me" = "Já";
 "Meeting review is ready" = "Shrnutí schůzky je hotové";
 "Memory" = "Paměť";
 "Message %@…" = "Zpráva pro %@…";
+"Microphone" = "Mikrofon";
 "Minimize" = "Minimalizovat";
 "Model" = "Model";
 "Move %@ to %@" = "Přesunout %@ do %@";
@@ -203,6 +216,7 @@
 "New folder" = "Nová složka";
 "New project" = "Nový projekt";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Nové snímky obrazovky (⌘⇧3, ⌘⇧4, ⌘⇧5) se objeví na Poličce.";
+"Next time" = "Příště";
 "No answer came back." = "Nepřišla žádná odpověď.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Žádné databáze. V Notionu otevři databázi úkolů → ••• → Connections → přidej svou integraci a pak stiskni Znovu načíst.";
 "No open tasks for you in Notion." = "V Notionu pro tebe nejsou žádné otevřené úkoly.";
@@ -210,15 +224,19 @@
 "No recordings yet." = "Zatím žádné nahrávky.";
 "No screen to record." = "Není co nahrávat.";
 "No speech was found in this recording." = "V této nahrávce nebyla nalezena řeč.";
+"No tasks were agreed on." = "Nebyly dohodnuty žádné úkoly.";
+"No transcript yet." = "Přepis zatím není.";
 "None" = "Žádný";
 "Not recorded" = "Nenahrává se";
 "Notes the AI keeps about this project, shared by all its chats." = "Poznámky, které si AI vede o tomto projektu; sdílí je všechny jeho chaty.";
+"Nothing found." = "Nic nenalezeno.";
 "Nothing to do" = "Nic na práci";
 "Nothing yet. The AI writes notes here as you work." = "Zatím nic. AI sem bude během práce zapisovat poznámky.";
 "Notion can't find this database. Connect it to your integration (••• → Connections)." = "Notion tuto databázi nenašel. Připoj ji ke své integraci (••• → Connections).";
 "Notion is busy. Try again in a minute." = "Notion je vytížený. Zkus to za minutu.";
 "Notion isn't connected for this database. Check Settings → Services." = "Notion není pro tuto databázi připojený. Zkontroluj Nastavení → Služby.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion token odmítl. Zkontroluj ho v Nastavení → Úkoly.";
+"Notion, ClickUp and Google for tasks and for the AI." = "Notion, ClickUp a Google — pro úkoly a pro AI.";
 "Off" = "Vypnuto";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Vypnuto: žádná zkratka, žádné probouzecí slovo, žádný mikrofon, žádná tlačítka nahrávání.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Jednou v Google Cloud: 1. Vytvoř projekt. 2. Zapni „Gmail API“ a „Google Drive API“. 3. Google Auth Platform → nastav aplikaci jako External, přidej sebe jako uživatele, pak Audience → Publish app (jinak přihlášení každých 7 dní vyprší). 4. Clients → Create client → Desktop app a vlož sem jeho ID a secret. Google upozorní, že aplikace není ověřená: je to tvoje vlastní aplikace, zvol Continue. AI bude moct hledat a číst e-maily a hledat, číst, vytvářet, nahrávat a stahovat soubory na Disku.";
@@ -235,6 +253,7 @@
 "Open apps, links and files" = "Otevírání aplikací, odkazů a souborů";
 "Open in ClickUp" = "Otevřít v ClickUp";
 "Open in Notion" = "Otevřít v Notionu";
+"Open questions" = "Otevřené otázky";
 "Open tasks assigned to you or to nobody" = "Otevřené úkoly přiřazené tobě nebo nikomu";
 "Open the Projects window for long work" = "Otevřít okno Projekty pro delší práci";
 "Open the meeting review" = "Otevřít shrnutí schůzky";
@@ -330,6 +349,7 @@
 "Schedule" = "Plán";
 "Screen" = "Obrazovka";
 "Screenshots" = "Snímky obrazovky";
+"Search" = "Hledat";
 "Search ClickUp for “%@”" = "Hledat v ClickUp „%@“";
 "Search ClickUp tasks" = "Hledání úkolů v ClickUp";
 "Search Gmail" = "Hledání v Gmailu";
@@ -350,6 +370,7 @@
 "Shelf" = "Polička";
 "Short Break" = "Krátká přestávka";
 "Short break" = "Krátká přestávka";
+"Short breaks for your eyes." = "Krátké přestávky pro oči.";
 "Show Panel" = "Zobrazit panel";
 "Show in Finder" = "Zobrazit ve Finderu";
 "Show in the Tasks tab" = "Zobrazit na kartě Úkoly";
@@ -357,6 +378,7 @@
 "Sign Out" = "Odhlásit";
 "Sign in with Google" = "Přihlásit přes Google";
 "Signed in" = "Přihlášeno";
+"Sites blocked during focus." = "Weby blokované během soustředění.";
 "Skip" = "Přeskočit";
 "Skip Phase" = "Přeskočit fázi";
 "Skip to next phase" = "Přejít na další fázi";
@@ -382,6 +404,7 @@
 "Stopped after %lld tool steps. Send a message to continue." = "Zastaveno po %lld krocích s nástroji. Pošli zprávu a pokračuj.";
 "Stops by itself at %lld:00:00" = "Zastaví se samo v %lld:00:00";
 "Summarizing the earlier conversation…" = "Shrnuji dřívější část konverzace…";
+"Summary" = "Shrnutí";
 "Take an Eye Break Now" = "Dopřát očím odpočinek teď";
 "Talk shortcut" = "Zkratka pro mluvení";
 "Talk to %@ (%@)" = "Mluvit s %@ (%@)";
@@ -398,7 +421,9 @@
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Napoprvé se macOS zeptá, zda RightHand smí ovládat každý prohlížeč. Klikni na OK.";
 "The project's instructions, files and memory are already part of this chat." = "Pokyny, soubory a paměť projektu už jsou součástí tohoto chatu.";
 "The recording couldn't be saved." = "Nahrávku se nepodařilo uložit.";
+"The review came back in an unexpected form. Try Analyze Again." = "Shrnutí přišlo v neočekávané podobě. Zkus Analyzovat znovu.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "Časovač začne znovu, když jsi 2 minuty pryč od Macu nebo zamkneš obrazovku. Během přestávky přeskočíš klávesou Esc.";
+"The voice assistant: shortcut, wake word, microphone, languages and voice." = "Hlasový asistent: zkratka, probouzecí slovo, mikrofon, jazyky a hlas.";
 "Thinking…" = "Přemýšlím…";
 "This ClickUp list has no done status." = "Tento seznam v ClickUp nemá stav hotovo.";
 "This database has no status or checkbox to mark it done" = "Tato databáze nemá stav ani zaškrtávací pole pro označení hotových";
@@ -428,12 +453,15 @@
 "Use project memory" = "Použít paměť projektu";
 "Use ⌘, ⌥ or ⌃ together with a key." = "Použij ⌘, ⌥ nebo ⌃ spolu s klávesou.";
 "Version %@ (%@)" = "Verze %@ (%@)";
+"Version and links." = "Verze a odkazy.";
 "Voice" = "Hlas";
 "Voice model" = "Hlasový model";
 "Volume" = "Hlasitost";
 "Waiting for your permission…" = "Čekám na tvé svolení…";
 "Waiting…" = "Čekám…";
 "Wake word “Hey Ellipse”" = "Probouzecí slovo „Hey Ellipse“";
+"What didn't" = "Co ne";
+"What went well" = "Co se povedlo";
 "What you hear: the other people in a call, videos…, on its own track" = "Co slyšíš: ostatní v hovoru, videa… — na samostatné stopě";
 "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper poslouchá na tvém Macu: asi 15–20 minut na dvouhodinovou schůzku.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Kdo jsi, na čem pracuješ, jaké odpovědi máš rád, odkazy (GitHub, LinkedIn, web…). Claude a ChatGPT si to přečtou na začátku každého chatu.";

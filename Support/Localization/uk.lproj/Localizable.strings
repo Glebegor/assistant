@@ -47,6 +47,7 @@
 "Ask %@ anything" = "Запитай %@ про що завгодно";
 "Ask Again" = "Знову питати";
 "Ask before the AI uses a tool" = "Питати, перш ніж AI використає інструмент";
+"Assessment" = "Оцінка";
 "Assistant" = "Асистент";
 "Automatic (English, Українська, Čeština, Русский)" = "Автоматично (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Автоматично (мова Mac)";
@@ -70,6 +71,8 @@
 "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it." = "Змінює мову меню, налаштувань і панелі RightHand. AI відповідає мовою, якою ти до нього пишеш.";
 "Change…" = "Змінити…";
 "Choose a project or chat" = "Вибери проєкт або чат";
+"Choose the microphone" = "Вибрати мікрофон";
+"Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude і ChatGPT: що вони знають про тебе і що можуть робити на твоєму Mac.";
 "Clear" = "Очистити";
 "ClickUp isn't connected. Check Settings → Services." = "ClickUp не підключено. Перевір Налаштування → Сервіси.";
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp відхилив токен. Перевір його в Налаштування → Сервіси.";
@@ -78,6 +81,7 @@
 "Client secret" = "Client secret";
 "Clipboard" = "Буфер обміну";
 "Clipboard history" = "Історія буфера обміну";
+"Clipboard history, files and screenshots." = "Історія буфера, файли й скріншоти.";
 "Close" = "Закрити";
 "Close tab" = "Закрити вкладку";
 "Computer sound" = "Звук з комп'ютера";
@@ -102,6 +106,8 @@
 "Create folder %@" = "Створити папку %@";
 "Create folders" = "Створення папок";
 "Cut" = "Вирізати";
+"Decisions" = "Рішення";
+"Default microphone" = "Мікрофон за замовчуванням";
 "Delete" = "Видалити";
 "Delete Chat" = "Видалити чат";
 "Delete Folder" = "Видалити папку";
@@ -125,6 +131,7 @@
 "Edit memory note %@" = "Змінити нотатку в пам'яті %@";
 "ElevenLabs (read answers aloud)" = "ElevenLabs (озвучування відповідей)";
 "ElevenLabs error %lld%@" = "Помилка ElevenLabs %lld%@";
+"Ellipse" = "Ellipse";
 "Ellipse — voice assistant" = "Ellipse — голосовий помічник";
 "Empty folder. Drop files or Shelf items here." = "Папка порожня. Перетягни сюди файли або елементи Полиці.";
 "Error %lld." = "Помилка %lld.";
@@ -140,10 +147,12 @@
 "Firefox doesn't let other apps see its address bar, so it isn't blocked yet." = "Firefox не дає іншим застосункам бачити адресний рядок, тому поки не блокується.";
 "Flash v2.5 (fast, cheaper)" = "Flash v2.5 (швидко, дешевше)";
 "Focus" = "Фокус";
+"Focus and break lengths, sounds." = "Тривалість фокусу й перерв, звуки.";
 "Focus finished" = "Фокус закінчився";
 "Focus session done" = "Сесію фокусу завершено";
 "Folder name" = "Назва папки";
 "Folders on your Mac" = "Папки на твоєму Mac";
+"For Ellipse and the “My voice” track of recordings" = "Для Ellipse і доріжки «Мій голос» у записах";
 "For This Chat" = "Для чату";
 "For This Project" = "Для проєкту";
 "General" = "Загальні";
@@ -155,6 +164,7 @@
 "Google sign-in timed out. Try again." = "Час на вхід у Google вийшов. Спробуй ще раз.";
 "Google sign-in was cancelled (%@)." = "Вхід у Google скасовано (%@).";
 "Hi! I'm RightHand, your right hand on the Mac." = "Привіт! Я RightHand, твоя права рука на Mac.";
+"How productive the meeting was" = "Наскільки продуктивною була зустріч";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Як AI має працювати в цьому проєкті, напр. «Допомагай з дипломом. Відповідай українською, коротко.»";
 "I didn't hear anything. Press the shortcut and speak." = "Я нічого не почув. Натисни сполучення клавіш і говори.";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "У проєктах AI може читати, створювати, переміщувати й видаляти файли будь-де на твоєму Mac і виконувати команди Терміналу. Він питає тебе перед кожною дією поза папками проєкту, а також перед кожною командою й видаленням. Видалені файли потрапляють у Кошик.";
@@ -166,6 +176,7 @@
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Зберігає останні %lld скопійованих елементів. Паролі з менеджерів паролів пропускаються.";
 "Keys are stored securely in your Mac's Keychain." = "Ключі надійно зберігаються в Keychain твого Mac.";
 "Language" = "Мова";
+"Language of RightHand." = "Мова RightHand.";
 "List %@" = "Переглянути вміст %@";
 "List ClickUp tasks" = "Показати задачі ClickUp";
 "List files" = "Перегляд файлів";
@@ -178,12 +189,14 @@
 "Long break" = "Довга перерва";
 "Long break after" = "Довга перерва після";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Подивись на щось щонайменше за 6 м і кілька разів кліпни.";
+"Mac default" = "Як у Mac";
 "Main screen" = "Основний екран";
 "Mark as done" = "Позначити виконаною";
 "Me" = "Я";
 "Meeting review is ready" = "Рев'ю зустрічі готове";
 "Memory" = "Пам'ять";
 "Message %@…" = "Повідомлення для %@…";
+"Microphone" = "Мікрофон";
 "Minimize" = "Згорнути";
 "Model" = "Модель";
 "Move %@ to %@" = "Перемістити %@ у %@";
@@ -203,6 +216,7 @@
 "New folder" = "Нова папка";
 "New project" = "Новий проєкт";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Нові знімки екрана (⌘⇧3, ⌘⇧4, ⌘⇧5) з'являються на Полиці.";
+"Next time" = "Наступного разу";
 "No answer came back." = "Відповідь не надійшла.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Баз не знайдено. У Notion відкрий базу задач → ••• → Connections → додай свою інтеграцію, потім натисни «Оновити бази».";
 "No open tasks for you in Notion." = "У Notion немає відкритих задач для тебе.";
@@ -210,15 +224,19 @@
 "No recordings yet." = "Записів ще немає.";
 "No screen to record." = "Немає екрана для запису.";
 "No speech was found in this recording." = "У цьому записі не знайдено мовлення.";
+"No tasks were agreed on." = "Задач не домовлялися.";
+"No transcript yet." = "Транскрипту ще немає.";
 "None" = "Немає";
 "Not recorded" = "Не записується";
 "Notes the AI keeps about this project, shared by all its chats." = "Нотатки, які AI веде про цей проєкт; спільні для всіх його чатів.";
+"Nothing found." = "Нічого не знайдено.";
 "Nothing to do" = "Нічого робити";
 "Nothing yet. The AI writes notes here as you work." = "Поки нічого. AI записуватиме сюди нотатки під час роботи.";
 "Notion can't find this database. Connect it to your integration (••• → Connections)." = "Notion не знаходить цю базу. Підключи її до інтеграції (••• → Connections).";
 "Notion is busy. Try again in a minute." = "Notion зайнятий. Спробуй за хвилину.";
 "Notion isn't connected for this database. Check Settings → Services." = "Notion не підключено для цієї бази. Перевір Налаштування → Сервіси.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion відхилив токен. Перевір його в Налаштування → Задачі.";
+"Notion, ClickUp and Google for tasks and for the AI." = "Notion, ClickUp і Google — для задач і для AI.";
 "Off" = "Вимкнено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Вимкнено: ні сполучення клавіш, ні слова виклику, ні мікрофона, ні кнопок запису.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API» і «Google Drive API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive.";
@@ -235,6 +253,7 @@
 "Open apps, links and files" = "Відкривання застосунків, посилань і файлів";
 "Open in ClickUp" = "Відкрити в ClickUp";
 "Open in Notion" = "Відкрити в Notion";
+"Open questions" = "Відкриті питання";
 "Open tasks assigned to you or to nobody" = "Відкриті задачі, призначені тобі або нікому";
 "Open the Projects window for long work" = "Відкрити вікно Проєкти для тривалої роботи";
 "Open the meeting review" = "Відкрити рев'ю зустрічі";
@@ -330,6 +349,7 @@
 "Schedule" = "Розклад";
 "Screen" = "Екран";
 "Screenshots" = "Знімки екрана";
+"Search" = "Пошук";
 "Search ClickUp for “%@”" = "Шукати в ClickUp «%@»";
 "Search ClickUp tasks" = "Пошук задач ClickUp";
 "Search Gmail" = "Пошук у Gmail";
@@ -350,6 +370,7 @@
 "Shelf" = "Полиця";
 "Short Break" = "Коротка перерва";
 "Short break" = "Коротка перерва";
+"Short breaks for your eyes." = "Короткі перерви для очей.";
 "Show Panel" = "Показати панель";
 "Show in Finder" = "Показати у Finder";
 "Show in the Tasks tab" = "Показувати у вкладці «Задачі»";
@@ -357,6 +378,7 @@
 "Sign Out" = "Вийти";
 "Sign in with Google" = "Увійти через Google";
 "Signed in" = "Вхід виконано";
+"Sites blocked during focus." = "Сайти, заблоковані під час фокусу.";
 "Skip" = "Пропустити";
 "Skip Phase" = "Пропустити фазу";
 "Skip to next phase" = "Перейти до наступної фази";
@@ -382,6 +404,7 @@
 "Stopped after %lld tool steps. Send a message to continue." = "Зупинено після %lld кроків з інструментами. Надішли повідомлення, щоб продовжити.";
 "Stops by itself at %lld:00:00" = "Зупиниться сам о %lld:00:00";
 "Summarizing the earlier conversation…" = "Стискаю попередню частину розмови…";
+"Summary" = "Підсумок";
 "Take an Eye Break Now" = "Відпочити очам зараз";
 "Talk shortcut" = "Сполучення для розмови";
 "Talk to %@ (%@)" = "Поговорити з %@ (%@)";
@@ -398,7 +421,9 @@
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Першого разу macOS спитає, чи дозволити RightHand керувати кожним браузером. Натисни OK.";
 "The project's instructions, files and memory are already part of this chat." = "Інструкції, файли й пам'ять проєкту вже є в цьому чаті.";
 "The recording couldn't be saved." = "Запис не вдалося зберегти.";
+"The review came back in an unexpected form. Try Analyze Again." = "Рев'ю прийшло в незвичному вигляді. Спробуй «Проаналізувати знову».";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "Таймер починається знову, якщо ти відійшов від Mac на 2 хвилини або заблокував екран. Під час перерви натисни Esc, щоб пропустити.";
+"The voice assistant: shortcut, wake word, microphone, languages and voice." = "Голосовий помічник: сполучення клавіш, слово виклику, мікрофон, мови й голос.";
 "Thinking…" = "Думаю…";
 "This ClickUp list has no done status." = "У цьому списку ClickUp немає статусу «готово».";
 "This database has no status or checkbox to mark it done" = "У цій базі немає статусу чи прапорця, щоб позначити виконання";
@@ -428,12 +453,15 @@
 "Use project memory" = "Використати пам'ять проєкту";
 "Use ⌘, ⌥ or ⌃ together with a key." = "Використай ⌘, ⌥ або ⌃ разом із клавішею.";
 "Version %@ (%@)" = "Версія %@ (%@)";
+"Version and links." = "Версія й посилання.";
 "Voice" = "Голос";
 "Voice model" = "Голосова модель";
 "Volume" = "Гучність";
 "Waiting for your permission…" = "Чекаю на твій дозвіл…";
 "Waiting…" = "Чекаю…";
 "Wake word “Hey Ellipse”" = "Слово для виклику «Гей, Ellipse»";
+"What didn't" = "Що ні";
+"What went well" = "Що вдалося";
 "What you hear: the other people in a call, videos…, on its own track" = "Те, що ти чуєш: співрозмовники у дзвінку, відео… — на окремій доріжці";
 "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper слухає на твоєму Mac: близько 15–20 хвилин на двогодинну зустріч.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Хто ти, над чим працюєш, які відповіді любиш, посилання (GitHub, LinkedIn, сайт…). Claude і ChatGPT читають це на початку кожного чату.";

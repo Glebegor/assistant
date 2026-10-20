@@ -53,6 +53,7 @@ final class WakeWordListener {
               AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
               let recognizer = Self.recognizer, recognizer.isAvailable
         else { return }
+        Microphones.apply(to: audio)
         let input = audio.inputNode
         input.removeTap(onBus: 0)
         let box = self.box

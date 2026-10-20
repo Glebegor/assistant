@@ -47,6 +47,7 @@
 "Ask %@ anything" = "Ask %@ anything";
 "Ask Again" = "Ask Again";
 "Ask before the AI uses a tool" = "Ask before the AI uses a tool";
+"Assessment" = "Assessment";
 "Assistant" = "Assistant";
 "Automatic (English, Українська, Čeština, Русский)" = "Automatic (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Automatic (Mac language)";
@@ -70,6 +71,8 @@
 "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it." = "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it.";
 "Change…" = "Change…";
 "Choose a project or chat" = "Choose a project or chat";
+"Choose the microphone" = "Choose the microphone";
+"Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude and ChatGPT, what they know about you and what they may do on your Mac.";
 "Clear" = "Clear";
 "ClickUp isn't connected. Check Settings → Services." = "ClickUp isn't connected. Check Settings → Services.";
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp rejected the token. Check it in Settings → Services.";
@@ -78,6 +81,7 @@
 "Client secret" = "Client secret";
 "Clipboard" = "Clipboard";
 "Clipboard history" = "Clipboard history";
+"Clipboard history, files and screenshots." = "Clipboard history, files and screenshots.";
 "Close" = "Close";
 "Close tab" = "Close tab";
 "Computer sound" = "Computer sound";
@@ -102,6 +106,8 @@
 "Create folder %@" = "Create folder %@";
 "Create folders" = "Create folders";
 "Cut" = "Cut";
+"Decisions" = "Decisions";
+"Default microphone" = "Default microphone";
 "Delete" = "Delete";
 "Delete Chat" = "Delete Chat";
 "Delete Folder" = "Delete Folder";
@@ -125,6 +131,7 @@
 "Edit memory note %@" = "Edit memory note %@";
 "ElevenLabs (read answers aloud)" = "ElevenLabs (read answers aloud)";
 "ElevenLabs error %lld%@" = "ElevenLabs error %lld%@";
+"Ellipse" = "Ellipse";
 "Ellipse — voice assistant" = "Ellipse — voice assistant";
 "Empty folder. Drop files or Shelf items here." = "Empty folder. Drop files or Shelf items here.";
 "Error %lld." = "Error %lld.";
@@ -140,10 +147,12 @@
 "Firefox doesn't let other apps see its address bar, so it isn't blocked yet." = "Firefox doesn't let other apps see its address bar, so it isn't blocked yet.";
 "Flash v2.5 (fast, cheaper)" = "Flash v2.5 (fast, cheaper)";
 "Focus" = "Focus";
+"Focus and break lengths, sounds." = "Focus and break lengths, sounds.";
 "Focus finished" = "Focus finished";
 "Focus session done" = "Focus session done";
 "Folder name" = "Folder name";
 "Folders on your Mac" = "Folders on your Mac";
+"For Ellipse and the “My voice” track of recordings" = "For Ellipse and the “My voice” track of recordings";
 "For This Chat" = "For This Chat";
 "For This Project" = "For This Project";
 "General" = "General";
@@ -155,6 +164,7 @@
 "Google sign-in timed out. Try again." = "Google sign-in timed out. Try again.";
 "Google sign-in was cancelled (%@)." = "Google sign-in was cancelled (%@).";
 "Hi! I'm RightHand, your right hand on the Mac." = "Hi! I'm RightHand, your right hand on the Mac.";
+"How productive the meeting was" = "How productive the meeting was";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”";
 "I didn't hear anything. Press the shortcut and speak." = "I didn't hear anything. Press the shortcut and speak.";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash.";
@@ -166,6 +176,7 @@
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Keeps the last %lld copied items. Passwords from password managers are skipped.";
 "Keys are stored securely in your Mac's Keychain." = "Keys are stored securely in your Mac's Keychain.";
 "Language" = "Language";
+"Language of RightHand." = "Language of RightHand.";
 "List %@" = "List %@";
 "List ClickUp tasks" = "List ClickUp tasks";
 "List files" = "List files";
@@ -178,12 +189,14 @@
 "Long break" = "Long break";
 "Long break after" = "Long break after";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Look at something at least 6 m (20 ft) away and blink a few times.";
+"Mac default" = "Mac default";
 "Main screen" = "Main screen";
 "Mark as done" = "Mark as done";
 "Me" = "Me";
 "Meeting review is ready" = "Meeting review is ready";
 "Memory" = "Memory";
 "Message %@…" = "Message %@…";
+"Microphone" = "Microphone";
 "Minimize" = "Minimize";
 "Model" = "Model";
 "Move %@ to %@" = "Move %@ to %@";
@@ -203,6 +216,7 @@
 "New folder" = "New folder";
 "New project" = "New project";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf.";
+"Next time" = "Next time";
 "No answer came back." = "No answer came back.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload.";
 "No open tasks for you in Notion." = "No open tasks for you in Notion.";
@@ -210,15 +224,19 @@
 "No recordings yet." = "No recordings yet.";
 "No screen to record." = "No screen to record.";
 "No speech was found in this recording." = "No speech was found in this recording.";
+"No tasks were agreed on." = "No tasks were agreed on.";
+"No transcript yet." = "No transcript yet.";
 "None" = "None";
 "Not recorded" = "Not recorded";
 "Notes the AI keeps about this project, shared by all its chats." = "Notes the AI keeps about this project, shared by all its chats.";
+"Nothing found." = "Nothing found.";
 "Nothing to do" = "Nothing to do";
 "Nothing yet. The AI writes notes here as you work." = "Nothing yet. The AI writes notes here as you work.";
 "Notion can't find this database. Connect it to your integration (••• → Connections)." = "Notion can't find this database. Connect it to your integration (••• → Connections).";
 "Notion is busy. Try again in a minute." = "Notion is busy. Try again in a minute.";
 "Notion isn't connected for this database. Check Settings → Services." = "Notion isn't connected for this database. Check Settings → Services.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion rejected the token. Check it in Settings → Tasks.";
+"Notion, ClickUp and Google for tasks and for the AI." = "Notion, ClickUp and Google for tasks and for the AI.";
 "Off" = "Off";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Off: no shortcut, no wake word, no microphone, no record buttons.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files.";
@@ -235,6 +253,7 @@
 "Open apps, links and files" = "Open apps, links and files";
 "Open in ClickUp" = "Open in ClickUp";
 "Open in Notion" = "Open in Notion";
+"Open questions" = "Open questions";
 "Open tasks assigned to you or to nobody" = "Open tasks assigned to you or to nobody";
 "Open the Projects window for long work" = "Open the Projects window for long work";
 "Open the meeting review" = "Open the meeting review";
@@ -330,6 +349,7 @@
 "Schedule" = "Schedule";
 "Screen" = "Screen";
 "Screenshots" = "Screenshots";
+"Search" = "Search";
 "Search ClickUp for “%@”" = "Search ClickUp for “%@”";
 "Search ClickUp tasks" = "Search ClickUp tasks";
 "Search Gmail" = "Search Gmail";
@@ -350,6 +370,7 @@
 "Shelf" = "Shelf";
 "Short Break" = "Short Break";
 "Short break" = "Short break";
+"Short breaks for your eyes." = "Short breaks for your eyes.";
 "Show Panel" = "Show Panel";
 "Show in Finder" = "Show in Finder";
 "Show in the Tasks tab" = "Show in the Tasks tab";
@@ -357,6 +378,7 @@
 "Sign Out" = "Sign Out";
 "Sign in with Google" = "Sign in with Google";
 "Signed in" = "Signed in";
+"Sites blocked during focus." = "Sites blocked during focus.";
 "Skip" = "Skip";
 "Skip Phase" = "Skip Phase";
 "Skip to next phase" = "Skip to next phase";
@@ -382,6 +404,7 @@
 "Stopped after %lld tool steps. Send a message to continue." = "Stopped after %lld tool steps. Send a message to continue.";
 "Stops by itself at %lld:00:00" = "Stops by itself at %lld:00:00";
 "Summarizing the earlier conversation…" = "Summarizing the earlier conversation…";
+"Summary" = "Summary";
 "Take an Eye Break Now" = "Take an Eye Break Now";
 "Talk shortcut" = "Talk shortcut";
 "Talk to %@ (%@)" = "Talk to %@ (%@)";
@@ -398,7 +421,9 @@
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "The first time, macOS asks to let RightHand control each browser. Click OK.";
 "The project's instructions, files and memory are already part of this chat." = "The project's instructions, files and memory are already part of this chat.";
 "The recording couldn't be saved." = "The recording couldn't be saved.";
+"The review came back in an unexpected form. Try Analyze Again." = "The review came back in an unexpected form. Try Analyze Again.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip.";
+"The voice assistant: shortcut, wake word, microphone, languages and voice." = "The voice assistant: shortcut, wake word, microphone, languages and voice.";
 "Thinking…" = "Thinking…";
 "This ClickUp list has no done status." = "This ClickUp list has no done status.";
 "This database has no status or checkbox to mark it done" = "This database has no status or checkbox to mark it done";
@@ -428,12 +453,15 @@
 "Use project memory" = "Use project memory";
 "Use ⌘, ⌥ or ⌃ together with a key." = "Use ⌘, ⌥ or ⌃ together with a key.";
 "Version %@ (%@)" = "Version %@ (%@)";
+"Version and links." = "Version and links.";
 "Voice" = "Voice";
 "Voice model" = "Voice model";
 "Volume" = "Volume";
 "Waiting for your permission…" = "Waiting for your permission…";
 "Waiting…" = "Waiting…";
 "Wake word “Hey Ellipse”" = "Wake word “Hey Ellipse”";
+"What didn't" = "What didn't";
+"What went well" = "What went well";
 "What you hear: the other people in a call, videos…, on its own track" = "What you hear: the other people in a call, videos…, on its own track";
 "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.";

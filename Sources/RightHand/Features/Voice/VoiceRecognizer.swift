@@ -105,6 +105,7 @@ final class VoiceRecognizer {
         }
 
         let requests = channels.map(\.request)
+        Microphones.apply(to: audio)
         let input = audio.inputNode
         let format = input.outputFormat(forBus: 0)
         input.removeTap(onBus: 0)

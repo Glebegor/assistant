@@ -1,13 +1,10 @@
 import AppKit
 import SwiftUI
 
-/// The Settings window: a native toolbar with one tab per pane.
+/// The Settings window: a quiet sidebar on the left, the chosen page on the right.
 @MainActor
 final class SettingsWindowController {
-    static let paneWidth: CGFloat = 500
-
     private var window: NSWindow?
-    private weak var tabs: SettingsTabViewController?
     private let tasks: TaskStore
 
     init(tasks: TaskStore) {
@@ -21,90 +18,163 @@ final class SettingsWindowController {
     }
 
     private func makeWindow() -> NSWindow {
-        let tabs = SettingsTabViewController()
-        tabs.tabStyle = .toolbar
-        self.tabs = tabs
-        tabs.addTabViewItem(pane(GeneralSettingsPane(), title: "General", systemImage: "gearshape"))
-        tabs.addTabViewItem(pane(PomodoroSettingsPane(), title: "Pomodoro", systemImage: "timer"))
-        tabs.addTabViewItem(pane(EyeRestSettingsPane(), title: "Eye Rest", systemImage: "eye"))
-        tabs.addTabViewItem(pane(TasksSettingsPane(store: tasks), title: "Services", systemImage: "square.stack.3d.up"))
-        tabs.addTabViewItem(pane(ShelfSettingsPane(), title: "Shelf", systemImage: "tray.full"))
-        tabs.addTabViewItem(pane(BlockerSettingsPane(), title: "Blocking", systemImage: "hand.raised"))
-        tabs.addTabViewItem(pane(AssistantSettingsPane(), title: "Assistant", systemImage: "sparkles"))
-        tabs.addTabViewItem(pane(AboutPane(), title: "About", systemImage: "info.circle"))
-
-        let window = NSWindow(contentViewController: tabs)
-        window.styleMask = [.titled, .closable]
-        window.toolbarStyle = .preference
+        let window = NSWindow(contentViewController: NSHostingController(rootView: SettingsRootView(tasks: tasks)))
+        window.title = L("Settings")
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
+        window.appearance = NSAppearance(named: .darkAqua)
+        window.isMovableByWindowBackground = true
+        window.setContentSize(NSSize(width: 900, height: 660))
+        window.minSize = NSSize(width: 760, height: 480)
         window.isReleasedWhenClosed = false
-        tabs.fitWindowToSelectedPane(animated: false)
-        window.center()
+        window.setFrameAutosaveName("RightHandSettings")
+        if window.frame.origin == .zero { window.center() }
         return window
     }
+}
 
-    private func pane(_ content: some View, title: String, systemImage: String) -> NSTabViewItem {
-        let root = SettingsPaneContainer(content: content, width: Self.paneWidth) { [weak self] in
-            self?.tabs?.fitWindowToSelectedPane(animated: true)
+enum SettingsPage: String, CaseIterable, Identifiable {
+    case general, assistant, ellipse, services, pomodoro, eyeRest, shelf, blocking, about
+
+    var id: Self { self }
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .general: "General"
+        case .assistant: "Assistant"
+        case .ellipse: "Ellipse"
+        case .services: "Services"
+        case .pomodoro: "Pomodoro"
+        case .eyeRest: "Eye Rest"
+        case .shelf: "Shelf"
+        case .blocking: "Blocking"
+        case .about: "About"
         }
-        let controller = NSHostingController(rootView: root)
-        controller.title = L(title)
-        let item = NSTabViewItem(viewController: controller)
-        item.label = L(title)
-        item.image = NSImage(systemSymbolName: systemImage, accessibilityDescription: title)
-        return item
+    }
+
+    var subtitle: LocalizedStringKey {
+        switch self {
+        case .general: "Language of RightHand."
+        case .assistant: "Claude and ChatGPT, what they know about you and what they may do on your Mac."
+        case .ellipse: "The voice assistant: shortcut, wake word, microphone, languages and voice."
+        case .services: "Notion, ClickUp and Google for tasks and for the AI."
+        case .pomodoro: "Focus and break lengths, sounds."
+        case .eyeRest: "Short breaks for your eyes."
+        case .shelf: "Clipboard history, files and screenshots."
+        case .blocking: "Sites blocked during focus."
+        case .about: "Version and links."
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .general: "gearshape"
+        case .assistant: "sparkles"
+        case .ellipse: "waveform"
+        case .services: "square.stack.3d.up"
+        case .pomodoro: "timer"
+        case .eyeRest: "eye"
+        case .shelf: "tray"
+        case .blocking: "hand.raised"
+        case .about: "info.circle"
+        }
     }
 }
 
-/// A pane as tall as its content but never taller than the screen; the rest scrolls.
-private struct SettingsPaneContainer<Content: View>: View {
-    let content: Content
-    let width: CGFloat
-    /// Called when the content grows or shrinks (e.g. Notion databases loaded), to resize the window.
-    let onHeightChange: @MainActor () -> Void
-
-    /// Leaves room for the menu bar, the window's toolbar and a margin.
-    private var maxHeight: CGFloat {
-        (NSScreen.main?.visibleFrame.height ?? 800) - 140
-    }
+struct SettingsRootView: View {
+    let tasks: TaskStore
+    @AppStorage("settings.page") private var page: SettingsPage = .general
 
     var body: some View {
-        ScrollView {
-            content
-                .frame(width: width)
-                .fixedSize(horizontal: false, vertical: true)
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { _ in
-                    DispatchQueue.main.async { onHeightChange() }
+        HStack(spacing: 0) {
+            sidebar
+            Rectangle().fill(Theme.hairline).frame(width: 1)
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(page.title).font(.system(size: 26, weight: .semibold))
+                    Text(page.subtitle).font(.callout).foregroundStyle(.secondary)
                 }
+                .padding(.horizontal, 28)
+                .padding(.top, 34)
+                .padding(.bottom, 6)
+                pane
+                    .scrollContentBackground(.hidden)
+                    .tint(Theme.neon)
+                    .id(page)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .frame(width: width)
-        .frame(maxHeight: maxHeight)
-        .fixedSize(horizontal: false, vertical: true)
+        .background(Theme.background)
+        .foregroundStyle(.white)
+    }
+
+    private var sidebar: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 8) {
+                Image(systemName: "hand.raised.fill").foregroundStyle(Theme.neon).neonGlow(radius: 6)
+                Text(verbatim: "RightHand").font(.system(size: 15, weight: .semibold))
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 40)
+            .padding(.bottom, 18)
+            ForEach(SettingsPage.allCases) { item in
+                SidebarItem(page: item, isSelected: item == page) { page = item }
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 10)
+        .frame(width: 210)
+        .background(Color.black.opacity(0.18))
+    }
+
+    @ViewBuilder
+    private var pane: some View {
+        switch page {
+        case .general: GeneralSettingsPane()
+        case .assistant: AssistantSettingsPane()
+        case .ellipse: EllipseSettingsPane()
+        case .services: TasksSettingsPane(store: tasks)
+        case .pomodoro: PomodoroSettingsPane()
+        case .eyeRest: EyeRestSettingsPane()
+        case .shelf: ShelfSettingsPane()
+        case .blocking: BlockerSettingsPane()
+        case .about: AboutPane()
+        }
     }
 }
 
-/// Resizes the window to each pane's height when you switch tabs (top edge stays in place).
-final class SettingsTabViewController: NSTabViewController {
-    override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
-        super.tabView(tabView, didSelect: tabViewItem)
-        fitWindowToSelectedPane(animated: true)
-    }
+/// A sidebar row; the selected one gets the soft neon.
+private struct SidebarItem: View {
+    let page: SettingsPage
+    let isSelected: Bool
+    let action: () -> Void
+    @State private var isHovered = false
 
-    func fitWindowToSelectedPane(animated: Bool) {
-        guard let window = view.window ?? tabViewItems.first?.viewController?.view.window,
-              let pane = tabViewItems[safe: selectedTabViewItemIndex]?.viewController?.view
-        else { return }
-        let contentSize = pane.fittingSize
-        var frame = window.frameRect(forContentRect: NSRect(origin: .zero, size: contentSize))
-        frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
-        // Keep the whole window on screen: move it up when it would reach below the Dock.
-        if let visible = (window.screen ?? NSScreen.main)?.visibleFrame {
-            frame.origin.y = min(max(frame.origin.y, visible.minY), visible.maxY - frame.height)
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Image(systemName: page.systemImage)
+                    .font(.system(size: 13, weight: .medium))
+                    .frame(width: 18)
+                    .foregroundStyle(isSelected ? Theme.neon : .secondary)
+                Text(page.title)
+                    .font(.system(size: 13, weight: isSelected ? .semibold : .regular))
+                    .foregroundStyle(isSelected ? .primary : .secondary)
+                Spacer()
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 7)
+            .background {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(isSelected ? Theme.neonSoft : (isHovered ? Color.white.opacity(0.05) : .clear))
+                    .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .strokeBorder(isSelected ? Theme.neon.opacity(0.45) : .clear, lineWidth: 1))
+                    .shadow(color: isSelected ? Theme.neon.opacity(0.25) : .clear, radius: 8)
+            }
+            .contentShape(Rectangle())
         }
-        window.setFrame(frame, display: true, animate: animated && window.isVisible)
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
     }
-}
-
-private extension Array {
-    subscript(safe index: Int) -> Element? { indices.contains(index) ? self[index] : nil }
 }

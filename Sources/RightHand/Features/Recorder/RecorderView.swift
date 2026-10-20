@@ -8,6 +8,7 @@ struct RecorderView: View {
     let analyzer: MeetingAnalyzer
     let openReview: (URL) -> Void
     @State private var recordings: [Recording] = []
+    @State private var microphoneRevision = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -55,9 +56,28 @@ struct RecorderView: View {
                 .disabled(recorder.displays.count < 2)
             }
             Button { recorder.recordsMicrophone.toggle() } label: {
-                SourceTile(title: "My voice", detail: recorder.recordsMicrophone ? L("Own track") : L("Off"),
+                SourceTile(title: "My voice", detail: recorder.recordsMicrophone ? Microphones.selectedName : L("Off"),
                            systemImage: recorder.recordsMicrophone ? "mic.fill" : "mic.slash.fill",
-                           isOn: recorder.recordsMicrophone, tint: .cyan) { EmptyView() }
+                           isOn: recorder.recordsMicrophone, tint: .cyan) {
+                    Menu {
+                        Button { Microphones.selectedID = ""; microphoneRevision += 1 } label: {
+                            if Microphones.selectedID.isEmpty { Label("Mac default", systemImage: "checkmark") } else { Text("Mac default") }
+                        }
+                        Divider()
+                        ForEach(Microphones.all) { device in
+                            Button { Microphones.selectedID = device.id; microphoneRevision += 1 } label: {
+                                if device.id == Microphones.selectedID { Label(device.name, systemImage: "checkmark") } else { Text(device.name) }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.bold))
+                    }
+                    .menuStyle(.borderlessButton)
+                    .menuIndicator(.hidden)
+                    .fixedSize()
+                    .help("Choose the microphone")
+                }
+                .id(microphoneRevision)
             }
             .buttonStyle(.plain)
             .help("Your microphone, on its own track")
