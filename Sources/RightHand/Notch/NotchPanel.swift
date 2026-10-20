@@ -24,9 +24,23 @@ final class NotchPanel: NSPanel {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
 
+    /// ⌘W / ⌘Q: close the current chat tab (a new empty chat takes the place of the last one).
+    var onCloseChat: (() -> Void)?
+    /// ⌘T / ⌘N: open a new chat tab.
+    var onNewChat: (() -> Void)?
+
     // You type in the panel without RightHand becoming the active app, so the Edit menu
     // doesn't see ⌘C/⌘V/…; send them to the text field directly.
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask).subtracting([.capsLock, .numericPad, .function])
+        if event.type == .keyDown, modifiers == .command {
+            // In the notch these mean "this chat", like in a chat app — never "quit RightHand".
+            switch event.charactersIgnoringModifiers?.lowercased() {
+            case "w", "q": onCloseChat?(); return true
+            case "t", "n": onNewChat?(); return true
+            default: break
+            }
+        }
         if event.type == .keyDown, let shortcut = EditShortcut.matching(event),
            NSApp.sendAction(shortcut.action, to: firstResponder, from: self) {
             return true
