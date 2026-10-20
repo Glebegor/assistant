@@ -1,7 +1,29 @@
 # RightHand
 
 Personal macOS productivity hub that lives in the camera notch. Move the mouse to the
-notch and a panel drops down with Pomodoro, a file/screenshot shelf and an AI assistant.
+notch and a panel drops down with Pomodoro, tasks, a file/screenshot shelf, screen recording
+and an AI assistant that works with your Mac, Notion, ClickUp and Google — by text or by voice.
+
+![The AI in the notch working through Notion tasks](assets/screenshots/notch-chat-notion.jpg)
+
+<table>
+  <tr>
+    <td width="50%"><img src="assets/screenshots/notch-recorder.png" alt="Recording a meeting: screen, your voice and the computer sound on separate tracks"></td>
+    <td width="50%"><img src="assets/screenshots/settings-ellipse.png" alt="Settings for Ellipse, the voice assistant"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Record meetings: screen, your voice and computer sound apart</sub></td>
+    <td align="center"><sub>Ellipse, the voice assistant: shortcut, wake word, languages</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="assets/screenshots/settings-about.png" alt="Settings: About and updates"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Updates itself from GitHub releases</sub></td>
+    <td></td>
+  </tr>
+</table>
 
 ## Run
 
