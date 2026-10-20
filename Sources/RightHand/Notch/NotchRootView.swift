@@ -9,6 +9,8 @@ struct NotchRootView: View {
     let chat: ChatStore
     let voice: VoiceAssistant
     let recorder: ScreenRecorder
+    let analyzer: MeetingAnalyzer
+    let openReview: (URL) -> Void
     let openSettings: () -> Void
     let openProjects: () -> Void
     @State private var isDropTargeted = false
@@ -111,7 +113,7 @@ struct NotchRootView: View {
                 case .pomodoro: PomodoroView(timer: pomodoro)
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)
-                case .recorder: RecorderView(recorder: recorder)
+                case .recorder: RecorderView(recorder: recorder, analyzer: analyzer, openReview: openReview)
                 case .chat: ChatView(store: chat, voice: voice, openSettings: openSettings, openProjects: openProjects)
                 }
             }

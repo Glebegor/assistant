@@ -9,6 +9,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let tasks = TaskStore()
     private lazy var voice = VoiceAssistant(chat: chat)
     private let recorder = ScreenRecorder()
+    private let analyzer = MeetingAnalyzer()
+    private lazy var reviewWindows = MeetingReviewWindowController(analyzer: analyzer)
     private let projects = ProjectStore()
     private var projectsWindow: ProjectsWindowController?
     private lazy var settingsWindow = SettingsWindowController(tasks: tasks)
@@ -29,6 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let projectsWindow = ProjectsWindowController(store: projects, openSettings: { settings.show() })
         self.projectsWindow = projectsWindow
         let notch = NotchController(pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice, recorder: recorder,
+                                    analyzer: analyzer, openReview: { [weak self] in self?.reviewWindows.show($0) },
                                     openSettings: { settings.show() }, openProjects: { projectsWindow.show() })
         self.notch = notch
         statusItem = StatusItemController(
