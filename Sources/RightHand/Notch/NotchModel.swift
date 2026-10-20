@@ -2,7 +2,7 @@ import AppKit
 import Observation
 
 enum NotchTab: CaseIterable, Identifiable {
-    case pomodoro, tasks, shelf, chat
+    case pomodoro, tasks, shelf, recorder, chat
 
     var id: Self { self }
 
@@ -10,6 +10,7 @@ enum NotchTab: CaseIterable, Identifiable {
         switch self {
         case .pomodoro: L("Pomodoro")
         case .tasks: L("Tasks")
+        case .recorder: L("Record")
         case .shelf: L("Shelf")
         case .chat: L("Assistant")
         }
@@ -19,6 +20,7 @@ enum NotchTab: CaseIterable, Identifiable {
         switch self {
         case .pomodoro: "timer"
         case .tasks: "checklist"
+        case .recorder: "record.circle"
         case .shelf: "tray.full"
         case .chat: "sparkles"
         }
@@ -29,6 +31,7 @@ enum NotchTab: CaseIterable, Identifiable {
         switch self {
         case .pomodoro: CGSize(width: 560, height: 230)
         case .tasks: CGSize(width: 560, height: 360)
+        case .recorder: CGSize(width: 560, height: 250)
         case .chat: CGSize(width: 600, height: 440)
         case .shelf: CGSize(width: 560, height: 325) // two rows: clipboard and files
         }

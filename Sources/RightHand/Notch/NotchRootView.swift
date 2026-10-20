@@ -8,6 +8,7 @@ struct NotchRootView: View {
     let tasks: TaskStore
     let chat: ChatStore
     let voice: VoiceAssistant
+    let recorder: ScreenRecorder
     let openSettings: () -> Void
     let openProjects: () -> Void
     @State private var isDropTargeted = false
@@ -32,9 +33,13 @@ struct NotchRootView: View {
     }
 
     var body: some View {
+        let collapsed = model.geometry.collapsedSize
+        let showsRecording = recorder.state != .idle && !model.isExpanded && !showsApproval && !showsVoice
         let size = model.isExpanded ? model.selectedTab.panelSize
             : showsApproval ? approvalSize
-            : (showsVoice ? VoiceHUD.size(for: voice.phase, collapsed: model.geometry.collapsedSize) : model.geometry.collapsedSize)
+            : showsVoice ? VoiceHUD.size(for: voice.phase, collapsed: collapsed)
+            // While recording, the closed notch grows a little to the right for the red dot and time.
+            : showsRecording ? CGSize(width: collapsed.width + 150, height: collapsed.height) : collapsed
         let radius: CGFloat = model.isExpanded ? 26 : (showsVoice || showsApproval ? 22 : 10)
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
         let glows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
@@ -45,7 +50,7 @@ struct NotchRootView: View {
             ZStack(alignment: .top) {
                 shape
                     .fill(.black)
-                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice || showsApproval ? 1 : 0)
+                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice || showsApproval || showsRecording ? 1 : 0)
                 if model.isExpanded {
                     content
                         .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
@@ -59,6 +64,11 @@ struct NotchRootView: View {
                     }
                     .foregroundStyle(.white)
                     .transition(.opacity)
+                } else if showsRecording {
+                    RecordingIndicator(recorder: recorder)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                        .padding(.trailing, 14)
+                        .transition(.opacity)
                 } else if showsVoice {
                     VoiceHUD(voice: voice, topInset: model.geometry.collapsedSize.height)
                         .transition(.opacity)
@@ -101,6 +111,7 @@ struct NotchRootView: View {
                 case .pomodoro: PomodoroView(timer: pomodoro)
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)
+                case .recorder: RecorderView(recorder: recorder)
                 case .chat: ChatView(store: chat, voice: voice, openSettings: openSettings, openProjects: openProjects)
                 }
             }

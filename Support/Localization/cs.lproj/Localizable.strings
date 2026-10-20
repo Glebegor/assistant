@@ -5,6 +5,7 @@
 "%@ is used by macOS (for example Spotlight). Choose another." = "%@ používá macOS (třeba Spotlight). Vyber jinou.";
 "%@ to send · Esc to cancel" = "%@ odešle · Esc zruší";
 "%@ wants to: %@" = "%@ chce: %@";
+"%@ · stops at %lld:00:00" = "%@ · zastaví se v %lld:00:00";
 "%@. Press once to talk, again to send. Esc cancels." = "%@. Stiskni jednou a mluv, podruhé odešleš. Esc zruší.";
 "%lld done" = "%lld hotovo";
 "%lld overdue" = "%lld po termínu";
@@ -28,6 +29,7 @@
 "Add your %@ API key in Settings → Assistant." = "Přidej klíč API %@ v Nastavení → Asistent.";
 "Add your Notion integration and choose task databases in Settings → Tasks." = "Přidej integraci Notionu a vyber databáze úkolů v Nastavení → Úkoly.";
 "Allow Once" = "Povolit jednou";
+"Allow Screen Recording for RightHand in System Settings → Privacy & Security → Screen & System Audio Recording, then try again." = "Povol nahrávání obrazovky pro RightHand v Nastavení systému → Soukromí a zabezpečení → Nahrávání obrazovky a systémového zvuku a zkus to znovu.";
 "Allow screenshots…" = "Povolit snímky obrazovky…";
 "Allow speech recognition for RightHand in System Settings → Privacy & Security → Speech Recognition." = "Povol rozpoznávání řeči pro RightHand v Nastavení systému → Soukromí a zabezpečení → Rozpoznávání řeči.";
 "Allow the microphone for RightHand in System Settings → Privacy & Security → Microphone." = "Povol mikrofon pro RightHand v Nastavení systému → Soukromí a zabezpečení → Mikrofon.";
@@ -75,6 +77,7 @@
 "Clipboard history" = "Historie schránky";
 "Close" = "Zavřít";
 "Close tab" = "Zavřít kartu";
+"Computer sound" = "Zvuk z počítače";
 "Connect" = "Připojit";
 "Connect Notion" = "Připojit Notion";
 "Connect Notion or ClickUp to see your tasks" = "Připoj Notion nebo ClickUp a uvidíš své úkoly";
@@ -88,6 +91,7 @@
 "Copy %@ to %@" = "Zkopírovat %@ do %@";
 "Copy answer" = "Kopírovat odpověď";
 "Couldn't play the audio." = "Zvuk se nepodařilo přehrát.";
+"Couldn't start recording: %@" = "Nahrávání se nepodařilo spustit: %@";
 "Create %@" = "Vytvořit %@";
 "Create Google Doc “%@”" = "Vytvořit Google Doc „%@“";
 "Create Google Docs" = "Vytváření Google Docs";
@@ -104,6 +108,7 @@
 "Delete “%@”?" = "Smazat „%@“?";
 "Deny" = "Zakázat";
 "Disconnect" = "Odpojit";
+"Display %lld" = "Obrazovka %lld";
 "Don't ask again for “%@” (change it in Settings → Assistant)" = "Už se neptat u „%@“ (změníš v Nastavení → Asistent)";
 "Done" = "Hotovo";
 "Download a Google Drive file to %@" = "Stáhnout soubor z Google Drive do %@";
@@ -176,6 +181,7 @@
 "Move and copy files" = "Přesouvání a kopírování souborů";
 "Move to" = "Přesunout do";
 "Multilingual v2 (best quality)" = "Multilingual v2 (nejlepší kvalita)";
+"My voice" = "Můj hlas";
 "Name" = "Název";
 "New %@ Chat" = "Nový chat s %@";
 "New Chat" = "Nový chat";
@@ -191,7 +197,10 @@
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Žádné databáze. V Notionu otevři databázi úkolů → ••• → Connections → přidej svou integraci a pak stiskni Znovu načíst.";
 "No open tasks for you in Notion." = "V Notionu pro tebe nejsou žádné otevřené úkoly.";
 "No open tasks for you." = "Nemáš žádné otevřené úkoly.";
+"No recordings yet." = "Zatím žádné nahrávky.";
+"No screen to record." = "Není co nahrávat.";
 "None" = "Žádný";
+"Not recorded" = "Nenahrává se";
 "Notes the AI keeps about this project, shared by all its chats." = "Poznámky, které si AI vede o tomto projektu; sdílí je všechny jeho chaty.";
 "Nothing to do" = "Nic na práci";
 "Nothing yet. The AI writes notes here as you work." = "Zatím nic. AI sem bude během práce zapisovat poznámky.";
@@ -205,6 +214,7 @@
 "Only while a Pomodoro focus session is running. Breaks are free." = "Jen během soustředění Pomodoro. O přestávkách bez omezení.";
 "Open" = "Otevřít";
 "Open %@" = "Otevřít %@";
+"Open Folder" = "Otevřít složku";
 "Open Google Cloud" = "Otevřít Google Cloud";
 "Open Privacy & Security → Automation" = "Otevřít Soukromí a zabezpečení → Automatizace";
 "Open Settings" = "Otevřít Nastavení";
@@ -260,6 +270,11 @@
 "Recognized on your Mac when the language allows it" = "Rozpoznává se na tvém Macu, pokud to jazyk umožňuje";
 "Recognizing…" = "Rozpoznávám…";
 "Record" = "Nahrát";
+"Record Screen" = "Nahrát obrazovku";
+"Recorded on its own track" = "Nahrává se na samostatnou stopu";
+"Recording saved" = "Nahrávka uložena";
+"Recording stopped: %@" = "Nahrávání se zastavilo: %@";
+"Recordings" = "Nahrávky";
 "Redo" = "Znovu";
 "Refresh" = "Obnovit";
 "Releases" = "Vydání";
@@ -290,6 +305,7 @@
 "Same as RightHand" = "Stejně jako RightHand";
 "Save" = "Uložit";
 "Saved" = "Uloženo";
+"Saving…" = "Ukládám…";
 "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on." = "Řekni „Hey Ellipse“ (nebo „Эй, Эллипс“) a pak svůj požadavek; odešle se, když se odmlčíš. Poslouchá jen na tvém Macu; indikátor mikrofonu svítí stále.";
 "Schedule" = "Plán";
 "Screenshots" = "Snímky obrazovky";
@@ -330,11 +346,13 @@
 "Speed" = "Rychlost";
 "Start" = "Start";
 "Start %@" = "Začít: %@";
+"Start Recording" = "Začít nahrávat";
 "Start next phase automatically" = "Automaticky začít další fázi";
 "Start the conversation" = "Začni konverzaci";
 "Stop" = "Zastavit";
 "Stop Reading" = "Zastavit předčítání";
 "Stop Recording and Send" = "Zastavit nahrávání a odeslat";
+"Stop Screen Recording (%@)" = "Zastavit nahrávání obrazovky (%@)";
 "Stop recording and send (%@)" = "Zastavit nahrávání a odeslat (%@)";
 "Stop the answer" = "Zastavit odpověď";
 "Stopped after %lld tool steps. Send a message to continue." = "Zastaveno po %lld krocích s nástroji. Pošli zprávu a pokračuj.";
@@ -354,6 +372,7 @@
 "The ElevenLabs API key was rejected." = "Klíč API ElevenLabs byl odmítnut.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Napoprvé se macOS zeptá, zda RightHand smí ovládat každý prohlížeč. Klikni na OK.";
 "The project's instructions, files and memory are already part of this chat." = "Pokyny, soubory a paměť projektu už jsou součástí tohoto chatu.";
+"The recording couldn't be saved." = "Nahrávku se nepodařilo uložit.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "Časovač začne znovu, když jsi 2 minuty pryč od Macu nebo zamkneš obrazovku. Během přestávky přeskočíš klávesou Esc.";
 "Thinking…" = "Přemýšlím…";
 "This ClickUp list has no done status." = "Tento seznam v ClickUp nemá stav hotovo.";
@@ -372,6 +391,7 @@
 "Undo" = "Zpět";
 "Unpin panel" = "Odepnout panel";
 "Untitled" = "Bez názvu";
+"Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks" = "Až %lld hodiny · asi 1,5 GB za hodinu · hlas a zvuk počítače na samostatných stopách";
 "Upload %@ to Google Drive" = "Nahrát %@ na Google Drive";
 "Upload to Google Drive" = "Nahrávání na Google Drive";
 "Use This Folder" = "Použít tuto složku";

@@ -5,6 +5,7 @@
 "%@ is used by macOS (for example Spotlight). Choose another." = "%@ is used by macOS (for example Spotlight). Choose another.";
 "%@ to send · Esc to cancel" = "%@ to send · Esc to cancel";
 "%@ wants to: %@" = "%@ wants to: %@";
+"%@ · stops at %lld:00:00" = "%@ · stops at %lld:00:00";
 "%@. Press once to talk, again to send. Esc cancels." = "%@. Press once to talk, again to send. Esc cancels.";
 "%lld done" = "%lld done";
 "%lld overdue" = "%lld overdue";
@@ -28,6 +29,7 @@
 "Add your %@ API key in Settings → Assistant." = "Add your %@ API key in Settings → Assistant.";
 "Add your Notion integration and choose task databases in Settings → Tasks." = "Add your Notion integration and choose task databases in Settings → Tasks.";
 "Allow Once" = "Allow Once";
+"Allow Screen Recording for RightHand in System Settings → Privacy & Security → Screen & System Audio Recording, then try again." = "Allow Screen Recording for RightHand in System Settings → Privacy & Security → Screen & System Audio Recording, then try again.";
 "Allow screenshots…" = "Allow screenshots…";
 "Allow speech recognition for RightHand in System Settings → Privacy & Security → Speech Recognition." = "Allow speech recognition for RightHand in System Settings → Privacy & Security → Speech Recognition.";
 "Allow the microphone for RightHand in System Settings → Privacy & Security → Microphone." = "Allow the microphone for RightHand in System Settings → Privacy & Security → Microphone.";
@@ -75,6 +77,7 @@
 "Clipboard history" = "Clipboard history";
 "Close" = "Close";
 "Close tab" = "Close tab";
+"Computer sound" = "Computer sound";
 "Connect" = "Connect";
 "Connect Notion" = "Connect Notion";
 "Connect Notion or ClickUp to see your tasks" = "Connect Notion or ClickUp to see your tasks";
@@ -88,6 +91,7 @@
 "Copy %@ to %@" = "Copy %@ to %@";
 "Copy answer" = "Copy answer";
 "Couldn't play the audio." = "Couldn't play the audio.";
+"Couldn't start recording: %@" = "Couldn't start recording: %@";
 "Create %@" = "Create %@";
 "Create Google Doc “%@”" = "Create Google Doc “%@”";
 "Create Google Docs" = "Create Google Docs";
@@ -104,6 +108,7 @@
 "Delete “%@”?" = "Delete “%@”?";
 "Deny" = "Deny";
 "Disconnect" = "Disconnect";
+"Display %lld" = "Display %lld";
 "Don't ask again for “%@” (change it in Settings → Assistant)" = "Don't ask again for “%@” (change it in Settings → Assistant)";
 "Done" = "Done";
 "Download a Google Drive file to %@" = "Download a Google Drive file to %@";
@@ -176,6 +181,7 @@
 "Move and copy files" = "Move and copy files";
 "Move to" = "Move to";
 "Multilingual v2 (best quality)" = "Multilingual v2 (best quality)";
+"My voice" = "My voice";
 "Name" = "Name";
 "New %@ Chat" = "New %@ Chat";
 "New Chat" = "New Chat";
@@ -191,7 +197,10 @@
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload.";
 "No open tasks for you in Notion." = "No open tasks for you in Notion.";
 "No open tasks for you." = "No open tasks for you.";
+"No recordings yet." = "No recordings yet.";
+"No screen to record." = "No screen to record.";
 "None" = "None";
+"Not recorded" = "Not recorded";
 "Notes the AI keeps about this project, shared by all its chats." = "Notes the AI keeps about this project, shared by all its chats.";
 "Nothing to do" = "Nothing to do";
 "Nothing yet. The AI writes notes here as you work." = "Nothing yet. The AI writes notes here as you work.";
@@ -205,6 +214,7 @@
 "Only while a Pomodoro focus session is running. Breaks are free." = "Only while a Pomodoro focus session is running. Breaks are free.";
 "Open" = "Open";
 "Open %@" = "Open %@";
+"Open Folder" = "Open Folder";
 "Open Google Cloud" = "Open Google Cloud";
 "Open Privacy & Security → Automation" = "Open Privacy & Security → Automation";
 "Open Settings" = "Open Settings";
@@ -260,6 +270,11 @@
 "Recognized on your Mac when the language allows it" = "Recognized on your Mac when the language allows it";
 "Recognizing…" = "Recognizing…";
 "Record" = "Record";
+"Record Screen" = "Record Screen";
+"Recorded on its own track" = "Recorded on its own track";
+"Recording saved" = "Recording saved";
+"Recording stopped: %@" = "Recording stopped: %@";
+"Recordings" = "Recordings";
 "Redo" = "Redo";
 "Refresh" = "Refresh";
 "Releases" = "Releases";
@@ -290,6 +305,7 @@
 "Same as RightHand" = "Same as RightHand";
 "Save" = "Save";
 "Saved" = "Saved";
+"Saving…" = "Saving…";
 "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on." = "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on.";
 "Schedule" = "Schedule";
 "Screenshots" = "Screenshots";
@@ -330,11 +346,13 @@
 "Speed" = "Speed";
 "Start" = "Start";
 "Start %@" = "Start %@";
+"Start Recording" = "Start Recording";
 "Start next phase automatically" = "Start next phase automatically";
 "Start the conversation" = "Start the conversation";
 "Stop" = "Stop";
 "Stop Reading" = "Stop Reading";
 "Stop Recording and Send" = "Stop Recording and Send";
+"Stop Screen Recording (%@)" = "Stop Screen Recording (%@)";
 "Stop recording and send (%@)" = "Stop recording and send (%@)";
 "Stop the answer" = "Stop the answer";
 "Stopped after %lld tool steps. Send a message to continue." = "Stopped after %lld tool steps. Send a message to continue.";
@@ -354,6 +372,7 @@
 "The ElevenLabs API key was rejected." = "The ElevenLabs API key was rejected.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "The first time, macOS asks to let RightHand control each browser. Click OK.";
 "The project's instructions, files and memory are already part of this chat." = "The project's instructions, files and memory are already part of this chat.";
+"The recording couldn't be saved." = "The recording couldn't be saved.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip.";
 "Thinking…" = "Thinking…";
 "This ClickUp list has no done status." = "This ClickUp list has no done status.";
@@ -372,6 +391,7 @@
 "Undo" = "Undo";
 "Unpin panel" = "Unpin panel";
 "Untitled" = "Untitled";
+"Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks" = "Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks";
 "Upload %@ to Google Drive" = "Upload %@ to Google Drive";
 "Upload to Google Drive" = "Upload to Google Drive";
 "Use This Folder" = "Use This Folder";

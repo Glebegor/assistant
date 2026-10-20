@@ -35,7 +35,7 @@
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>RightHand listens while you hold a conversation with the AI using the talk shortcut.</string>
+	<string>RightHand listens when you talk to Ellipse, and records your voice on its own track when you record the screen.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>RightHand turns what you say into text for the AI, on your Mac when your language allows it.</string>
 	<key>NSAppleEventsUsageDescription</key>

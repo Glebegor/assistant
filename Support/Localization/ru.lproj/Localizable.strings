@@ -5,6 +5,7 @@
 "%@ is used by macOS (for example Spotlight). Choose another." = "%@ использует macOS (например, Spotlight). Выбери другое.";
 "%@ to send · Esc to cancel" = "%@ — отправить · Esc — отменить";
 "%@ wants to: %@" = "%@ хочет: %@";
+"%@ · stops at %lld:00:00" = "%@ · остановится в %lld:00:00";
 "%@. Press once to talk, again to send. Esc cancels." = "%@. Нажми раз, чтобы говорить, ещё раз — чтобы отправить. Esc отменяет.";
 "%lld done" = "%lld сделано";
 "%lld overdue" = "%lld просрочено";
@@ -28,6 +29,7 @@
 "Add your %@ API key in Settings → Assistant." = "Добавь ключ API %@ в Настройках → Ассистент.";
 "Add your Notion integration and choose task databases in Settings → Tasks." = "Добавь интеграцию Notion и выбери базы задач в Настройки → Задачи.";
 "Allow Once" = "Разрешить раз";
+"Allow Screen Recording for RightHand in System Settings → Privacy & Security → Screen & System Audio Recording, then try again." = "Разреши запись экрана для RightHand в Системные настройки → Конфиденциальность и безопасность → Запись экрана и системного звука, потом попробуй снова.";
 "Allow screenshots…" = "Разрешить снимки экрана…";
 "Allow speech recognition for RightHand in System Settings → Privacy & Security → Speech Recognition." = "Разреши распознавание речи для RightHand в Системные настройки → Конфиденциальность и безопасность → Распознавание речи.";
 "Allow the microphone for RightHand in System Settings → Privacy & Security → Microphone." = "Разреши микрофон для RightHand в Системные настройки → Конфиденциальность и безопасность → Микрофон.";
@@ -75,6 +77,7 @@
 "Clipboard history" = "История буфера обмена";
 "Close" = "Закрыть";
 "Close tab" = "Закрыть вкладку";
+"Computer sound" = "Звук с компьютера";
 "Connect" = "Подключить";
 "Connect Notion" = "Подключить Notion";
 "Connect Notion or ClickUp to see your tasks" = "Подключи Notion или ClickUp, чтобы видеть задачи";
@@ -88,6 +91,7 @@
 "Copy %@ to %@" = "Скопировать %@ в %@";
 "Copy answer" = "Копировать ответ";
 "Couldn't play the audio." = "Не удалось воспроизвести аудио.";
+"Couldn't start recording: %@" = "Не удалось начать запись: %@";
 "Create %@" = "Создать %@";
 "Create Google Doc “%@”" = "Создать Google Doc «%@»";
 "Create Google Docs" = "Создание Google Docs";
@@ -104,6 +108,7 @@
 "Delete “%@”?" = "Удалить «%@»?";
 "Deny" = "Запретить";
 "Disconnect" = "Отключить";
+"Display %lld" = "Экран %lld";
 "Don't ask again for “%@” (change it in Settings → Assistant)" = "Больше не спрашивать для «%@» (изменить можно в Настройках → Ассистент)";
 "Done" = "Готово";
 "Download a Google Drive file to %@" = "Скачать файл из Google Drive в %@";
@@ -176,6 +181,7 @@
 "Move and copy files" = "Перемещение и копирование файлов";
 "Move to" = "Переместить в";
 "Multilingual v2 (best quality)" = "Multilingual v2 (лучшее качество)";
+"My voice" = "Мой голос";
 "Name" = "Название";
 "New %@ Chat" = "Новый чат с %@";
 "New Chat" = "Новый чат";
@@ -191,7 +197,10 @@
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Баз не найдено. В Notion открой базу задач → ••• → Connections → добавь свою интеграцию, потом нажми «Обновить базы».";
 "No open tasks for you in Notion." = "В Notion нет открытых задач для тебя.";
 "No open tasks for you." = "Для тебя нет открытых задач.";
+"No recordings yet." = "Записей пока нет.";
+"No screen to record." = "Нет экрана для записи.";
 "None" = "Нет";
+"Not recorded" = "Не записывается";
 "Notes the AI keeps about this project, shared by all its chats." = "Заметки, которые AI ведёт об этом проекте; общие для всех его чатов.";
 "Nothing to do" = "Нечего делать";
 "Nothing yet. The AI writes notes here as you work." = "Пока ничего. AI будет записывать сюда заметки во время работы.";
@@ -205,6 +214,7 @@
 "Only while a Pomodoro focus session is running. Breaks are free." = "Только во время сессии фокуса Pomodoro. В перерывы — без ограничений.";
 "Open" = "Открыть";
 "Open %@" = "Открыть %@";
+"Open Folder" = "Открыть папку";
 "Open Google Cloud" = "Открыть Google Cloud";
 "Open Privacy & Security → Automation" = "Открыть Конфиденциальность и безопасность → Автоматизация";
 "Open Settings" = "Открыть Настройки";
@@ -260,6 +270,11 @@
 "Recognized on your Mac when the language allows it" = "Распознаётся на твоём Mac, если язык это поддерживает";
 "Recognizing…" = "Распознаю…";
 "Record" = "Записать";
+"Record Screen" = "Записать экран";
+"Recorded on its own track" = "Записывается на отдельную дорожку";
+"Recording saved" = "Запись сохранена";
+"Recording stopped: %@" = "Запись остановлена: %@";
+"Recordings" = "Записи";
 "Redo" = "Повторить";
 "Refresh" = "Обновить";
 "Releases" = "Релизы";
@@ -290,6 +305,7 @@
 "Same as RightHand" = "Как в RightHand";
 "Save" = "Сохранить";
 "Saved" = "Сохранено";
+"Saving…" = "Сохраняю…";
 "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on." = "Скажи «Эй, Эллипс» (или «Hey Ellipse»), потом запрос — он отправится, когда сделаешь паузу. Слушает только на твоём Mac; индикатор микрофона горит всё время.";
 "Schedule" = "Расписание";
 "Screenshots" = "Снимки экрана";
@@ -330,11 +346,13 @@
 "Speed" = "Скорость";
 "Start" = "Старт";
 "Start %@" = "Начать: %@";
+"Start Recording" = "Начать запись";
 "Start next phase automatically" = "Автоматически начинать следующую фазу";
 "Start the conversation" = "Начни разговор";
 "Stop" = "Остановить";
 "Stop Reading" = "Остановить озвучивание";
 "Stop Recording and Send" = "Остановить запись и отправить";
+"Stop Screen Recording (%@)" = "Остановить запись экрана (%@)";
 "Stop recording and send (%@)" = "Остановить запись и отправить (%@)";
 "Stop the answer" = "Остановить ответ";
 "Stopped after %lld tool steps. Send a message to continue." = "Остановлено после %lld шагов с инструментами. Отправь сообщение, чтобы продолжить.";
@@ -354,6 +372,7 @@
 "The ElevenLabs API key was rejected." = "Ключ API ElevenLabs отклонён.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "В первый раз macOS спросит, разрешить ли RightHand управлять каждым браузером. Нажми OK.";
 "The project's instructions, files and memory are already part of this chat." = "Инструкции, файлы и память проекта уже есть в этом чате.";
+"The recording couldn't be saved." = "Запись не удалось сохранить.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "Таймер начинается заново, если ты отошёл от Mac на 2 минуты или заблокировал экран. Во время перерыва нажми Esc, чтобы пропустить.";
 "Thinking…" = "Думаю…";
 "This ClickUp list has no done status." = "В этом списке ClickUp нет статуса «готово».";
@@ -372,6 +391,7 @@
 "Undo" = "Отменить";
 "Unpin panel" = "Открепить панель";
 "Untitled" = "Без названия";
+"Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks" = "До %lld часов · около 1,5 ГБ в час · голос и звук компьютера на отдельных дорожках";
 "Upload %@ to Google Drive" = "Загрузить %@ в Google Drive";
 "Upload to Google Drive" = "Загрузка в Google Drive";
 "Use This Folder" = "Использовать эту папку";

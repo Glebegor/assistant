@@ -26,6 +26,7 @@ final class NotchController {
     private let chat: ChatStore
     private let tasks: TaskStore
     private let voice: VoiceAssistant
+    private let recorder: ScreenRecorder
     private let openSettings: () -> Void
     private let openProjects: () -> Void
 
@@ -38,13 +39,14 @@ final class NotchController {
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, chat: ChatStore, voice: VoiceAssistant,
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, chat: ChatStore, voice: VoiceAssistant, recorder: ScreenRecorder,
          openSettings: @escaping () -> Void, openProjects: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.shelf = shelf
         self.chat = chat
         self.tasks = tasks
         self.voice = voice
+        self.recorder = recorder
         self.openSettings = openSettings
         self.openProjects = openProjects
         chat.onApprovalNeeded = { [weak self] in self?.approvalRequested() }
@@ -162,7 +164,7 @@ final class NotchController {
         model.displayID = screen.displayID
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice,
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice, recorder: recorder,
                                    openSettings: openSettings, openProjects: openProjects)
         )
         let size = NotchTab.maxPanelSize
