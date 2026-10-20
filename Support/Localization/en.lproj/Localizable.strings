@@ -289,6 +289,7 @@
 "Same as RightHand" = "Same as RightHand";
 "Save" = "Save";
 "Saved" = "Saved";
+"Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on." = "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on.";
 "Schedule" = "Schedule";
 "Screenshots" = "Screenshots";
 "Search ClickUp for “%@”" = "Search ClickUp for “%@”";
@@ -379,6 +380,7 @@
 "Voice model" = "Voice model";
 "Volume" = "Volume";
 "Waiting for your permission…" = "Waiting for your permission…";
+"Wake word “Hey Ellipse”" = "Wake word “Hey Ellipse”";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.";
 "Window" = "Window";
 "Work with the whole Mac" = "Work with the whole Mac";

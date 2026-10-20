@@ -153,6 +153,7 @@ private struct VoiceSettingsSection: View {
     @AppStorage(VoiceSettings.Key.voiceID) private var voiceID = ""
     @AppStorage(VoiceSettings.Key.rate) private var rate = 0.52
     @AppStorage(VoiceSettings.Key.speakVoiceAnswers) private var speakAnswers = true
+    @AppStorage(VoiceSettings.Key.wakeWord) private var wakeWord = true
     @State private var languages = VoiceRecognizer.languages
     @State private var shortcut = Shortcut.voice
     @State private var isRecording = false
@@ -189,6 +190,11 @@ private struct VoiceSettingsSection: View {
                     }
                 }
                 .padding(.leading, 30)
+            }
+            Toggle(isOn: $wakeWord) {
+                SettingsRowLabel("Wake word “Hey Ellipse”",
+                                 subtitle: L("Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on."),
+                                 systemImage: "ear.fill", color: .cyan)
             }
             Toggle(isOn: $speakAnswers) {
                 SettingsRowLabel("Read voice answers aloud", systemImage: "speaker.wave.2.fill", color: .indigo)

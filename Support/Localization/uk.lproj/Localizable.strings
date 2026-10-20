@@ -289,6 +289,7 @@
 "Same as RightHand" = "Як у RightHand";
 "Save" = "Зберегти";
 "Saved" = "Збережено";
+"Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on." = "Скажи «Hey Ellipse» (або «Ей, Еліпс»), потім запит — він надішлеться, коли зробиш паузу. Слухає лише на твоєму Mac; індикатор мікрофона світиться весь час.";
 "Schedule" = "Розклад";
 "Screenshots" = "Знімки екрана";
 "Search ClickUp for “%@”" = "Шукати в ClickUp «%@»";
@@ -379,6 +380,7 @@
 "Voice model" = "Голосова модель";
 "Volume" = "Гучність";
 "Waiting for your permission…" = "Чекаю на твій дозвіл…";
+"Wake word “Hey Ellipse”" = "Слово для виклику «Гей, Ellipse»";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Хто ти, над чим працюєш, які відповіді любиш, посилання (GitHub, LinkedIn, сайт…). Claude і ChatGPT читають це на початку кожного чату.";
 "Window" = "Вікно";
 "Work with the whole Mac" = "Працювати з усім Mac";

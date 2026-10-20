@@ -400,4 +400,6 @@ T = {
     'Ellipse — voice assistant': ('Ellipse — голосовий помічник', 'Ellipse — hlasový asistent', 'Ellipse — голосовой помощник'),
     'Talk to Ellipse': ('Говорити з Ellipse', 'Mluvit s Ellipse', 'Говорить с Ellipse'),
     'Only the languages you speak. Fewer languages are recognized faster and better.': ('Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.', 'Jen jazyky, kterými mluvíš. Čím méně jazyků, tím rychlejší a přesnější rozpoznávání.', 'Только языки, на которых ты говоришь. Чем меньше языков, тем быстрее и точнее распознавание.'),
+    'Wake word “Hey Ellipse”': ('Слово для виклику «Гей, Ellipse»', 'Probouzecí slovo „Hey Ellipse“', 'Слово вызова «Эй, Эллипс»'),
+    "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on.": ('Скажи «Hey Ellipse» (або «Ей, Еліпс»), потім запит — він надішлеться, коли зробиш паузу. Слухає лише на твоєму Mac; індикатор мікрофона світиться весь час.', 'Řekni „Hey Ellipse“ (nebo „Эй, Эллипс“) a pak svůj požadavek; odešle se, když se odmlčíš. Poslouchá jen na tvém Macu; indikátor mikrofonu svítí stále.', 'Скажи «Эй, Эллипс» (или «Hey Ellipse»), потом запрос — он отправится, когда сделаешь паузу. Слушает только на твоём Mac; индикатор микрофона горит всё время.'),
 }
