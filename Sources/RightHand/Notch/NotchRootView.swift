@@ -7,26 +7,46 @@ struct NotchRootView: View {
     let shelf: ShelfStore
     let tasks: TaskStore
     let chat: ChatStore
+    let voice: VoiceAssistant
     let openSettings: () -> Void
     let openProjects: () -> Void
     @State private var isDropTargeted = false
 
+    /// The voice card shows on the closed notch of the screen you started talking on.
+    private var showsVoice: Bool {
+        voice.isVisible && !model.isExpanded && (voice.displayID == nil || voice.displayID == model.displayID)
+    }
+
     var body: some View {
-        let size = model.isExpanded ? model.selectedTab.panelSize : model.geometry.collapsedSize
-        let radius: CGFloat = model.isExpanded ? 26 : 10
+        let size = model.isExpanded ? model.selectedTab.panelSize
+            : (showsVoice ? VoiceHUD.size(for: voice.phase, collapsed: model.geometry.collapsedSize) : model.geometry.collapsedSize)
+        let radius: CGFloat = model.isExpanded ? 26 : (showsVoice ? 22 : 10)
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
+        let glows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
+            && [.listening, .transcribing, .working].contains(voice.phase)
 
         ZStack(alignment: .top) {
-            shape
-                .fill(.black)
-                .opacity(model.isExpanded || !model.hidesWhenCollapsed ? 1 : 0)
-            if model.isExpanded {
-                content
-                    .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
+            if glows {
+                NotchGlow(size: size, radius: radius, level: voice.level, isListening: voice.phase == .listening)
+                    .transition(.opacity)
             }
+            ZStack(alignment: .top) {
+                shape
+                    .fill(.black)
+                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice ? 1 : 0)
+                if model.isExpanded {
+                    content
+                        .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
+                } else if showsVoice {
+                    VoiceHUD(voice: voice, topInset: model.geometry.collapsedSize.height)
+                        .transition(.opacity)
+                }
+            }
+            .frame(width: size.width, height: size.height)
+            .clipShape(shape)
         }
-        .frame(width: size.width, height: size.height)
-        .clipShape(shape)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: voice.phase)
+        .animation(.easeInOut(duration: 0.3), value: glows)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.selectedTab)
         .animation(.easeInOut(duration: 0.2), value: model.hidesWhenCollapsed)

@@ -1,156 +1,118 @@
 import AVFoundation
+import NaturalLanguage
 import Observation
 import SwiftUI
 
-/// ElevenLabs settings: the API key is in the Keychain, voice and model in UserDefaults.
+/// Voice settings: reading answers aloud with the Mac's own voices (on the Mac, free, offline),
+/// the shortcut for talking to the AI, and the language it listens in.
 enum VoiceSettings {
-    static let keychainAccount = "elevenlabs-api-key"
-    static let keysURL = URL(string: "https://elevenlabs.io/app/settings/api-keys")!
-
     enum Key {
-        static let voiceID = "voice.voiceID"
-        static let model = "voice.model"
+        static let voiceID = "voice.localVoice"
+        static let rate = "voice.rate"
+        static let speakVoiceAnswers = "voice.speakAnswers"
+        static let shortcut = "voice.shortcut"
+        static let listenLanguage = "voice.listenLanguage"
     }
 
-    enum Default {
-        static let voiceID = "EXAVITQu4vr4xnSDxMaL" // Sarah
-        static let model = "eleven_multilingual_v2"
+    /// "" = pick the best installed voice for the language of each answer.
+    static var voiceID: String { UserDefaults.standard.string(forKey: Key.voiceID) ?? "" }
+    /// 0.5 is normal speed.
+    static var rate: Float { UserDefaults.standard.object(forKey: Key.rate) as? Float ?? 0.52 }
+    static var speakVoiceAnswers: Bool { UserDefaults.standard.object(forKey: Key.speakVoiceAnswers) as? Bool ?? true }
+
+    /// Installed voices worth offering: no novelty voices (Bells, Bubbles, …).
+    static var voices: [AVSpeechSynthesisVoice] {
+        AVSpeechSynthesisVoice.speechVoices()
+            .filter { $0.identifier.hasPrefix("com.apple.voice.") || $0.quality != .default }
+            .sorted { ($0.language, $0.name) < ($1.language, $1.name) }
     }
 
-    /// Multilingual v2 speaks Ukrainian, English and ~30 more languages; Flash is faster and cheaper.
-    static let models: [(id: String, name: String)] = [
-        ("eleven_multilingual_v2", "Multilingual v2 (best quality)"),
-        ("eleven_flash_v2_5", "Flash v2.5 (fast, cheaper)"),
-    ]
+    /// The best voice for a language: premium, then enhanced, then the standard one.
+    static func bestVoice(for language: String) -> AVSpeechSynthesisVoice? {
+        let candidates = voices.filter { $0.language.hasPrefix(language) }
+        // The usual region first (en-US, not en-AU), at the same quality.
+        let home = ["en": "en-US", "uk": "uk-UA", "cs": "cs-CZ", "ru": "ru-RU", "de": "de-DE", "es": "es-ES", "fr": "fr-FR"][language]
+        func key(_ voice: AVSpeechSynthesisVoice) -> Int { rank(voice) * 2 + (voice.language == home ? 1 : 0) }
+        return candidates.max { key($0) < key($1) } ?? AVSpeechSynthesisVoice(language: language)
+    }
 
-    static var voiceID: String { UserDefaults.standard.string(forKey: Key.voiceID) ?? Default.voiceID }
-    static var model: String { UserDefaults.standard.string(forKey: Key.model) ?? Default.model }
+    private static func rank(_ voice: AVSpeechSynthesisVoice) -> Int {
+        switch voice.quality {
+        case .premium: 3
+        case .enhanced: 2
+        default: voice.identifier.hasPrefix("com.apple.voice.") ? 1 : 0
+        }
+    }
 }
 
-/// Reads AI answers aloud with ElevenLabs.
+/// Reads AI answers aloud with the Mac's built-in speech (no internet, no API key).
 @Observable
 @MainActor
 final class SpeechPlayer {
     static let shared = SpeechPlayer()
 
-    /// The text being spoken (or loaded) right now.
+    /// The text being spoken right now.
     private(set) var currentText: String?
-    private(set) var isLoading = false
-    var errorMessage: String?
+    /// Kept for the ▶︎ buttons; local speech starts at once.
+    let isLoading = false
 
-    @ObservationIgnored private var player: AVAudioPlayer?
-    @ObservationIgnored private var delegate: Delegate?
-    @ObservationIgnored private var task: Task<Void, Never>?
-
-    private static let maxCharacters = 5_000
-
-    var hasKey: Bool { Keychain.read(VoiceSettings.keychainAccount) != nil }
+    @ObservationIgnored private let synthesizer = AVSpeechSynthesizer()
+    @ObservationIgnored private lazy var delegate = Delegate { [weak self] in self?.finished() }
+    @ObservationIgnored private var onFinish: (() -> Void)?
 
     func toggle(_ text: String) {
         if currentText == text { stop() } else { speak(text) }
     }
 
-    func speak(_ text: String) {
+    /// Speaks `text`; `onFinish` runs when it has been read to the end (not when stopped).
+    func speak(_ text: String, onFinish: (() -> Void)? = nil) {
         stop()
-        guard let apiKey = Keychain.read(VoiceSettings.keychainAccount) else {
-            errorMessage = L("Add your %@ API key in Settings → Assistant.", "ElevenLabs")
-            return
-        }
+        let spoken = Self.plainText(text)
+        guard !spoken.isEmpty else { onFinish?(); return }
+        synthesizer.delegate = delegate
+        let utterance = AVSpeechUtterance(string: spoken)
+        utterance.voice = Self.voice(for: spoken)
+        utterance.rate = VoiceSettings.rate
         currentText = text
-        isLoading = true
-        errorMessage = nil
-        let spoken = String(Self.plainText(text).prefix(Self.maxCharacters))
-        task = Task {
-            do {
-                let audio = try await ElevenLabs.speech(for: spoken, voiceID: VoiceSettings.voiceID,
-                                                        model: VoiceSettings.model, apiKey: apiKey)
-                try Task.checkCancellation()
-                play(audio)
-            } catch is CancellationError {
-            } catch {
-                errorMessage = error.localizedDescription
-                currentText = nil
-            }
-            isLoading = false
-        }
+        self.onFinish = onFinish
+        synthesizer.speak(utterance)
     }
 
     func stop() {
-        task?.cancel()
-        player?.stop()
-        player = nil
+        onFinish = nil
+        if synthesizer.isSpeaking { synthesizer.stopSpeaking(at: .immediate) }
         currentText = nil
-        isLoading = false
     }
 
-    private func play(_ audio: Data) {
-        guard let player = try? AVAudioPlayer(data: audio) else {
-            errorMessage = L("Couldn't play the audio.")
-            currentText = nil
-            return
-        }
-        let delegate = Delegate { [weak self] in self?.currentText = nil }
-        player.delegate = delegate
-        self.delegate = delegate
-        self.player = player
-        player.play()
+    private func finished() {
+        currentText = nil
+        let done = onFinish
+        onFinish = nil
+        done?()
     }
 
-    /// Markdown symbols would be read out loud; drop them.
-    private static func plainText(_ markdown: String) -> String {
+    private static func voice(for text: String) -> AVSpeechSynthesisVoice? {
+        if !VoiceSettings.voiceID.isEmpty, let chosen = AVSpeechSynthesisVoice(identifier: VoiceSettings.voiceID) { return chosen }
+        let language = NLLanguageRecognizer.dominantLanguage(for: text)?.rawValue ?? AppLanguage.current
+        return VoiceSettings.bestVoice(for: language)
+    }
+
+    /// Markdown symbols and links would be read out loud; drop them.
+    static func plainText(_ markdown: String) -> String {
         var text = markdown
-        text = text.replacingOccurrences(of: "```[\\s\\S]*?```", with: " (code) ", options: .regularExpression)
-        text = text.replacingOccurrences(of: "[*_`#>]+", with: "", options: .regularExpression)
+        text = text.replacingOccurrences(of: "```[\\s\\S]*?```", with: " ", options: .regularExpression)
         text = text.replacingOccurrences(of: "\\[([^\\]]+)\\]\\([^)]+\\)", with: "$1", options: .regularExpression)
-        return text
+        text = text.replacingOccurrences(of: "https?://\\S+", with: "", options: .regularExpression)
+        text = text.replacingOccurrences(of: "[*_`#>|]+", with: "", options: .regularExpression)
+        return text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private final class Delegate: NSObject, AVAudioPlayerDelegate {
+    private final class Delegate: NSObject, AVSpeechSynthesizerDelegate {
         let onFinish: @MainActor () -> Void
         init(onFinish: @escaping @MainActor () -> Void) { self.onFinish = onFinish }
-        func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
             Task { @MainActor in onFinish() }
         }
-    }
-}
-
-/// ElevenLabs text-to-speech API.
-enum ElevenLabs {
-    struct Voice: Identifiable, Hashable, Sendable {
-        let id: String
-        let name: String
-    }
-
-    static func speech(for text: String, voiceID: String, model: String, apiKey: String) async throws -> Data {
-        var components = URLComponents(string: "https://api.elevenlabs.io/v1/text-to-speech/\(voiceID)")!
-        components.queryItems = [URLQueryItem(name: "output_format", value: "mp3_44100_128")]
-        var request = URLRequest(url: components.url!, timeoutInterval: 120)
-        request.httpMethod = "POST"
-        request.setValue(apiKey, forHTTPHeaderField: "xi-api-key")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("audio/mpeg", forHTTPHeaderField: "Accept")
-        request.httpBody = try JSONValue.object(["text": .string(text), "model_id": .string(model)]).encoded()
-        let (data, response) = try await URLSession.shared.data(for: request)
-        try check(response, data)
-        return data
-    }
-
-    static func voices(apiKey: String) async throws -> [Voice] {
-        var request = URLRequest(url: URL(string: "https://api.elevenlabs.io/v1/voices")!)
-        request.setValue(apiKey, forHTTPHeaderField: "xi-api-key")
-        let (data, response) = try await URLSession.shared.data(for: request)
-        try check(response, data)
-        return (JSONValue.parse(data)?["voices"]?.array ?? []).compactMap { voice in
-            guard let id = voice["voice_id"]?.string, let name = voice["name"]?.string else { return nil }
-            return Voice(id: id, name: name.components(separatedBy: " - ").first ?? name)
-        }
-    }
-
-    private static func check(_ response: URLResponse, _ data: Data) throws {
-        guard let status = (response as? HTTPURLResponse)?.statusCode, status != 200 else { return }
-        let detail = JSONValue.parse(data)?["detail"]
-        let message = detail?["message"]?.string ?? detail?.string
-        throw ChatError(message: status == 401 ? L("The ElevenLabs API key was rejected.") : L("ElevenLabs error %lld%@", status, message.map { ": \($0)" } ?? ""))
     }
 }
 
@@ -161,10 +123,9 @@ struct SpeakButton: View {
 
     var body: some View {
         let isCurrent = player.currentText == text
-        Button(isCurrent ? "Stop Reading" : "Read Aloud",
-               systemImage: isCurrent ? (player.isLoading ? "hourglass" : "stop.fill") : "speaker.wave.2") {
+        Button(isCurrent ? "Stop Reading" : "Read Aloud", systemImage: isCurrent ? "stop.fill" : "speaker.wave.2") {
             player.toggle(text)
         }
-        .help(player.hasKey ? (isCurrent ? "Stop" : "Read aloud with ElevenLabs") : "Add an ElevenLabs API key in Settings → Assistant")
+        .help(isCurrent ? "Stop" : "Read aloud")
     }
 }

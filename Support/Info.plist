@@ -34,6 +34,10 @@
 	<true/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>RightHand listens while you hold a conversation with the AI using the talk shortcut.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>RightHand turns what you say into text for the AI, on your Mac when your language allows it.</string>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>RightHand checks the address of the open browser tab to block distracting sites during focus sessions.</string>
 	<!-- Private drag type for moving Shelf items into Shelf folders. -->
