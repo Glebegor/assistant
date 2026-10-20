@@ -251,6 +251,7 @@
 "Ready to focus again?" = "Готов снова сосредоточиться?";
 "Recognized on your Mac when the language allows it" = "Распознаётся на твоём Mac, если язык это поддерживает";
 "Recognizing…" = "Распознаю…";
+"Record" = "Записать";
 "Redo" = "Повторить";
 "Refresh" = "Обновить";
 "Releases" = "Релизы";
@@ -296,6 +297,7 @@
 "Select All" = "Выбрать всё";
 "Send" = "Отправить";
 "Send (Return)" = "Отправить (Return)";
+"Send Recording" = "Отправить запись";
 "Services" = "Сервисы";
 "Settings" = "Настройки";
 "Settings…" = "Настройки…";
@@ -313,6 +315,7 @@
 "Skip Phase" = "Пропустить фазу";
 "Skip to next phase" = "Перейти к следующей фазе";
 "Sounds" = "Звуки";
+"Speak your message (%@)" = "Сказать сообщение голосом (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Речь создаёт твой Mac, офлайн и бесплатно. Голоса лучше (★) можно скачать в Системные настройки → Универсальный доступ → Устный контент → Системный голос → Управлять голосами.";
 "Speech recognition isn't available for %@." = "Распознавание речи недоступно для %@.";
 "Speed" = "Скорость";
@@ -322,11 +325,14 @@
 "Start the conversation" = "Начни разговор";
 "Stop" = "Остановить";
 "Stop Reading" = "Остановить озвучивание";
+"Stop Recording and Send" = "Остановить запись и отправить";
+"Stop recording and send (%@)" = "Остановить запись и отправить (%@)";
 "Stop the answer" = "Остановить ответ";
 "Stopped after %lld tool steps. Send a message to continue." = "Остановлено после %lld шагов с инструментами. Отправь сообщение, чтобы продолжить.";
 "Summarizing the earlier conversation…" = "Сжимаю предыдущую часть разговора…";
 "Take an Eye Break Now" = "Дать глазам отдохнуть сейчас";
 "Talk shortcut" = "Сочетание для разговора";
+"Talk to the AI (%@)" = "Поговорить с AI (%@)";
 "Tasks" = "Задачи";
 "Tasks assigned to others are hidden" = "Задачи, назначенные другим, скрыты";
 "Text, images and files you copy appear here." = "Здесь появляется скопированный текст, изображения и файлы.";

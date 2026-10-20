@@ -251,6 +251,7 @@
 "Ready to focus again?" = "Готовий знову зосередитися?";
 "Recognized on your Mac when the language allows it" = "Розпізнається на твоєму Mac, якщо мова це підтримує";
 "Recognizing…" = "Розпізнаю…";
+"Record" = "Записати";
 "Redo" = "Повторити";
 "Refresh" = "Оновити";
 "Releases" = "Випуски";
@@ -296,6 +297,7 @@
 "Select All" = "Вибрати все";
 "Send" = "Надіслати";
 "Send (Return)" = "Надіслати (Return)";
+"Send Recording" = "Надіслати запис";
 "Services" = "Сервіси";
 "Settings" = "Налаштування";
 "Settings…" = "Налаштування…";
@@ -313,6 +315,7 @@
 "Skip Phase" = "Пропустити фазу";
 "Skip to next phase" = "Перейти до наступної фази";
 "Sounds" = "Звуки";
+"Speak your message (%@)" = "Сказати повідомлення голосом (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Мовлення створює твій Mac, офлайн і безкоштовно. Кращі голоси (★) можна завантажити в Системні параметри → Доступність → Озвучений вміст → Системний голос → Керувати голосами.";
 "Speech recognition isn't available for %@." = "Розпізнавання мовлення недоступне для %@.";
 "Speed" = "Швидкість";
@@ -322,11 +325,14 @@
 "Start the conversation" = "Почни розмову";
 "Stop" = "Зупинити";
 "Stop Reading" = "Зупинити озвучування";
+"Stop Recording and Send" = "Зупинити запис і надіслати";
+"Stop recording and send (%@)" = "Зупинити запис і надіслати (%@)";
 "Stop the answer" = "Зупинити відповідь";
 "Stopped after %lld tool steps. Send a message to continue." = "Зупинено після %lld кроків з інструментами. Надішли повідомлення, щоб продовжити.";
 "Summarizing the earlier conversation…" = "Стискаю попередню частину розмови…";
 "Take an Eye Break Now" = "Відпочити очам зараз";
 "Talk shortcut" = "Сполучення для розмови";
+"Talk to the AI (%@)" = "Поговорити з AI (%@)";
 "Tasks" = "Задачі";
 "Tasks assigned to others are hidden" = "Задачі, призначені іншим, приховано";
 "Text, images and files you copy appear here." = "Тут з'являється скопійований текст, зображення й файли.";

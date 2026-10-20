@@ -251,6 +251,7 @@
 "Ready to focus again?" = "Připraven se znovu soustředit?";
 "Recognized on your Mac when the language allows it" = "Rozpoznává se na tvém Macu, pokud to jazyk umožňuje";
 "Recognizing…" = "Rozpoznávám…";
+"Record" = "Nahrát";
 "Redo" = "Znovu";
 "Refresh" = "Obnovit";
 "Releases" = "Vydání";
@@ -296,6 +297,7 @@
 "Select All" = "Vybrat vše";
 "Send" = "Odeslat";
 "Send (Return)" = "Odeslat (Return)";
+"Send Recording" = "Odeslat nahrávku";
 "Services" = "Služby";
 "Settings" = "Nastavení";
 "Settings…" = "Nastavení…";
@@ -313,6 +315,7 @@
 "Skip Phase" = "Přeskočit fázi";
 "Skip to next phase" = "Přejít na další fázi";
 "Sounds" = "Zvuky";
+"Speak your message (%@)" = "Namluvit zprávu (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Řeč vytváří tvůj Mac, offline a zdarma. Hezčí hlasy (★) si stáhneš v Nastavení systému → Zpřístupnění → Mluvený obsah → Systémový hlas → Spravovat hlasy.";
 "Speech recognition isn't available for %@." = "Rozpoznávání řeči není pro %@ k dispozici.";
 "Speed" = "Rychlost";
@@ -322,11 +325,14 @@
 "Start the conversation" = "Začni konverzaci";
 "Stop" = "Zastavit";
 "Stop Reading" = "Zastavit předčítání";
+"Stop Recording and Send" = "Zastavit nahrávání a odeslat";
+"Stop recording and send (%@)" = "Zastavit nahrávání a odeslat (%@)";
 "Stop the answer" = "Zastavit odpověď";
 "Stopped after %lld tool steps. Send a message to continue." = "Zastaveno po %lld krocích s nástroji. Pošli zprávu a pokračuj.";
 "Summarizing the earlier conversation…" = "Shrnuji dřívější část konverzace…";
 "Take an Eye Break Now" = "Dopřát očím odpočinek teď";
 "Talk shortcut" = "Zkratka pro mluvení";
+"Talk to the AI (%@)" = "Mluvit s AI (%@)";
 "Tasks" = "Úkoly";
 "Tasks assigned to others are hidden" = "Úkoly přiřazené ostatním jsou skryté";
 "Text, images and files you copy appear here." = "Objeví se tu zkopírovaný text, obrázky a soubory.";

@@ -62,7 +62,7 @@ struct NotchRootView: View {
                 case .pomodoro: PomodoroView(timer: pomodoro)
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)
-                case .chat: ChatView(store: chat, openSettings: openSettings, openProjects: openProjects)
+                case .chat: ChatView(store: chat, voice: voice, openSettings: openSettings, openProjects: openProjects)
                 }
             }
             .padding(.horizontal, 20)

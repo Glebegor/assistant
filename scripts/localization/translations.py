@@ -384,4 +384,10 @@ T = {
     'Speed': ('Швидкість', 'Rychlost', 'Скорость'),
     'Talk shortcut': ('Сполучення для розмови', 'Zkratka pro mluvení', 'Сочетание для разговора'),
     'Read aloud': ('Прочитати вголос', 'Přečíst nahlas', 'Прочитать вслух'),
+    'Send Recording': ('Надіслати запис', 'Odeslat nahrávku', 'Отправить запись'),
+    'Record': ('Записати', 'Nahrát', 'Записать'),
+    'Stop recording and send (%@)': ('Зупинити запис і надіслати (%@)', 'Zastavit nahrávání a odeslat (%@)', 'Остановить запись и отправить (%@)'),
+    'Speak your message (%@)': ('Сказати повідомлення голосом (%@)', 'Namluvit zprávu (%@)', 'Сказать сообщение голосом (%@)'),
+    'Stop Recording and Send': ('Зупинити запис і надіслати', 'Zastavit nahrávání a odeslat', 'Остановить запись и отправить'),
+    'Talk to the AI (%@)': ('Поговорити з AI (%@)', 'Mluvit s AI (%@)', 'Поговорить с AI (%@)'),
 }

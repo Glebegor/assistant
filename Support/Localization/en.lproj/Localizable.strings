@@ -251,6 +251,7 @@
 "Ready to focus again?" = "Ready to focus again?";
 "Recognized on your Mac when the language allows it" = "Recognized on your Mac when the language allows it";
 "Recognizing…" = "Recognizing…";
+"Record" = "Record";
 "Redo" = "Redo";
 "Refresh" = "Refresh";
 "Releases" = "Releases";
@@ -296,6 +297,7 @@
 "Select All" = "Select All";
 "Send" = "Send";
 "Send (Return)" = "Send (Return)";
+"Send Recording" = "Send Recording";
 "Services" = "Services";
 "Settings" = "Settings";
 "Settings…" = "Settings…";
@@ -313,6 +315,7 @@
 "Skip Phase" = "Skip Phase";
 "Skip to next phase" = "Skip to next phase";
 "Sounds" = "Sounds";
+"Speak your message (%@)" = "Speak your message (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.";
 "Speech recognition isn't available for %@." = "Speech recognition isn't available for %@.";
 "Speed" = "Speed";
@@ -322,11 +325,14 @@
 "Start the conversation" = "Start the conversation";
 "Stop" = "Stop";
 "Stop Reading" = "Stop Reading";
+"Stop Recording and Send" = "Stop Recording and Send";
+"Stop recording and send (%@)" = "Stop recording and send (%@)";
 "Stop the answer" = "Stop the answer";
 "Stopped after %lld tool steps. Send a message to continue." = "Stopped after %lld tool steps. Send a message to continue.";
 "Summarizing the earlier conversation…" = "Summarizing the earlier conversation…";
 "Take an Eye Break Now" = "Take an Eye Break Now";
 "Talk shortcut" = "Talk shortcut";
+"Talk to the AI (%@)" = "Talk to the AI (%@)";
 "Tasks" = "Tasks";
 "Tasks assigned to others are hidden" = "Tasks assigned to others are hidden";
 "Text, images and files you copy appear here." = "Text, images and files you copy appear here.";

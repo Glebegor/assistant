@@ -31,6 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = StatusItemController(
             pomodoro: pomodoro,
             eyeRest: eyeRest,
+            voice: voice,
             showPanel: { notch.showPinned() },
             openProjects: { projectsWindow.show() },
             openSettings: { settings.show() }
