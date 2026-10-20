@@ -24,7 +24,8 @@ struct NotchRootView: View {
         let radius: CGFloat = model.isExpanded ? 26 : (showsVoice ? 22 : 10)
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
         let glows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
-            && [.listening, .transcribing, .working].contains(voice.phase)
+            && (voice.phase == .listening || voice.phase == .transcribing || voice.phase == .working
+                || (voice.phase.isAnswer && SpeechPlayer.shared.currentText != nil))
 
         ZStack(alignment: .top) {
             ZStack(alignment: .top) {

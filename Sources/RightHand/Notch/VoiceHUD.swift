@@ -11,16 +11,16 @@ struct VoiceHUD: View {
     /// never covers the windows you're working in; the card shows while you speak and for the answer.
     static func expands(_ phase: VoiceAssistant.Phase) -> Bool {
         switch phase {
-        case .listening, .answer, .failed: true
-        case .idle, .transcribing, .working: false
+        case .listening, .failed: true
+        // The answer is read aloud (and kept in the chat); a card would cover what you click on.
+        case .idle, .transcribing, .working, .answer: false
         }
     }
 
     static func size(for phase: VoiceAssistant.Phase, collapsed: CGSize) -> CGSize {
         let width = max(collapsed.width + 160, 420)
         switch phase {
-        case .idle, .transcribing, .working: return collapsed
-        case .answer: return CGSize(width: width + 60, height: collapsed.height + 92)
+        case .idle, .transcribing, .working, .answer: return collapsed
         case .failed: return CGSize(width: width, height: collapsed.height + 62)
         default: return CGSize(width: width, height: collapsed.height + 56)
         }

@@ -16,6 +16,8 @@ final class VoiceAssistant {
         case working
         case answer(String)
         case failed(String)
+
+        var isAnswer: Bool { if case .answer = self { true } else { false } }
     }
 
     private(set) var phase: Phase = .idle
@@ -140,9 +142,9 @@ final class VoiceAssistant {
         guard !answer.isEmpty else { return show(.failed(L("No answer came back."))) }
         phase = .answer(answer)
         if VoiceSettings.speakVoiceAnswers {
-            SpeechPlayer.shared.speak(answer) { [weak self] in self?.hide(after: 4) }
+            SpeechPlayer.shared.speak(answer) { [weak self] in self?.hide(after: 0.3) }
         } else {
-            hide(after: 12)
+            hide(after: 0.5)
         }
     }
 
