@@ -22,6 +22,11 @@ final class ChatStore {
     @ObservationIgnored var onApprovalNeeded: (() -> Void)?
     /// The screen to ask on (the one the mouse was on when the question came).
     private(set) var approvalDisplayID: CGDirectDisplayID?
+    /// The screen the last message was sent from; its notch glows while the AI works.
+    private(set) var workingDisplayID: CGDirectDisplayID?
+
+    /// Claude or ChatGPT is thinking or using tools in one of the tabs.
+    var isWorking: Bool { tabs.contains { $0.isRunning } }
 
     /// The chat waiting for your permission, if any — the one you're looking at first.
     var waitingForApproval: ConversationEngine? {
@@ -73,6 +78,7 @@ final class ChatStore {
     }
 
     func send(_ text: String) {
+        workingDisplayID = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }?.displayID
         // A model chosen in Settings applies to new chats; an empty one picks it up now.
         if isEmpty, engine.chat.model != ChatSettings.model(for: provider) { replaceSelected(with: provider) }
         engine.send(text)
