@@ -5,9 +5,6 @@ import SwiftUI
 struct AssistantSettingsPane: View {
     @AppStorage(ChatSettings.Key.claudeModel) private var claudeModel = ChatSettings.Default.claudeModel
     @AppStorage(ChatSettings.Key.openAIModel) private var openAIModel = ChatSettings.Default.openAIModel
-    @AppStorage(VoiceSettings.Key.voiceID) private var voiceID = VoiceSettings.Default.voiceID
-    @AppStorage(VoiceSettings.Key.model) private var voiceModel = VoiceSettings.Default.model
-    @State private var voices: [ElevenLabs.Voice] = []
     @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
     @AppStorage(ComputerAccess.key) private var wholeMac = true
     @AppStorage(AboutMe.key) private var aboutMe = ""
@@ -58,40 +55,7 @@ struct AssistantSettingsPane: View {
                 Text("ChatGPT")
             }
 
-            Section {
-                APIKeyRow(account: VoiceSettings.keychainAccount, keysURL: VoiceSettings.keysURL,
-                          color: .indigo, systemImage: "waveform")
-                LabeledContent {
-                    HStack {
-                        Picker("Voice", selection: $voiceID) {
-                            if !voices.contains(where: { $0.id == voiceID }) { Text("Sarah").tag(voiceID) }
-                            ForEach(voices) { Text($0.name).tag($0.id) }
-                        }
-                        .labelsHidden()
-                        .fixedSize()
-                        Button("Try", systemImage: "play.circle.fill") {
-                            SpeechPlayer.shared.speak(L("Hi! I'm RightHand, your right hand on the Mac."))
-                        }
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.borderless)
-                        .font(.title3)
-                    }
-                } label: {
-                    SettingsRowLabel("Voice", systemImage: "person.wave.2.fill", color: .purple)
-                }
-                LabeledContent {
-                    Picker("Voice model", selection: $voiceModel) {
-                        ForEach(VoiceSettings.models, id: \.id) { Text(LocalizedStringKey($0.name)).tag($0.id) }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                } label: {
-                    SettingsRowLabel("Voice model", systemImage: "cpu", color: .gray)
-                }
-            } header: {
-                Text("ElevenLabs (read answers aloud)")
-            }
-            .task { await loadVoices() }
+            VoiceSettingsSection()
 
             Section {
                 Toggle(isOn: $wholeMac) {
@@ -124,16 +88,10 @@ struct AssistantSettingsPane: View {
             } header: {
                 Text("Ask before the AI uses a tool")
             } footer: {
-                SettingsFooter("API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them.")
+                SettingsFooter("API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them.")
             }
         }
         .formStyle(.grouped)
-    }
-
-    private func loadVoices() async {
-        guard let key = Keychain.read(VoiceSettings.keychainAccount),
-              let list = try? await ElevenLabs.voices(apiKey: key) else { return }
-        voices = list
     }
 }
 
@@ -187,5 +145,95 @@ private struct APIKeyRow: View {
 
     private func refresh() {
         isSaved = Keychain.read(account) != nil
+    }
+}
+
+/// Talking to the AI with a shortcut, and reading answers aloud with the Mac's own voices.
+private struct VoiceSettingsSection: View {
+    @AppStorage(VoiceSettings.Key.voiceID) private var voiceID = ""
+    @AppStorage(VoiceSettings.Key.rate) private var rate = 0.52
+    @AppStorage(VoiceSettings.Key.speakVoiceAnswers) private var speakAnswers = true
+    @AppStorage(VoiceSettings.Key.listenLanguage) private var listenLanguage = ""
+    @State private var shortcut = Shortcut.voice
+    @State private var isRecording = false
+    @State private var monitor: Any?
+
+    var body: some View {
+        Section {
+            LabeledContent {
+                Button(isRecording ? L("Press keys…") : shortcut.displayName) { isRecording ? stopRecording() : startRecording() }
+                    .monospaced()
+                    .keyboardShortcut(isRecording ? .cancelAction : nil)
+            } label: {
+                SettingsRowLabel("Talk shortcut", subtitle: L("Press once to talk, again to send. Esc cancels."),
+                                 systemImage: "mic.fill", color: .blue)
+            }
+            LabeledContent {
+                Picker("Listen in", selection: $listenLanguage) {
+                    Text("Same as RightHand").tag("")
+                    Text(verbatim: "English").tag("en")
+                    Text(verbatim: "Українська").tag("uk")
+                    Text(verbatim: "Čeština").tag("cs")
+                    Text(verbatim: "Русский").tag("ru")
+                }
+                .labelsHidden().fixedSize()
+            } label: {
+                SettingsRowLabel("Listen in", subtitle: L("Recognized on your Mac when the language allows it"),
+                                 systemImage: "waveform", color: .teal)
+            }
+            Toggle(isOn: $speakAnswers) {
+                SettingsRowLabel("Read voice answers aloud", systemImage: "speaker.wave.2.fill", color: .indigo)
+            }
+            LabeledContent {
+                HStack {
+                    Picker("Voice", selection: $voiceID) {
+                        Text("Automatic (best for the language)").tag("")
+                        ForEach(VoiceSettings.voices, id: \.identifier) { voice in
+                            Text(verbatim: "\(voice.name) — \(Locale.current.localizedString(forIdentifier: voice.language) ?? voice.language)"
+                                 + (voice.quality == .premium ? " ★★" : voice.quality == .enhanced ? " ★" : ""))
+                                .tag(voice.identifier)
+                        }
+                    }
+                    .labelsHidden().fixedSize()
+                    Button("Try", systemImage: "play.circle.fill") {
+                        SpeechPlayer.shared.speak(L("Hi! I'm RightHand, your right hand on the Mac."))
+                    }
+                    .labelStyle(.iconOnly).buttonStyle(.borderless).font(.title3)
+                }
+            } label: {
+                SettingsRowLabel("Voice", systemImage: "person.wave.2.fill", color: .purple)
+            }
+            LabeledContent {
+                Slider(value: $rate, in: 0.35...0.65).frame(width: 160)
+            } label: {
+                SettingsRowLabel("Speed", systemImage: "hare.fill", color: .orange)
+            }
+        } header: {
+            Text("Voice")
+        } footer: {
+            SettingsFooter("Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.")
+        }
+        .onDisappear(perform: stopRecording)
+    }
+
+    private func startRecording() {
+        isRecording = true
+        NotificationCenter.default.post(name: VoiceAssistant.pauseShortcutNotification, object: true)
+        monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            if event.keyCode == 53 { stopRecording(); return nil } // Esc
+            guard let new = Shortcut(event: event) else { NSSound.beep(); return nil }
+            shortcut = new
+            Shortcut.voice = new
+            stopRecording()
+            return nil
+        }
+    }
+
+    private func stopRecording() {
+        guard isRecording else { return }
+        isRecording = false
+        if let monitor { NSEvent.removeMonitor(monitor) }
+        monitor = nil
+        NotificationCenter.default.post(name: VoiceAssistant.pauseShortcutNotification, object: false)
     }
 }

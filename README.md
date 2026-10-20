@@ -82,5 +82,6 @@ Sources/RightHand/
 - [x] Tasks tab: open Notion tasks (yours or unassigned), overdue and high priority first, tick to mark done
 - [x] AI tools for Notion, ClickUp, Gmail (read) and Google Drive; ClickUp tasks in the Tasks tab
 - [x] "About me" profile that every chat starts with
+- [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics
