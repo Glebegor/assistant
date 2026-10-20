@@ -42,6 +42,10 @@ jobs:
             cat <<'EOF'
           ### Install
 
+          Already have RightHand 0.10 or newer? Choose **Update…** in the ✋ menu (or Settings → About).
+
+          Otherwise:
+
           1. Download `RightHand-*.zip` below and unzip it.
           2. Move **RightHand.app** to **Applications**.
           3. The app is not notarized by Apple, so the first launch is blocked: open

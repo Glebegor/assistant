@@ -11,6 +11,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let voice: VoiceAssistant
     private let recorder: ScreenRecorder
     private let recordItem = NSMenuItem(title: "", action: #selector(record), keyEquivalent: "")
+    private let updateItem = NSMenuItem(title: "", action: #selector(update), keyEquivalent: "")
     private let talkItem = NSMenuItem(title: "", action: #selector(talk), keyEquivalent: "")
     private let openSettings: () -> Void
     private let toggleTimerItem = NSMenuItem(title: "", action: #selector(toggleTimer), keyEquivalent: "")
@@ -57,6 +58,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: L("Show Panel"), action: #selector(showPanelAction), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: L("Projects…"), action: #selector(openProjectsAction), keyEquivalent: "p"))
         menu.addItem(NSMenuItem(title: L("Settings…"), action: #selector(openSettingsAction), keyEquivalent: ","))
+        updateItem.target = self
+        menu.addItem(updateItem)
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: L("Quit RightHand"), action: #selector(quit), keyEquivalent: "q"))
         for menuItem in menu.items { menuItem.target = self }
@@ -73,6 +76,13 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     // Eye rest items are refreshed each time the menu opens.
     func menuNeedsUpdate(_ menu: NSMenu) {
         talkItem.isHidden = !voice.isEnabled
+        switch Updater.shared.state {
+        case .available(let release): updateItem.title = L("Update to %@…", release.version)
+        case .downloading(let value): updateItem.title = L("Downloading update… %lld%%", Int(value * 100))
+        case .installing: updateItem.title = L("Installing update…")
+        case .checking: updateItem.title = L("Checking for updates…")
+        default: updateItem.title = L("Check for Updates…")
+        }
         recordItem.title = recorder.isRecording ? L("Stop Screen Recording (%@)", RecorderView.duration(recorder.elapsed)) : L("Record Screen")
         talkItem.title = voice.phase == .listening ? L("Stop Recording and Send") : L("Talk to %@ (%@)", VoiceAssistant.name, Shortcut.voice.displayName)
 
@@ -98,6 +108,19 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     @objc private func showPanelAction() { showPanel() }
     @objc private func openProjectsAction() { openProjects() }
     @objc private func talk() { voice.toggle() }
+    @objc private func update() {
+        let updater = Updater.shared
+        if let release = updater.available { return updater.offer(release) }
+        Task {
+            await updater.check()
+            switch updater.state {
+            case .available(let release): updater.offer(release)
+            case .upToDate: Notifier.shared.notify(title: L("RightHand is up to date"), body: L("Version %@", Updater.currentVersion), playsSound: false)
+            case .failed(let message): Notifier.shared.notify(title: L("Couldn't check for updates"), body: message, playsSound: false)
+            default: break
+            }
+        }
+    }
     @objc private func record() {
         // Start uses the screen and sound chosen in the Record tab.
         if !recorder.isRecording, recorder.displays.isEmpty { Task { await recorder.loadDisplays(); recorder.toggle() } } else { recorder.toggle() }

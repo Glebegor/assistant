@@ -65,7 +65,10 @@ scripts/package.sh                # build build/RightHand-<version>.zip locally
 ```
 
 Pushing to `master` runs `.github/workflows/release.yml`, which builds the app, tags `vX.Y.Z`
-and publishes a GitHub release with the zip.
+and publishes a GitHub release with the zip. RightHand checks the latest release at launch and
+every six hours, notifies you, and installs it on request (download, re-sign with the local
+certificate so permissions stay, replace in Applications, restart). Local builds take the version
+this code would be released as, so they aren't offered their own release.
 
 ## Languages
 
@@ -115,5 +118,6 @@ Sources/RightHand/
 - [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
 - [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours
 - [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
+- [x] Updates: checks GitHub releases, tells you when a new version is out, installs it from the ✋ menu or Settings → About
 - [ ] Integrations: Calendar / Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

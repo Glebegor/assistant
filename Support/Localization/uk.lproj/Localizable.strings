@@ -70,6 +70,11 @@
 "Change a Notion task: %@" = "Змінити задачу Notion: %@";
 "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it." = "Змінює мову меню, налаштувань і панелі RightHand. AI відповідає мовою, якою ти до нього пишеш.";
 "Change…" = "Змінити…";
+"Check Now" = "Перевірити";
+"Check for Updates…" = "Перевірити оновлення…";
+"Check for updates automatically" = "Перевіряти оновлення автоматично";
+"Checked %@" = "Перевірено %@";
+"Checking for updates…" = "Перевіряю оновлення…";
 "Choose a project or chat" = "Вибери проєкт або чат";
 "Choose the microphone" = "Вибрати мікрофон";
 "Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude і ChatGPT: що вони знають про тебе і що можуть робити на твоєму Mac.";
@@ -97,7 +102,10 @@
 "Copy" = "Копіювати";
 "Copy %@ to %@" = "Скопіювати %@ у %@";
 "Copy answer" = "Копіювати відповідь";
+"Couldn't check for updates" = "Не вдалося перевірити оновлення";
+"Couldn't install the update: %@" = "Не вдалося встановити оновлення: %@";
 "Couldn't play the audio." = "Не вдалося відтворити аудіо.";
+"Couldn't read the latest release from GitHub." = "Не вдалося прочитати останній випуск з GitHub.";
 "Couldn't read the recording." = "Не вдалося прочитати запис.";
 "Couldn't start recording: %@" = "Не вдалося почати запис: %@";
 "Create %@" = "Створити %@";
@@ -124,6 +132,8 @@
 "Download a Google Drive file to %@" = "Завантажити файл з Google Drive у %@";
 "Download from Google Drive" = "Завантаження з Google Drive";
 "Downloading speech model… %lld%%" = "Завантажую модель… %lld%%";
+"Downloading update…" = "Завантажую оновлення…";
+"Downloading update… %lld%%" = "Завантажую оновлення… %lld%%";
 "Drop files here. New screenshots appear here too." = "Перетягни сюди файли. Нові знімки екрана теж з'являються тут.";
 "Edit" = "Редагування";
 "Edit %@" = "Змінити %@";
@@ -169,6 +179,10 @@
 "I didn't hear anything. Press the shortcut and speak." = "Я нічого не почув. Натисни сполучення клавіш і говори.";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "У проєктах AI може читати, створювати, переміщувати й видаляти файли будь-де на твоєму Mac і виконувати команди Терміналу. Він питає тебе перед кожною дією поза папками проєкту, а також перед кожною командою й видаленням. Видалені файли потрапляють у Кошик.";
 "In this project these tools run without asking, also outside the project folders." = "У цьому проєкті ці інструменти працюють без питань, також поза папками проєкту.";
+"Install" = "Встановити";
+"Install and Restart" = "Встановити й перезапустити";
+"Install it from the ✋ menu or Settings → About." = "Встанови його з меню ✋ або в Налаштування → Про програму.";
+"Installing update…" = "Встановлюю оновлення…";
 "Instructions" = "Інструкції";
 "Integration token from %@" = "Токен інтеграції з %@";
 "Its chats, files and memory are moved to the Trash." = "Його чати, файли й пам'ять буде переміщено в Кошик.";
@@ -177,6 +191,7 @@
 "Keys are stored securely in your Mac's Keychain." = "Ключі надійно зберігаються в Keychain твого Mac.";
 "Language" = "Мова";
 "Language of RightHand." = "Мова RightHand.";
+"Later" = "Пізніше";
 "List %@" = "Переглянути вміст %@";
 "List ClickUp tasks" = "Показати задачі ClickUp";
 "List files" = "Перегляд файлів";
@@ -337,7 +352,9 @@
 "Resume Eye Rest (paused until %@)" = "Відновити відпочинок очей (пауза до %@)";
 "Return sends, Shift-Return adds a new line." = "Return — надіслати, Shift-Return — новий рядок.";
 "Review" = "Рев'ю";
+"RightHand %@ is available" = "Доступний RightHand %@";
 "RightHand is connected to Google. You can close this tab." = "RightHand підключено до Google. Цю вкладку можна закрити.";
+"RightHand is up to date" = "RightHand оновлений";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand потрібен доступ до Робочого столу, щоб додавати знімки екрана автоматично";
 "Run Terminal commands" = "Команди Терміналу";
 "Run a command in %@" = "Виконати команду в %@";
@@ -381,6 +398,7 @@
 "Sites blocked during focus." = "Сайти, заблоковані під час фокусу.";
 "Skip" = "Пропустити";
 "Skip Phase" = "Пропустити фазу";
+"Skip This Version" = "Пропустити цю версію";
 "Skip to next phase" = "Перейти до наступної фази";
 "Sounds" = "Звуки";
 "Speak your message (%@)" = "Сказати повідомлення голосом (%@)";
@@ -418,6 +436,8 @@
 "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good." = "AI може переглядати, шукати, читати й записувати файли в цих папках. Він питає перед кожною дією, якщо ти не дозволив інструмент назавжди.";
 "The API key was rejected. Check it in Settings → Assistant." = "Ключ API відхилено. Перевір його в Налаштуваннях → Асистент.";
 "The ElevenLabs API key was rejected." = "Ключ API ElevenLabs відхилено.";
+"The download doesn't contain RightHand." = "У завантаженні немає RightHand.";
+"The download failed." = "Завантаження не вдалося.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Першого разу macOS спитає, чи дозволити RightHand керувати кожним браузером. Натисни OK.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "Мікрофон не дає звуку. Вибери інший у Налаштування → Ellipse.";
 "The project's instructions, files and memory are already part of this chat." = "Інструкції, файли й пам'ять проєкту вже є в цьому чаті.";
@@ -448,11 +468,14 @@
 "Unpin panel" = "Відкріпити панель";
 "Untitled" = "Без назви";
 "Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks" = "До %lld годин · близько 1,5 ГБ за годину · голос і звук комп'ютера на окремих доріжках";
+"Update to %@…" = "Оновити до %@…";
+"Updates" = "Оновлення";
 "Upload %@ to Google Drive" = "Вивантажити %@ у Google Drive";
 "Upload to Google Drive" = "Вивантаження в Google Drive";
 "Use This Folder" = "Використати цю папку";
 "Use project memory" = "Використати пам'ять проєкту";
 "Use ⌘, ⌥ or ⌃ together with a key." = "Використай ⌘, ⌥ або ⌃ разом із клавішею.";
+"Version %@" = "Версія %@";
 "Version %@ (%@)" = "Версія %@ (%@)";
 "Version and links." = "Версія й посилання.";
 "Voice" = "Голос";
@@ -471,6 +494,8 @@
 "Write files" = "Запис файлів";
 "Write memory note %@" = "Записати нотатку в пам'ять %@";
 "Writing the review…" = "Пишу рев'ю…";
+"You have %@." = "У тебе %@.";
+"You have %@. RightHand downloads the new version, replaces itself in Applications and starts again." = "У тебе %@. RightHand завантажить нову версію, замінить себе в «Програмах» і перезапуститься.";
 "Your microphone, on its own track" = "Твій мікрофон, на окремій доріжці";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Тут з'являться твої записи. Вони зберігаються у Фільми → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Твоя права рука на Mac: Pomodoro, Полиця й AI-асистент у нотчі.";

@@ -70,6 +70,11 @@
 "Change a Notion task: %@" = "Change a Notion task: %@";
 "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it." = "Changes the language of RightHand's menus, settings and panel. The AI answers in the language you write to it.";
 "Change…" = "Change…";
+"Check Now" = "Check Now";
+"Check for Updates…" = "Check for Updates…";
+"Check for updates automatically" = "Check for updates automatically";
+"Checked %@" = "Checked %@";
+"Checking for updates…" = "Checking for updates…";
 "Choose a project or chat" = "Choose a project or chat";
 "Choose the microphone" = "Choose the microphone";
 "Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude and ChatGPT, what they know about you and what they may do on your Mac.";
@@ -97,7 +102,10 @@
 "Copy" = "Copy";
 "Copy %@ to %@" = "Copy %@ to %@";
 "Copy answer" = "Copy answer";
+"Couldn't check for updates" = "Couldn't check for updates";
+"Couldn't install the update: %@" = "Couldn't install the update: %@";
 "Couldn't play the audio." = "Couldn't play the audio.";
+"Couldn't read the latest release from GitHub." = "Couldn't read the latest release from GitHub.";
 "Couldn't read the recording." = "Couldn't read the recording.";
 "Couldn't start recording: %@" = "Couldn't start recording: %@";
 "Create %@" = "Create %@";
@@ -124,6 +132,8 @@
 "Download a Google Drive file to %@" = "Download a Google Drive file to %@";
 "Download from Google Drive" = "Download from Google Drive";
 "Downloading speech model… %lld%%" = "Downloading speech model… %lld%%";
+"Downloading update…" = "Downloading update…";
+"Downloading update… %lld%%" = "Downloading update… %lld%%";
 "Drop files here. New screenshots appear here too." = "Drop files here. New screenshots appear here too.";
 "Edit" = "Edit";
 "Edit %@" = "Edit %@";
@@ -169,6 +179,10 @@
 "I didn't hear anything. Press the shortcut and speak." = "I didn't hear anything. Press the shortcut and speak.";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash.";
 "In this project these tools run without asking, also outside the project folders." = "In this project these tools run without asking, also outside the project folders.";
+"Install" = "Install";
+"Install and Restart" = "Install and Restart";
+"Install it from the ✋ menu or Settings → About." = "Install it from the ✋ menu or Settings → About.";
+"Installing update…" = "Installing update…";
 "Instructions" = "Instructions";
 "Integration token from %@" = "Integration token from %@";
 "Its chats, files and memory are moved to the Trash." = "Its chats, files and memory are moved to the Trash.";
@@ -177,6 +191,7 @@
 "Keys are stored securely in your Mac's Keychain." = "Keys are stored securely in your Mac's Keychain.";
 "Language" = "Language";
 "Language of RightHand." = "Language of RightHand.";
+"Later" = "Later";
 "List %@" = "List %@";
 "List ClickUp tasks" = "List ClickUp tasks";
 "List files" = "List files";
@@ -337,7 +352,9 @@
 "Resume Eye Rest (paused until %@)" = "Resume Eye Rest (paused until %@)";
 "Return sends, Shift-Return adds a new line." = "Return sends, Shift-Return adds a new line.";
 "Review" = "Review";
+"RightHand %@ is available" = "RightHand %@ is available";
 "RightHand is connected to Google. You can close this tab." = "RightHand is connected to Google. You can close this tab.";
+"RightHand is up to date" = "RightHand is up to date";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand needs access to your Desktop to add screenshots automatically";
 "Run Terminal commands" = "Run Terminal commands";
 "Run a command in %@" = "Run a command in %@";
@@ -381,6 +398,7 @@
 "Sites blocked during focus." = "Sites blocked during focus.";
 "Skip" = "Skip";
 "Skip Phase" = "Skip Phase";
+"Skip This Version" = "Skip This Version";
 "Skip to next phase" = "Skip to next phase";
 "Sounds" = "Sounds";
 "Speak your message (%@)" = "Speak your message (%@)";
@@ -418,6 +436,8 @@
 "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good." = "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good.";
 "The API key was rejected. Check it in Settings → Assistant." = "The API key was rejected. Check it in Settings → Assistant.";
 "The ElevenLabs API key was rejected." = "The ElevenLabs API key was rejected.";
+"The download doesn't contain RightHand." = "The download doesn't contain RightHand.";
+"The download failed." = "The download failed.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "The first time, macOS asks to let RightHand control each browser. Click OK.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "The microphone gives no sound. Choose another one in Settings → Ellipse.";
 "The project's instructions, files and memory are already part of this chat." = "The project's instructions, files and memory are already part of this chat.";
@@ -448,11 +468,14 @@
 "Unpin panel" = "Unpin panel";
 "Untitled" = "Untitled";
 "Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks" = "Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks";
+"Update to %@…" = "Update to %@…";
+"Updates" = "Updates";
 "Upload %@ to Google Drive" = "Upload %@ to Google Drive";
 "Upload to Google Drive" = "Upload to Google Drive";
 "Use This Folder" = "Use This Folder";
 "Use project memory" = "Use project memory";
 "Use ⌘, ⌥ or ⌃ together with a key." = "Use ⌘, ⌥ or ⌃ together with a key.";
+"Version %@" = "Version %@";
 "Version %@ (%@)" = "Version %@ (%@)";
 "Version and links." = "Version and links.";
 "Voice" = "Voice";
@@ -471,6 +494,8 @@
 "Write files" = "Write files";
 "Write memory note %@" = "Write memory note %@";
 "Writing the review…" = "Writing the review…";
+"You have %@." = "You have %@.";
+"You have %@. RightHand downloads the new version, replaces itself in Applications and starts again." = "You have %@. RightHand downloads the new version, replaces itself in Applications and starts again.";
 "Your microphone, on its own track" = "Your microphone, on its own track";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Your recordings will appear here. They're saved in Movies → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch.";
