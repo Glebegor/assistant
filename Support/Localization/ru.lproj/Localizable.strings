@@ -171,6 +171,7 @@
 "Long break" = "Длинный перерыв";
 "Long break after" = "Длинный перерыв после";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Посмотри на что-нибудь минимум в 6 м и несколько раз моргни.";
+"Main screen" = "Основной экран";
 "Mark as done" = "Отметить выполненной";
 "Memory" = "Память";
 "Message %@…" = "Сообщение для %@…";
@@ -208,6 +209,7 @@
 "Notion is busy. Try again in a minute." = "Notion занят. Попробуй через минуту.";
 "Notion isn't connected for this database. Check Settings → Services." = "Notion не подключён для этой базы. Проверь Настройки → Сервисы.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion отклонил токен. Проверь его в Настройки → Задачи.";
+"Off" = "Выключено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Выключено: ни сочетания клавиш, ни слова вызова, ни микрофона, ни кнопок записи.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Один раз в Google Cloud: 1. Создай проект. 2. Включи «Gmail API» и «Google Drive API». 3. Google Auth Platform → настрой приложение как External, добавь себя как пользователя, потом Audience → Publish app (иначе вход будет слетать каждые 7 дней). 4. Clients → Create client → Desktop app, и вставь сюда его ID и secret. Google предупредит, что приложение не проверено: это твоё собственное приложение, выбери Continue. AI сможет искать и читать почту, а также искать, читать, создавать, загружать и скачивать файлы Drive.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Только языки, на которых ты говоришь. Чем меньше языков, тем быстрее и точнее распознавание.";
@@ -227,6 +229,7 @@
 "Overdue · %@" = "Просрочено · %@";
 "Overview" = "Обзор";
 "Overwrite %@" = "Перезаписать %@";
+"Own track" = "Отдельная дорожка";
 "Paste" = "Вставить";
 "Paste key" = "Вставь ключ";
 "Pause" = "Пауза";
@@ -267,6 +270,7 @@
 "Read memory %@" = "Прочитать память %@";
 "Read voice answers aloud" = "Читать голосовые ответы вслух";
 "Ready to focus again?" = "Готов снова сосредоточиться?";
+"Recent" = "Последние";
 "Recognized on your Mac when the language allows it" = "Распознаётся на твоём Mac, если язык это поддерживает";
 "Recognizing…" = "Распознаю…";
 "Record" = "Записать";
@@ -308,6 +312,7 @@
 "Saving…" = "Сохраняю…";
 "Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on." = "Скажи «Эй, Эллипс» (или «Hey Ellipse»), потом запрос — он отправится, когда сделаешь паузу. Слушает только на твоём Mac; индикатор микрофона горит всё время.";
 "Schedule" = "Расписание";
+"Screen" = "Экран";
 "Screenshots" = "Снимки экрана";
 "Search ClickUp for “%@”" = "Искать в ClickUp «%@»";
 "Search ClickUp tasks" = "Поиск задач ClickUp";
@@ -348,14 +353,17 @@
 "Start %@" = "Начать: %@";
 "Start Recording" = "Начать запись";
 "Start next phase automatically" = "Автоматически начинать следующую фазу";
+"Start recording" = "Начать запись";
 "Start the conversation" = "Начни разговор";
 "Stop" = "Остановить";
 "Stop Reading" = "Остановить озвучивание";
 "Stop Recording and Send" = "Остановить запись и отправить";
 "Stop Screen Recording (%@)" = "Остановить запись экрана (%@)";
+"Stop recording" = "Остановить запись";
 "Stop recording and send (%@)" = "Остановить запись и отправить (%@)";
 "Stop the answer" = "Остановить ответ";
 "Stopped after %lld tool steps. Send a message to continue." = "Остановлено после %lld шагов с инструментами. Отправь сообщение, чтобы продолжить.";
+"Stops by itself at %lld:00:00" = "Остановится сам в %lld:00:00";
 "Summarizing the earlier conversation…" = "Сжимаю предыдущую часть разговора…";
 "Take an Eye Break Now" = "Дать глазам отдохнуть сейчас";
 "Talk shortcut" = "Сочетание для разговора";
@@ -403,11 +411,14 @@
 "Volume" = "Громкость";
 "Waiting for your permission…" = "Жду твоего разрешения…";
 "Wake word “Hey Ellipse”" = "Слово вызова «Эй, Эллипс»";
+"What you hear: the other people in a call, videos…, on its own track" = "То, что ты слышишь: собеседники в звонке, видео… — на отдельной дорожке";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Кто ты, над чем работаешь, какие ответы любишь, ссылки (GitHub, LinkedIn, сайт…). Claude и ChatGPT читают это в начале каждого чата.";
 "Window" = "Окно";
 "Work with the whole Mac" = "Работать со всем Mac";
 "Write files" = "Запись файлов";
 "Write memory note %@" = "Записать заметку в память %@";
+"Your microphone, on its own track" = "Твой микрофон, на отдельной дорожке";
+"Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Здесь появятся твои записи. Они сохраняются в Фильмы → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Твоя правая рука на Mac: Pomodoro, Полка и AI-ассистент в вырезе.";
 "a file" = "файл";
 "add comment" = "добавить комментарий";

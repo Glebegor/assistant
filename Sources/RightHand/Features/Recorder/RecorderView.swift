@@ -1,122 +1,254 @@
+import AVFoundation
 import SwiftUI
 
-/// Record tab: which screen, which sound, start/stop, and the latest recordings.
+/// Record tab: a big record button, the three sources (screen, your voice, computer sound),
+/// and the latest recordings.
 struct RecorderView: View {
     let recorder: ScreenRecorder
-    @State private var recordings: [URL] = []
+    @State private var recordings: [Recording] = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            if recorder.state == .idle {
-                setup
-            } else {
-                progress
+            HStack(alignment: .center, spacing: 16) {
+                RecordButton(recorder: recorder)
+                if recorder.state == .idle {
+                    sources
+                } else {
+                    progress
+                }
             }
             if let error = recorder.errorMessage {
                 Label(error, systemImage: "exclamationmark.triangle.fill")
-                    .font(.caption).foregroundStyle(.orange).lineLimit(3)
+                    .font(.caption).foregroundStyle(.orange).lineLimit(2)
             }
-            Divider().overlay(.white.opacity(0.1))
             recent
         }
-        .task { await recorder.loadDisplays(); reloadRecordings() }
-        .onChange(of: recorder.state) { _, _ in reloadRecordings() }
-    }
-
-    private var setup: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
-                Picker("Screen", selection: Binding(get: { recorder.selectedDisplayID }, set: { recorder.selectedDisplayID = $0 })) {
-                    ForEach(recorder.displays) { Text(verbatim: $0.name).tag($0.id) }
-                }
-                .labelsHidden()
-                .fixedSize()
-                switchPill("My voice", systemImage: recorder.recordsMicrophone ? "mic.fill" : "mic.slash", isOn: recorder.recordsMicrophone) {
-                    recorder.recordsMicrophone.toggle()
-                }
-                switchPill("Computer sound", systemImage: recorder.recordsSystemAudio ? "speaker.wave.3.fill" : "speaker.slash.fill",
-                           isOn: recorder.recordsSystemAudio) {
-                    recorder.recordsSystemAudio.toggle()
-                }
-                Spacer()
-            }
-            HStack {
-                Button { recorder.toggle() } label: {
-                    Label("Start Recording", systemImage: "record.circle.fill")
-                }
-                .buttonStyle(.notchPill(prominent: true, tint: .red))
-                .disabled(recorder.displays.isEmpty)
-                Text(L("Up to %lld hours · about 1.5 GB per hour · voice and computer sound on separate tracks", Int(ScreenRecorder.maxDuration / 3600)))
-                    .font(.caption).foregroundStyle(.secondary).lineLimit(2)
-            }
+        .padding(.top, 4)
+        .task {
+            await recorder.loadDisplays()
+            await reloadRecordings()
+        }
+        .onChange(of: recorder.state) { _, state in
+            if state == .idle { Task { await reloadRecordings() } }
         }
     }
 
-    private func switchPill(_ title: LocalizedStringKey, systemImage: String, isOn: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) { Label(title, systemImage: systemImage) }
-            .buttonStyle(.notchPill(prominent: isOn, tint: .white))
-            .help(isOn ? "Recorded on its own track" : "Not recorded")
+    // MARK: Sources
+
+    private var sources: some View {
+        HStack(spacing: 8) {
+            SourceTile(title: "Screen", detail: selectedDisplayName, systemImage: "display", isOn: true, tint: .blue) {
+                Menu {
+                    ForEach(recorder.displays) { display in
+                        Button { recorder.selectedDisplayID = display.id } label: {
+                            if display.id == recorder.selectedDisplayID { Label(display.name, systemImage: "checkmark") } else { Text(display.name) }
+                        }
+                    }
+                } label: {
+                    Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.bold))
+                }
+                .menuStyle(.borderlessButton)
+                .menuIndicator(.hidden)
+                .fixedSize()
+                .disabled(recorder.displays.count < 2)
+            }
+            Button { recorder.recordsMicrophone.toggle() } label: {
+                SourceTile(title: "My voice", detail: recorder.recordsMicrophone ? L("Own track") : L("Off"),
+                           systemImage: recorder.recordsMicrophone ? "mic.fill" : "mic.slash.fill",
+                           isOn: recorder.recordsMicrophone, tint: .cyan) { EmptyView() }
+            }
+            .buttonStyle(.plain)
+            .help("Your microphone, on its own track")
+            Button { recorder.recordsSystemAudio.toggle() } label: {
+                SourceTile(title: "Computer sound", detail: recorder.recordsSystemAudio ? L("Own track") : L("Off"),
+                           systemImage: recorder.recordsSystemAudio ? "speaker.wave.2.fill" : "speaker.slash.fill",
+                           isOn: recorder.recordsSystemAudio, tint: .purple) { EmptyView() }
+            }
+            .buttonStyle(.plain)
+            .help("What you hear: the other people in a call, videos…, on its own track")
+        }
     }
+
+    private var selectedDisplayName: String {
+        recorder.displays.first { $0.id == recorder.selectedDisplayID }?.name ?? L("Main screen")
+    }
+
+    // MARK: Recording
 
     private var progress: some View {
         TimelineView(.periodic(from: .now, by: 1)) { _ in
-            HStack(spacing: 14) {
-                Circle().fill(.red).frame(width: 12, height: 12)
-                    .opacity(recorder.state == .recording ? 1 : 0.4)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(Self.duration(recorder.elapsed)).font(.title2.monospacedDigit().weight(.semibold))
-                    Text(L("%@ · stops at %lld:00:00", ByteCountFormatter.string(fromByteCount: recorder.fileSize, countStyle: .file),
-                           Int(ScreenRecorder.maxDuration / 3600)))
-                        .font(.caption).foregroundStyle(.secondary)
+            let fraction = min(1, recorder.elapsed / ScreenRecorder.maxDuration)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(Self.duration(recorder.elapsed))
+                        .font(.system(size: 30, weight: .semibold, design: .rounded).monospacedDigit())
+                    Spacer()
+                    Text(ByteCountFormatter.string(fromByteCount: recorder.fileSize, countStyle: .file))
+                        .font(.callout.monospacedDigit()).foregroundStyle(.secondary)
                 }
-                Spacer()
-                Button { recorder.toggle() } label: {
-                    Label(recorder.state == .stopping ? L("Saving…") : L("Stop"), systemImage: "stop.fill")
+                // How much of the 4-hour limit is used.
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(.white.opacity(0.12))
+                        Capsule().fill(.red.gradient).frame(width: max(6, geometry.size.width * fraction))
+                    }
                 }
-                .buttonStyle(.notchPill(prominent: true, tint: .white))
-                .disabled(recorder.state != .recording)
+                .frame(height: 6)
+                HStack(spacing: 10) {
+                    if recorder.recordsMicrophone { Label("My voice", systemImage: "mic.fill") }
+                    if recorder.recordsSystemAudio { Label("Computer sound", systemImage: "speaker.wave.2.fill") }
+                    Spacer()
+                    Text(recorder.state == .stopping ? L("Saving…") : L("Stops by itself at %lld:00:00", Int(ScreenRecorder.maxDuration / 3600)))
+                }
+                .font(.caption).foregroundStyle(.secondary)
             }
         }
     }
+
+    // MARK: Recordings
 
     private var recent: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text("Recordings").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                Text("Recent").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                 Spacer()
-                Button("Open Folder") { recorder.showInFinder() }
-                    .buttonStyle(.plain).font(.caption).foregroundStyle(.secondary)
+                Button { recorder.showInFinder() } label: {
+                    Label("Open Folder", systemImage: "folder").labelStyle(.titleAndIcon)
+                }
+                .buttonStyle(.plain).font(.caption).foregroundStyle(.secondary)
             }
             if recordings.isEmpty {
-                Text("No recordings yet.").font(.caption).foregroundStyle(.tertiary)
-            }
-            ForEach(recordings.prefix(3), id: \.self) { url in
-                Button { recorder.showInFinder(url) } label: {
-                    HStack {
-                        Image(systemName: "film").foregroundStyle(.secondary)
-                        Text(verbatim: url.deletingPathExtension().lastPathComponent).lineLimit(1)
-                        Spacer()
-                        Text(ByteCountFormatter.string(fromByteCount: Int64((try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0), countStyle: .file))
-                            .foregroundStyle(.secondary)
-                    }
-                    .font(.caption)
-                    .contentShape(Rectangle())
+                Text("Your recordings will appear here. They're saved in Movies → RightHand Recordings.")
+                    .font(.caption).foregroundStyle(.tertiary)
+                    .padding(.vertical, 6)
+            } else {
+                ForEach(recordings.prefix(2)) { recording in
+                    RecordingRow(recording: recording) { recorder.showInFinder(recording.url) }
                 }
-                .buttonStyle(.plain)
             }
         }
+        .padding(10)
+        .background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private func reloadRecordings() {
-        let files = (try? FileManager.default.contentsOfDirectory(at: ScreenRecorder.folder, includingPropertiesForKeys: [.creationDateKey])) ?? []
-        recordings = files.filter { $0.pathExtension == "mov" }
-            .sorted { ((try? $0.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast)
-                > ((try? $1.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast) }
+    private func reloadRecordings() async {
+        let keys: [URLResourceKey] = [.creationDateKey, .fileSizeKey]
+        let files = ((try? FileManager.default.contentsOfDirectory(at: ScreenRecorder.folder, includingPropertiesForKeys: keys)) ?? [])
+            .filter { $0.pathExtension == "mov" }
+        var list: [Recording] = []
+        for url in files {
+            let values = try? url.resourceValues(forKeys: Set(keys))
+            let duration = (try? await AVURLAsset(url: url).load(.duration).seconds) ?? 0
+            list.append(Recording(url: url, date: values?.creationDate ?? .distantPast,
+                                  size: Int64(values?.fileSize ?? 0), duration: duration.isFinite ? duration : 0))
+        }
+        recordings = list.sorted { $0.date > $1.date }
     }
 
     static func duration(_ seconds: TimeInterval) -> String {
         let total = Int(seconds)
         return String(format: "%d:%02d:%02d", total / 3600, total / 60 % 60, total % 60)
+    }
+}
+
+struct Recording: Identifiable {
+    let url: URL
+    let date: Date
+    let size: Int64
+    let duration: TimeInterval
+    var id: URL { url }
+}
+
+/// The round record button: a red dot to start, a red square to stop.
+private struct RecordButton: View {
+    let recorder: ScreenRecorder
+    @State private var isHovered = false
+
+    var body: some View {
+        let isActive = recorder.state != .idle
+        Button { recorder.toggle() } label: {
+            ZStack {
+                Circle().strokeBorder(.white.opacity(isHovered ? 0.9 : 0.6), lineWidth: 3)
+                if isActive {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous).fill(.red).frame(width: 26, height: 26)
+                } else {
+                    Circle().fill(.red.gradient).padding(7)
+                }
+                if recorder.state == .starting || recorder.state == .stopping {
+                    ProgressView().controlSize(.small).tint(.white)
+                }
+            }
+            .frame(width: 64, height: 64)
+            .contentShape(Circle())
+            .scaleEffect(isHovered ? 1.04 : 1)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isHovered)
+            .animation(.spring(response: 0.3, dampingFraction: 0.75), value: isActive)
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+        .disabled(recorder.state == .starting || recorder.state == .stopping || (!isActive && recorder.displays.isEmpty))
+        .help(isActive ? "Stop recording" : "Start recording")
+    }
+}
+
+/// One source: an icon, a name and what it does; lit when it's recorded.
+private struct SourceTile<Accessory: View>: View {
+    let title: LocalizedStringKey
+    let detail: String
+    let systemImage: String
+    let isOn: Bool
+    let tint: Color
+    @ViewBuilder let accessory: () -> Accessory
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Image(systemName: systemImage)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(isOn ? tint : .secondary)
+                    .frame(width: 22, height: 22)
+                Spacer(minLength: 0)
+                accessory()
+            }
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title).font(.callout.weight(.semibold)).lineLimit(1)
+                Text(verbatim: detail).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(height: 70)
+        .background(isOn ? tint.opacity(0.16) : .white.opacity(0.05), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(isOn ? tint.opacity(0.45) : .white.opacity(0.08)))
+        .contentShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+private struct RecordingRow: View {
+    let recording: Recording
+    let reveal: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: reveal) {
+            HStack(spacing: 8) {
+                Image(systemName: "film.fill").foregroundStyle(.secondary)
+                Text(recording.date.formatted(.relative(presentation: .named)).capitalized(with: .current))
+                    .lineLimit(1)
+                Text(recording.date.formatted(date: .omitted, time: .shortened)).foregroundStyle(.secondary)
+                Spacer()
+                Text(RecorderView.duration(recording.duration)).monospacedDigit().foregroundStyle(.secondary)
+                Text(ByteCountFormatter.string(fromByteCount: recording.size, countStyle: .file))
+                    .monospacedDigit().foregroundStyle(.secondary).frame(width: 64, alignment: .trailing)
+                Image(systemName: "magnifyingglass").foregroundStyle(.secondary).opacity(isHovered ? 1 : 0)
+            }
+            .font(.caption)
+            .padding(.vertical, 3)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+        .help("Show in Finder")
     }
 }
 
