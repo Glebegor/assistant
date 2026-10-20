@@ -10,13 +10,14 @@ import Speech
 @MainActor
 final class VoiceRecognizer {
     enum Failure: LocalizedError {
-        case microphoneDenied, recognitionDenied, unavailable(String)
+        case microphoneDenied, recognitionDenied, unavailable(String), microphoneUnavailable
 
         var errorDescription: String? {
             switch self {
             case .microphoneDenied: L("Allow the microphone for RightHand in System Settings → Privacy & Security → Microphone.")
             case .recognitionDenied: L("Allow speech recognition for RightHand in System Settings → Privacy & Security → Speech Recognition.")
             case .unavailable(let language): L("Speech recognition isn't available for %@.", language)
+            case .microphoneUnavailable: L("The microphone gives no sound. Choose another one in Settings → Ellipse.")
             }
         }
     }
@@ -41,7 +42,7 @@ final class VoiceRecognizer {
         init(language: String) { self.language = language }
     }
 
-    private let audio = AVAudioEngine()
+    private var audio = AVAudioEngine()
     private var channels: [Channel] = []
     private var finalResult: CheckedContinuation<String, Never>?
 
@@ -105,9 +106,14 @@ final class VoiceRecognizer {
         }
 
         let requests = channels.map(\.request)
-        Microphones.apply(to: audio)
+        guard let microphone = Microphones.engine() else {
+            channels.forEach { $0.task?.cancel() }
+            channels = []
+            throw Failure.microphoneUnavailable
+        }
+        audio = microphone.engine
         let input = audio.inputNode
-        let format = input.outputFormat(forBus: 0)
+        let format = microphone.format
         input.removeTap(onBus: 0)
         nonisolated(unsafe) var lastLevel = Date.distantPast
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in

@@ -33,6 +33,23 @@ enum Microphones {
         return AVCaptureDevice.default(for: .audio)?.localizedName ?? L("Default microphone")
     }
 
+    /// A fresh audio engine listening to the chosen microphone, and the format to tap it with —
+    /// nil when that microphone gives no usable sound (then nothing is recorded instead of crashing:
+    /// tapping with the previous device's format makes macOS abort the app).
+    static func engine() -> (engine: AVAudioEngine, format: AVAudioFormat)? {
+        let engine = AVAudioEngine()
+        apply(to: engine)
+        var format = engine.inputNode.inputFormat(forBus: 0)
+        if format.channelCount == 0 || format.sampleRate == 0 {
+            // The chosen microphone isn't usable right now: fall back to the Mac's default input.
+            let fallback = AVAudioEngine()
+            format = fallback.inputNode.inputFormat(forBus: 0)
+            guard format.channelCount > 0, format.sampleRate > 0 else { return nil }
+            return (fallback, format)
+        }
+        return (engine, format)
+    }
+
     /// Points an audio engine's input at the chosen microphone (before the engine starts).
     static func apply(to engine: AVAudioEngine) {
         guard let device = selected, var deviceID = coreAudioID(of: device.id),

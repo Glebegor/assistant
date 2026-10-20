@@ -419,6 +419,7 @@
 "The API key was rejected. Check it in Settings → Assistant." = "Klíč API byl odmítnut. Zkontroluj ho v Nastavení → Asistent.";
 "The ElevenLabs API key was rejected." = "Klíč API ElevenLabs byl odmítnut.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Napoprvé se macOS zeptá, zda RightHand smí ovládat každý prohlížeč. Klikni na OK.";
+"The microphone gives no sound. Choose another one in Settings → Ellipse." = "Mikrofon nedává zvuk. Vyber jiný v Nastavení → Ellipse.";
 "The project's instructions, files and memory are already part of this chat." = "Pokyny, soubory a paměť projektu už jsou součástí tohoto chatu.";
 "The recording couldn't be saved." = "Nahrávku se nepodařilo uložit.";
 "The review came back in an unexpected form. Try Analyze Again." = "Shrnutí přišlo v neočekávané podobě. Zkus Analyzovat znovu.";

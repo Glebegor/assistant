@@ -488,4 +488,5 @@ T = {
     'Nothing found.': ('Нічого не знайдено.', 'Nic nenalezeno.', 'Ничего не найдено.'),
     'How productive the meeting was': ('Наскільки продуктивною була зустріч', 'Jak produktivní schůzka byla', 'Насколько продуктивной была встреча'),
     'The review came back in an unexpected form. Try Analyze Again.': ("Рев'ю прийшло в незвичному вигляді. Спробуй «Проаналізувати знову».", 'Shrnutí přišlo v neočekávané podobě. Zkus Analyzovat znovu.', 'Обзор пришёл в неожиданном виде. Попробуй «Проанализировать снова».'),
+    'The microphone gives no sound. Choose another one in Settings → Ellipse.': ('Мікрофон не дає звуку. Вибери інший у Налаштування → Ellipse.', 'Mikrofon nedává zvuk. Vyber jiný v Nastavení → Ellipse.', 'Микрофон не даёт звука. Выбери другой в Настройки → Ellipse.'),
 }
