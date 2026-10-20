@@ -12,6 +12,7 @@ enum VoiceSettings {
         static let speakVoiceAnswers = "voice.speakAnswers"
         static let shortcut = "voice.shortcut"
         static let listenLanguage = "voice.listenLanguage"
+        static let listenLanguages = "voice.listenLanguages"
     }
 
     /// "" = pick the best installed voice for the language of each answer.

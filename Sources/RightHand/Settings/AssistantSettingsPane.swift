@@ -153,7 +153,7 @@ private struct VoiceSettingsSection: View {
     @AppStorage(VoiceSettings.Key.voiceID) private var voiceID = ""
     @AppStorage(VoiceSettings.Key.rate) private var rate = 0.52
     @AppStorage(VoiceSettings.Key.speakVoiceAnswers) private var speakAnswers = true
-    @AppStorage(VoiceSettings.Key.listenLanguage) private var listenLanguage = ""
+    @State private var languages = VoiceRecognizer.languages
     @State private var shortcut = Shortcut.voice
     @State private var isRecording = false
     @State private var monitor: Any?
@@ -169,18 +169,26 @@ private struct VoiceSettingsSection: View {
                 SettingsRowLabel("Talk to Ellipse", subtitle: shortcutMessage ?? L("%@. Press once to talk, again to send. Esc cancels.", shortcut.spokenName),
                                  systemImage: "mic.fill", color: shortcutMessage == nil ? .blue : .orange)
             }
-            LabeledContent {
-                Picker("Listen in", selection: $listenLanguage) {
-                    Text("Automatic (English, Українська, Čeština, Русский)").tag("")
-                    Text(verbatim: "English").tag("en")
-                    Text(verbatim: "Українська").tag("uk")
-                    Text(verbatim: "Čeština").tag("cs")
-                    Text(verbatim: "Русский").tag("ru")
-                }
-                .labelsHidden().fixedSize()
-            } label: {
-                SettingsRowLabel("Listen in", subtitle: L("Automatic understands all four; choosing one is a bit faster"),
+            VStack(alignment: .leading, spacing: 8) {
+                SettingsRowLabel("Listen in", subtitle: L("Only the languages you speak. Fewer languages are recognized faster and better."),
                                  systemImage: "waveform", color: .teal)
+                HStack(spacing: 14) {
+                    ForEach([("en", "English"), ("uk", "Українська"), ("cs", "Čeština"), ("ru", "Русский")], id: \.0) { code, name in
+                        Toggle(isOn: Binding(
+                            get: { languages.contains(code) },
+                            set: { on in
+                                var next = languages.filter { $0 != code }
+                                if on { next.append(code) }
+                                // At least one language stays on.
+                                guard !next.isEmpty else { NSSound.beep(); return }
+                                VoiceRecognizer.languages = VoiceRecognizer.automaticLanguages.filter(next.contains)
+                                languages = VoiceRecognizer.languages
+                            }
+                        )) { Text(verbatim: name) }
+                        .toggleStyle(.checkbox)
+                    }
+                }
+                .padding(.leading, 30)
             }
             Toggle(isOn: $speakAnswers) {
                 SettingsRowLabel("Read voice answers aloud", systemImage: "speaker.wave.2.fill", color: .indigo)

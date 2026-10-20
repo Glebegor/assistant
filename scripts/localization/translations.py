@@ -399,4 +399,5 @@ T = {
     'Talk to %@ (%@)': ('Поговорити з %@ (%@)', 'Mluvit s %@ (%@)', 'Поговорить с %@ (%@)'),
     'Ellipse — voice assistant': ('Ellipse — голосовий помічник', 'Ellipse — hlasový asistent', 'Ellipse — голосовой помощник'),
     'Talk to Ellipse': ('Говорити з Ellipse', 'Mluvit s Ellipse', 'Говорить с Ellipse'),
+    'Only the languages you speak. Fewer languages are recognized faster and better.': ('Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.', 'Jen jazyky, kterými mluvíš. Čím méně jazyků, tím rychlejší a přesnější rozpoznávání.', 'Только языки, на которых ты говоришь. Чем меньше языков, тем быстрее и точнее распознавание.'),
 }
