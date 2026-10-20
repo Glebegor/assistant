@@ -157,6 +157,7 @@ private struct VoiceSettingsSection: View {
     @State private var shortcut = Shortcut.voice
     @State private var isRecording = false
     @State private var monitor: Any?
+    @State private var shortcutMessage: String?
 
     var body: some View {
         Section {
@@ -165,8 +166,8 @@ private struct VoiceSettingsSection: View {
                     .monospaced()
                     .keyboardShortcut(isRecording ? .cancelAction : nil)
             } label: {
-                SettingsRowLabel("Talk shortcut", subtitle: L("Press once to talk, again to send. Esc cancels."),
-                                 systemImage: "mic.fill", color: .blue)
+                SettingsRowLabel("Talk shortcut", subtitle: shortcutMessage ?? L("%@. Press once to talk, again to send. Esc cancels.", shortcut.spokenName),
+                                 systemImage: "mic.fill", color: shortcutMessage == nil ? .blue : .orange)
             }
             LabeledContent {
                 Picker("Listen in", selection: $listenLanguage) {
@@ -221,7 +222,17 @@ private struct VoiceSettingsSection: View {
         NotificationCenter.default.post(name: VoiceAssistant.pauseShortcutNotification, object: true)
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             if event.keyCode == 53 { stopRecording(); return nil } // Esc
-            guard let new = Shortcut(event: event) else { NSSound.beep(); return nil }
+            guard let new = Shortcut(event: event) else {
+                NSSound.beep()
+                shortcutMessage = L("Use ⌘, ⌥ or ⌃ together with a key.")
+                return nil
+            }
+            guard !new.isReservedBySystem else {
+                NSSound.beep()
+                shortcutMessage = L("%@ is used by macOS (for example Spotlight). Choose another.", new.displayName)
+                return nil
+            }
+            shortcutMessage = nil
             shortcut = new
             Shortcut.voice = new
             stopRecording()

@@ -390,4 +390,7 @@ T = {
     'Speak your message (%@)': ('Сказати повідомлення голосом (%@)', 'Namluvit zprávu (%@)', 'Сказать сообщение голосом (%@)'),
     'Stop Recording and Send': ('Зупинити запис і надіслати', 'Zastavit nahrávání a odeslat', 'Остановить запись и отправить'),
     'Talk to the AI (%@)': ('Поговорити з AI (%@)', 'Mluvit s AI (%@)', 'Поговорить с AI (%@)'),
+    '%@. Press once to talk, again to send. Esc cancels.': ('%@. Натисни раз, щоб говорити, ще раз — щоб надіслати. Esc скасовує.', '%@. Stiskni jednou a mluv, podruhé odešleš. Esc zruší.', '%@. Нажми раз, чтобы говорить, ещё раз — чтобы отправить. Esc отменяет.'),
+    'Use ⌘, ⌥ or ⌃ together with a key.': ('Використай ⌘, ⌥ або ⌃ разом із клавішею.', 'Použij ⌘, ⌥ nebo ⌃ spolu s klávesou.', 'Используй ⌘, ⌥ или ⌃ вместе с клавишей.'),
+    '%@ is used by macOS (for example Spotlight). Choose another.': ('%@ використовує macOS (наприклад, Spotlight). Обери інше.', '%@ používá macOS (třeba Spotlight). Vyber jinou.', '%@ использует macOS (например, Spotlight). Выбери другое.'),
 }

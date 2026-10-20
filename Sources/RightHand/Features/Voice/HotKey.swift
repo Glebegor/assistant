@@ -35,6 +35,29 @@ struct Shortcut: Codable, Equatable {
         self.modifiers = modifiers
     }
 
+    /// Combinations macOS already uses (Spotlight ⌘Space, input sources ⌃Space and ⌃⌥Space,
+    /// app switching, quitting, …); taking them would break those.
+    var isReservedBySystem: Bool {
+        let cmd = UInt32(cmdKey), opt = UInt32(optionKey), ctrl = UInt32(controlKey), shift = UInt32(shiftKey)
+        let reserved: [(Int, UInt32)] = [
+            (kVK_Space, cmd), (kVK_Space, cmd | opt), (kVK_Space, ctrl), (kVK_Space, ctrl | opt), (kVK_Space, ctrl | cmd),
+            (kVK_Tab, cmd), (kVK_Tab, cmd | shift), (kVK_ANSI_Q, cmd), (kVK_ANSI_W, cmd), (kVK_ANSI_H, cmd), (kVK_ANSI_M, cmd),
+            (kVK_ANSI_C, cmd), (kVK_ANSI_V, cmd), (kVK_ANSI_X, cmd), (kVK_ANSI_Z, cmd), (kVK_ANSI_A, cmd),
+            (kVK_ANSI_3, cmd | shift), (kVK_ANSI_4, cmd | shift), (kVK_ANSI_5, cmd | shift), (kVK_Escape, cmd | opt),
+        ]
+        return reserved.contains { UInt32($0.0) == keyCode && $0.1 == modifiers }
+    }
+
+    /// The keys spelled out for people who don't read ⌥: "⌥ Option + Space".
+    var spokenName: String {
+        var names: [String] = []
+        if modifiers & UInt32(controlKey) != 0 { names.append("⌃ Control") }
+        if modifiers & UInt32(optionKey) != 0 { names.append("⌥ Option") }
+        if modifiers & UInt32(shiftKey) != 0 { names.append("⇧ Shift") }
+        if modifiers & UInt32(cmdKey) != 0 { names.append("⌘ Command") }
+        return (names + [Self.keyName(keyCode)]).joined(separator: " + ")
+    }
+
     /// "⌃⌥Space".
     var displayName: String {
         var text = ""
