@@ -107,6 +107,8 @@ struct NotchGlow: View {
     let level: Float
     /// Calmer while the AI works, livelier while listening.
     let isListening: Bool
+    /// Light along the inside of the border (the open panel) instead of around the outside.
+    var inside = false
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1 / 30)) { timeline in
@@ -127,10 +129,16 @@ struct NotchGlow: View {
         let outerBlur: CGFloat = 16 + 10 * breathe
         let rimWidth: CGFloat = 3 + 3 * breathe
         return ZStack {
-            shape.stroke(gradient, lineWidth: outerWidth).blur(radius: outerBlur).opacity(0.85)
-            shape.stroke(gradient, lineWidth: rimWidth).blur(radius: 4)
-            shape.stroke(gradient, lineWidth: 1.5)
+            if inside {
+                shape.strokeBorder(gradient, lineWidth: 6 + 8 * breathe).blur(radius: 10 + 6 * breathe).opacity(0.7)
+                shape.strokeBorder(gradient, lineWidth: 1.5)
+            } else {
+                shape.stroke(gradient, lineWidth: outerWidth).blur(radius: outerBlur).opacity(0.85)
+                shape.stroke(gradient, lineWidth: rimWidth).blur(radius: 4)
+                shape.stroke(gradient, lineWidth: 1.5)
+            }
         }
+        .allowsHitTesting(false)
     }
 }
 

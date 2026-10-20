@@ -41,11 +41,19 @@ struct NotchRootView: View {
                 }
             }
             .frame(width: size.width, height: size.height)
+            // The open panel fills its window, so light outside it would be cut off at the edges:
+            // there it glows along the inside of its border instead.
+            .overlay {
+                if glows && model.isExpanded {
+                    NotchGlow(radius: radius, level: voice.level, isListening: voice.phase == .listening, inside: true)
+                        .transition(.opacity)
+                }
+            }
             .clipShape(shape)
-            // Behind the shape and outside the clip, so it grows, shrinks and rounds its corners
-            // together with the notch in the same animation.
+            // Behind the closed notch and outside the clip, so it grows, shrinks and rounds its
+            // corners together with the notch in the same animation.
             .background {
-                if glows {
+                if glows && !model.isExpanded {
                     NotchGlow(radius: radius, level: voice.level, isListening: voice.phase == .listening)
                         .transition(.opacity)
                 }
