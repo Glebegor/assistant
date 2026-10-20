@@ -42,8 +42,10 @@
 "Ask Again" = "Знову питати";
 "Ask before the AI uses a tool" = "Питати, перш ніж AI використає інструмент";
 "Assistant" = "Асистент";
+"Automatic (English, Українська, Čeština, Русский)" = "Автоматично (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Автоматично (мова Mac)";
 "Automatic (best for the language)" = "Автоматично (найкращий для мови)";
+"Automatic understands all four; choosing one is a bit faster" = "Автоматично розуміє всі чотири; одна мова — трохи швидше";
 "Back" = "Назад";
 "Back to Shelf" = "Назад до Полиці";
 "Block distracting sites during focus" = "Блокувати відволікаючі сайти під час фокусу";

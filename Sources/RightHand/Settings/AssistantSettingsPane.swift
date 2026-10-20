@@ -171,7 +171,7 @@ private struct VoiceSettingsSection: View {
             }
             LabeledContent {
                 Picker("Listen in", selection: $listenLanguage) {
-                    Text("Same as RightHand").tag("")
+                    Text("Automatic (English, Українська, Čeština, Русский)").tag("")
                     Text(verbatim: "English").tag("en")
                     Text(verbatim: "Українська").tag("uk")
                     Text(verbatim: "Čeština").tag("cs")
@@ -179,7 +179,7 @@ private struct VoiceSettingsSection: View {
                 }
                 .labelsHidden().fixedSize()
             } label: {
-                SettingsRowLabel("Listen in", subtitle: L("Recognized on your Mac when the language allows it"),
+                SettingsRowLabel("Listen in", subtitle: L("Automatic understands all four; choosing one is a bit faster"),
                                  systemImage: "waveform", color: .teal)
             }
             Toggle(isOn: $speakAnswers) {

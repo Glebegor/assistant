@@ -1,8 +1,12 @@
+import AppKit
 import AVFoundation
+import NaturalLanguage
 import Speech
 
-/// Records from the microphone and turns speech into text with Apple's recognizer, on the Mac
-/// itself when the language supports it. Partial text and the voice level arrive while you speak.
+/// Records from the microphone and turns speech into text with Apple's recognizer (on the Mac
+/// itself when the language supports it). Apple's recognizer listens for one language at a time,
+/// so in Automatic mode the same recording goes to English, Ukrainian, Czech and Russian at once
+/// and the transcript that reads most like real text in its language wins.
 @MainActor
 final class VoiceRecognizer {
     enum Failure: LocalizedError {
@@ -17,22 +21,34 @@ final class VoiceRecognizer {
         }
     }
 
+    /// Languages Automatic listens for.
+    nonisolated static let automaticLanguages = ["en", "uk", "cs", "ru"]
+    private static let regions = ["en": "en-US", "uk": "uk-UA", "cs": "cs-CZ", "ru": "ru-RU"]
+
     var onPartial: ((String) -> Void)?
     /// 0…1, about 20 times a second.
     var onLevel: ((Float) -> Void)?
 
+    /// One language being recognized.
+    private final class Channel {
+        let language: String
+        let request = SFSpeechAudioBufferRecognitionRequest()
+        var task: SFSpeechRecognitionTask?
+        var transcript = ""
+        var confidence: Float = 0
+        var isDone = false
+
+        init(language: String) { self.language = language }
+    }
+
     private let audio = AVAudioEngine()
-    private var request: SFSpeechAudioBufferRecognitionRequest?
-    private var task: SFSpeechRecognitionTask?
-    private var transcript = ""
+    private var channels: [Channel] = []
     private var finalResult: CheckedContinuation<String, Never>?
 
-    /// The language to listen in: chosen in Settings, or the app's language.
-    static var locale: Locale {
+    /// The languages to listen in: the one chosen in Settings, or all of them (Automatic).
+    static var languages: [String] {
         let chosen = UserDefaults.standard.string(forKey: VoiceSettings.Key.listenLanguage) ?? ""
-        let code = chosen.isEmpty ? AppLanguage.current : chosen
-        let regions = ["en": "en-US", "uk": "uk-UA", "cs": "cs-CZ", "ru": "ru-RU"]
-        return Locale(identifier: regions[code] ?? code)
+        return chosen.isEmpty ? automaticLanguages : [chosen]
     }
 
     static func requestPermissions() async throws {
@@ -45,23 +61,48 @@ final class VoiceRecognizer {
     }
 
     func start() throws {
-        let locale = Self.locale
-        guard let recognizer = SFSpeechRecognizer(locale: locale), recognizer.isAvailable else {
-            throw Failure.unavailable(locale.localizedString(forIdentifier: locale.identifier) ?? locale.identifier)
+        channels = []
+        for language in Self.languages {
+            let locale = Locale(identifier: Self.regions[language] ?? language)
+            guard let recognizer = SFSpeechRecognizer(locale: locale), recognizer.isAvailable else { continue }
+            let channel = Channel(language: language)
+            channel.request.shouldReportPartialResults = true
+            channel.request.addsPunctuation = true
+            if recognizer.supportsOnDeviceRecognition { channel.request.requiresOnDeviceRecognition = true }
+            channel.task = recognizer.recognitionTask(with: channel.request) { [weak self, weak channel] result, error in
+                let text = result?.bestTranscription.formattedString
+                let segments = result?.bestTranscription.segments ?? []
+                let isFinal = result?.isFinal ?? false
+                DispatchQueue.main.async {
+                    MainActor.assumeIsolated {
+                        guard let self, let channel else { return }
+                        if let text {
+                            channel.transcript = text
+                            if isFinal, !segments.isEmpty {
+                                channel.confidence = segments.map(\.confidence).reduce(0, +) / Float(segments.count)
+                            }
+                            self.onPartial?(self.best()?.transcript ?? text)
+                        }
+                        if isFinal || error != nil {
+                            channel.isDone = true
+                            if self.channels.allSatisfy(\.isDone) { self.deliver() }
+                        }
+                    }
+                }
+            }
+            channels.append(channel)
         }
-        transcript = ""
-        let request = SFSpeechAudioBufferRecognitionRequest()
-        request.shouldReportPartialResults = true
-        request.addsPunctuation = true
-        if recognizer.supportsOnDeviceRecognition { request.requiresOnDeviceRecognition = true }
-        self.request = request
+        guard !channels.isEmpty else {
+            throw Failure.unavailable(Self.languages.map { Locale.current.localizedString(forLanguageCode: $0) ?? $0 }.joined(separator: ", "))
+        }
 
+        let requests = channels.map(\.request)
         let input = audio.inputNode
         let format = input.outputFormat(forBus: 0)
         input.removeTap(onBus: 0)
-        var lastLevel = Date.distantPast
+        nonisolated(unsafe) var lastLevel = Date.distantPast
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
-            request.append(buffer)
+            for request in requests { request.append(buffer) }
             guard Date().timeIntervalSince(lastLevel) > 0.05, let samples = buffer.floatChannelData?[0] else { return }
             lastLevel = Date()
             var sum: Float = 0
@@ -72,36 +113,24 @@ final class VoiceRecognizer {
         }
         audio.prepare()
         try audio.start()
-
-        task = recognizer.recognitionTask(with: request) { [weak self] result, error in
-            let text = result?.bestTranscription.formattedString
-            let isFinal = result?.isFinal ?? false
-            DispatchQueue.main.async {
-                MainActor.assumeIsolated {
-                    guard let self else { return }
-                    if let text { self.transcript = text; self.onPartial?(text) }
-                    if isFinal || error != nil { self.deliver() }
-                }
-            }
-        }
     }
 
-    /// Stops recording and returns what was said (waits at most 2 seconds for the final text).
+    /// Stops recording and returns what was said (waits at most 2.5 seconds for the final texts).
     func finish() async -> String {
         stopAudio()
-        request?.endAudio()
+        channels.forEach { $0.request.endAudio() }
         return await withCheckedContinuation { continuation in
             finalResult = continuation
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.deliver() }
+            if channels.allSatisfy(\.isDone) { return deliver() }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in self?.deliver() }
         }
     }
 
     func cancel() {
         stopAudio()
-        task?.cancel()
-        task = nil
-        request = nil
+        channels.forEach { $0.task?.cancel() }
         deliver()
+        channels = []
     }
 
     private func stopAudio() {
@@ -112,9 +141,40 @@ final class VoiceRecognizer {
     private func deliver() {
         guard let continuation = finalResult else { return }
         finalResult = nil
-        task?.finish()
-        task = nil
-        request = nil
-        continuation.resume(returning: transcript.trimmingCharacters(in: .whitespacesAndNewlines))
+        let text = best()?.transcript ?? ""
+        channels.forEach { $0.task?.finish() }
+        channels = []
+        continuation.resume(returning: text.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+
+    /// The transcript that is most clearly in its own language.
+    private func best() -> Channel? {
+        channels.filter { !$0.transcript.isEmpty }.max { Self.score($0) < Self.score($1) }
+    }
+
+    private static func score(_ channel: Channel) -> Double {
+        score(transcript: channel.transcript, language: channel.language, confidence: channel.confidence)
+    }
+
+    /// How likely `transcript` is real speech in `language` (higher is better). Three signals:
+    /// the share of words found in that language's spelling dictionary, how much the text reads like
+    /// the language, and the recognizer's own confidence (low when it heard a language it doesn't know).
+    static func score(transcript: String, language: String, confidence: Float) -> Double {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.languageConstraints = automaticLanguages.map { NLLanguage($0) }
+        recognizer.processString(transcript)
+        let probability = recognizer.languageHypotheses(withMaximum: 4)[NLLanguage(language)] ?? 0
+        return 0.45 * knownWords(in: transcript, language: language) + 0.2 * probability + 0.35 * Double(confidence)
+    }
+
+    /// Share of words (2+ letters) the system dictionary of `language` knows.
+    static func knownWords(in text: String, language: String) -> Double {
+        let words = text.components(separatedBy: CharacterSet.letters.inverted).filter { $0.count >= 2 }
+        guard !words.isEmpty else { return 0 }
+        let checker = NSSpellChecker.shared
+        let known = words.filter { word in
+            checker.checkSpelling(of: word, startingAt: 0, language: language, wrap: false, inSpellDocumentWithTag: 0, wordCount: nil).location == NSNotFound
+        }
+        return Double(known.count) / Double(words.count)
     }
 }

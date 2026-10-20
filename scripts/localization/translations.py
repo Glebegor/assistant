@@ -393,4 +393,6 @@ T = {
     '%@. Press once to talk, again to send. Esc cancels.': ('%@. Натисни раз, щоб говорити, ще раз — щоб надіслати. Esc скасовує.', '%@. Stiskni jednou a mluv, podruhé odešleš. Esc zruší.', '%@. Нажми раз, чтобы говорить, ещё раз — чтобы отправить. Esc отменяет.'),
     'Use ⌘, ⌥ or ⌃ together with a key.': ('Використай ⌘, ⌥ або ⌃ разом із клавішею.', 'Použij ⌘, ⌥ nebo ⌃ spolu s klávesou.', 'Используй ⌘, ⌥ или ⌃ вместе с клавишей.'),
     '%@ is used by macOS (for example Spotlight). Choose another.': ('%@ використовує macOS (наприклад, Spotlight). Обери інше.', '%@ používá macOS (třeba Spotlight). Vyber jinou.', '%@ использует macOS (например, Spotlight). Выбери другое.'),
+    'Automatic (English, Українська, Čeština, Русский)': ('Автоматично (English, Українська, Čeština, Русский)', 'Automaticky (English, Українська, Čeština, Русский)', 'Автоматически (English, Українська, Čeština, Русский)'),
+    'Automatic understands all four; choosing one is a bit faster': ('Автоматично розуміє всі чотири; одна мова — трохи швидше', 'Automaticky rozumí všem čtyřem; jeden jazyk je o něco rychlejší', 'Автоматически понимает все четыре; один язык — чуть быстрее'),
 }
