@@ -159,9 +159,15 @@ private struct VoiceSettingsSection: View {
     @State private var isRecording = false
     @State private var monitor: Any?
     @State private var shortcutMessage: String?
+    @AppStorage(VoiceSettings.Key.enabled) private var enabled = true
 
     var body: some View {
         Section {
+            Toggle(isOn: $enabled) {
+                SettingsRowLabel("Turn on Ellipse", subtitle: L("Off: no shortcut, no wake word, no microphone, no record buttons."),
+                                 systemImage: "power", color: .green)
+            }
+            Group {
             LabeledContent {
                 Button(isRecording ? L("Press keys…") : shortcut.displayName) { isRecording ? stopRecording() : startRecording() }
                     .monospaced()
@@ -223,6 +229,8 @@ private struct VoiceSettingsSection: View {
             } label: {
                 SettingsRowLabel("Speed", systemImage: "hare.fill", color: .orange)
             }
+            }
+            .disabled(!enabled)
         } header: {
             Text("Ellipse — voice assistant")
         } footer: {

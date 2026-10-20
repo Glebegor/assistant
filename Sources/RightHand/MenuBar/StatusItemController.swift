@@ -67,6 +67,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     // Eye rest items are refreshed each time the menu opens.
     func menuNeedsUpdate(_ menu: NSMenu) {
+        talkItem.isHidden = !voice.isEnabled
         talkItem.title = voice.phase == .listening ? L("Stop Recording and Send") : L("Talk to %@ (%@)", VoiceAssistant.name, Shortcut.voice.displayName)
 
         let enabled = EyeRestSettings.enabled

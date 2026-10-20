@@ -122,11 +122,13 @@ struct ChatView: View {
             } else {
                 messageField
             }
+            if voice.isEnabled {
             Button(voice.phase == .listening ? "Send Recording" : "Record", systemImage: micSymbol) { voice.toggle() }
                 .help(voice.phase == .listening ? L("Stop recording and send (%@)", Shortcut.voice.displayName)
                                                : L("Speak your message (%@)", Shortcut.voice.displayName))
                 .iconButton(color: voice.phase == .listening ? .red : .white)
                 .disabled(!store.hasKey || voice.phase == .transcribing)
+            }
             sendOrStop
         }
     }

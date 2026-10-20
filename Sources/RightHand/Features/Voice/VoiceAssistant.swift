@@ -27,6 +27,8 @@ final class VoiceAssistant {
     private(set) var level: Float = 0
     /// The screen the mouse was on when you started talking; the notch there shows the card.
     private(set) var displayID: CGDirectDisplayID?
+    /// Off in Settings: no shortcut, no wake word, no record buttons.
+    private(set) var isEnabled = VoiceSettings.isEnabled
 
     @ObservationIgnored private let chat: ChatStore
     @ObservationIgnored private let recognizer = VoiceRecognizer()
@@ -52,6 +54,7 @@ final class VoiceAssistant {
         registerShortcut()
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated {
+                self?.enabledMayHaveChanged()
                 self?.shortcutMayHaveChanged()
                 self?.updateWakeWord()
             }
@@ -70,6 +73,7 @@ final class VoiceAssistant {
 
     /// The shortcut: start listening, or stop and send.
     func toggle() {
+        guard isEnabled else { return }
         switch phase {
         case .listening:
             Task { await finishListening() }
@@ -210,13 +214,13 @@ final class VoiceAssistant {
 
     /// Listens for the wake word whenever nothing else uses the microphone.
     private func updateWakeWord() {
-        if WakeWordListener.isEnabled && phase == .idle {
+        if isEnabled && WakeWordListener.isEnabled && phase == .idle {
             // A moment later, so the microphone is free after recording or speaking.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
                 guard let self, self.phase == .idle else { return }
                 self.wake.start()
             }
-        } else if !WakeWordListener.isEnabled {
+        } else if !isEnabled || !WakeWordListener.isEnabled {
             wake.stop()
         }
     }
@@ -234,9 +238,25 @@ final class VoiceAssistant {
 
     private func registerShortcut() {
         hotKey?.unregister()
+        hotKey = nil
+        guard isEnabled else { return } // the combination stays free for other apps
         let shortcut = Shortcut.voice
         registered = shortcut
         hotKey = HotKey(shortcut) { [weak self] in self?.toggle() }
+    }
+
+    private func enabledMayHaveChanged() {
+        guard VoiceSettings.isEnabled != isEnabled else { return }
+        isEnabled = VoiceSettings.isEnabled
+        if isEnabled {
+            registerShortcut()
+        } else {
+            engine?.stop()
+            hide()
+            hotKey?.unregister()
+            hotKey = nil
+            wake.stop()
+        }
     }
 
     private func shortcutMayHaveChanged() {

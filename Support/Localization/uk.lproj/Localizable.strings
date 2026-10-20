@@ -199,6 +199,7 @@
 "Notion is busy. Try again in a minute." = "Notion зайнятий. Спробуй за хвилину.";
 "Notion isn't connected for this database. Check Settings → Services." = "Notion не підключено для цієї бази. Перевір Налаштування → Сервіси.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion відхилив токен. Перевір його в Налаштування → Задачі.";
+"Off: no shortcut, no wake word, no microphone, no record buttons." = "Вимкнено: ні сполучення клавіш, ні слова виклику, ні мікрофона, ні кнопок запису.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API» і «Google Drive API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Лише під час сесії фокусу Pomodoro. У перерви — без обмежень.";
@@ -367,6 +368,7 @@
 "Token" = "Токен";
 "Too many requests or no credit left. Try again later." = "Забагато запитів або закінчились кошти. Спробуй пізніше.";
 "Try" = "Спробувати";
+"Turn on Ellipse" = "Увімкнути Ellipse";
 "Undo" = "Скасувати";
 "Unpin panel" = "Відкріпити панель";
 "Untitled" = "Без назви";
