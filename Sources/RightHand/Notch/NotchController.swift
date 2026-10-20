@@ -47,8 +47,14 @@ final class NotchController {
         self.voice = voice
         self.openSettings = openSettings
         self.openProjects = openProjects
-        chat.onApprovalNeeded = { [weak self] in self?.showChat() }
+        chat.onApprovalNeeded = { [weak self] in self?.approvalRequested() }
         rebuildNotches()
+        // When a question is answered (or a new one comes), the notch stops or starts taking clicks.
+        observeChanges { [weak self] in
+            guard let self else { return }
+            _ = self.chat.waitingForApproval?.pendingApproval
+            self.updateApprovalClicks()
+        }
 
         // A click outside the open panel closes it (also when it's kept open for typing).
         clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
@@ -114,7 +120,24 @@ final class NotchController {
         notch.model.isPinned = true
     }
 
-    /// Opens the Assistant tab, e.g. when the AI asks for permission while the panel is closed.
+    /// A permission question: an open panel switches to the chat (the card is there); a closed
+    /// notch grows into a small card with the buttons, which then has to take clicks.
+    private func approvalRequested() {
+        if let notch = expanded { notch.model.selectedTab = .chat }
+        updateApprovalClicks()
+    }
+
+    /// Closed notches showing the permission card take clicks; otherwise clicks go through to your apps.
+    private func updateApprovalClicks() {
+        let waiting = chat.waitingForApproval != nil
+        for notch in notches where notch.panel !== expanded?.panel {
+            let asks = waiting && (chat.approvalDisplayID == nil || chat.approvalDisplayID == notch.model.displayID)
+            notch.panel.ignoresMouseEvents = !asks
+            if asks { notch.panel.orderFrontRegardless() }
+        }
+    }
+
+    /// Opens the Assistant tab, e.g. from the menu bar.
     func showChat() {
         if let notch = expanded {
             notch.model.selectedTab = .chat
@@ -203,6 +226,7 @@ final class NotchController {
         notch.model.isPinned = false
         notch.panel.ignoresMouseEvents = true
         expanded = nil
+        updateApprovalClicks()
         updateCatcher(of: notch)
         returnKeyboardFocus(from: notch)
     }

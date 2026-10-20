@@ -14,14 +14,28 @@ struct NotchRootView: View {
 
     /// The voice card shows on the closed notch of the screen you started talking on.
     private var showsVoice: Bool {
-        voice.isVisible && VoiceHUD.expands(voice.phase) && !model.isExpanded
+        voice.isVisible && VoiceHUD.expands(voice.phase) && !model.isExpanded && !showsApproval
             && (voice.displayID == nil || voice.displayID == model.displayID)
+    }
+
+    /// A permission question opens the closed notch into a small card with the buttons, on the
+    /// screen you were on — not the whole panel.
+    private var showsApproval: Bool {
+        !model.isExpanded && chat.waitingForApproval != nil
+            && (chat.approvalDisplayID == nil || chat.approvalDisplayID == model.displayID)
+    }
+
+    private var approvalSize: CGSize {
+        let collapsed = model.geometry.collapsedSize
+        let hasDetail = chat.waitingForApproval?.pendingApproval?.detail != nil
+        return CGSize(width: max(collapsed.width + 300, 560), height: collapsed.height + (hasDetail ? 128 : 84))
     }
 
     var body: some View {
         let size = model.isExpanded ? model.selectedTab.panelSize
+            : showsApproval ? approvalSize
             : (showsVoice ? VoiceHUD.size(for: voice.phase, collapsed: model.geometry.collapsedSize) : model.geometry.collapsedSize)
-        let radius: CGFloat = model.isExpanded ? 26 : (showsVoice ? 22 : 10)
+        let radius: CGFloat = model.isExpanded ? 26 : (showsVoice || showsApproval ? 22 : 10)
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
         let glows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
             && (voice.phase == .listening || voice.phase == .transcribing || voice.phase == .working
@@ -31,10 +45,20 @@ struct NotchRootView: View {
             ZStack(alignment: .top) {
                 shape
                     .fill(.black)
-                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice ? 1 : 0)
+                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice || showsApproval ? 1 : 0)
                 if model.isExpanded {
                     content
                         .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
+                } else if showsApproval, let engine = chat.waitingForApproval, let approval = engine.pendingApproval {
+                    VStack(spacing: 0) {
+                        Color.clear.frame(height: model.geometry.collapsedSize.height + 6)
+                        NotchApprovalCard(approval: approval, provider: engine.chat.provider, engine: engine,
+                                          who: voice.activeEngine === engine ? VoiceAssistant.name : nil)
+                            .padding(.horizontal, 14)
+                        Spacer(minLength: 0)
+                    }
+                    .foregroundStyle(.white)
+                    .transition(.opacity)
                 } else if showsVoice {
                     VoiceHUD(voice: voice, topInset: model.geometry.collapsedSize.height)
                         .transition(.opacity)
@@ -60,6 +84,7 @@ struct NotchRootView: View {
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: voice.phase)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: showsApproval)
         .animation(.easeInOut(duration: 0.3), value: glows)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.selectedTab)

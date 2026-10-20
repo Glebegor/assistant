@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 import Observation
 
 /// The conversations in the Assistant tab, one per tab. They run on the same engine as project
@@ -20,6 +20,13 @@ final class ChatStore {
     private(set) var configuredProviders: Set<ChatProvider> = []
     /// Called when the AI asks for permission, so the panel can open and show the question.
     @ObservationIgnored var onApprovalNeeded: (() -> Void)?
+    /// The screen to ask on (the one the mouse was on when the question came).
+    private(set) var approvalDisplayID: CGDirectDisplayID?
+
+    /// The chat waiting for your permission, if any — the one you're looking at first.
+    var waitingForApproval: ConversationEngine? {
+        engine.pendingApproval != nil ? engine : tabs.first { $0.pendingApproval != nil }
+    }
 
     /// Bumped when Settings change, so the model name shown in the chat refreshes.
     private var settingsRevision = 0
@@ -130,7 +137,10 @@ final class ChatStore {
             // Empty tabs aren't written; they disappear on restart.
             if !chat.messages.isEmpty { ProjectStorage.save(chat) }
         })
-        engine.onApprovalNeeded = { [weak self] in self?.onApprovalNeeded?() }
+        engine.onApprovalNeeded = { [weak self] in
+            self?.approvalDisplayID = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }?.displayID
+            self?.onApprovalNeeded?()
+        }
         return engine
     }
 
