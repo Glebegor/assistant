@@ -22,6 +22,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let settings = settingsWindow
         let eyeRest = EyeRestController(pomodoro: pomodoro)
+        let recorder = self.recorder
+        eyeRest.holdsBreaks = { recorder.isRecording }
         self.eyeRest = eyeRest
         blocker = URLBlocker(pomodoro: pomodoro)
         let projectsWindow = ProjectsWindowController(store: projects, openSettings: { settings.show() })

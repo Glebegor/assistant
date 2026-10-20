@@ -19,6 +19,8 @@ final class EyeRestController {
     var isPaused: Bool { pausedUntil.map { $0 > Date() } ?? false }
 
     @ObservationIgnored private let pomodoro: PomodoroTimer
+    /// True while something mustn't be covered by a break, e.g. a screen recording.
+    @ObservationIgnored var holdsBreaks: () -> Bool = { false }
     @ObservationIgnored private var ticker: Timer?
     @ObservationIgnored private var overlays: [NSPanel] = []
 
@@ -81,6 +83,12 @@ final class EyeRestController {
     // MARK: Scheduling
 
     private func tick() {
+        if holdsBreaks() {
+            // No dimmed screens in a recording; the interval starts over afterwards.
+            finishRest(completed: false)
+            nextBreak = nil
+            return
+        }
         if isResting {
             restRemaining -= 1
             if restRemaining <= 0 { finishRest(completed: true) }
