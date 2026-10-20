@@ -8,7 +8,7 @@ final class WakeWordListener {
     var onWake: (() -> Void)?
     private(set) var isRunning = false
 
-    private let audio = AVAudioEngine()
+    private var audio = AVAudioEngine()
     /// The audio thread hands every buffer straight to the current request.
     private final class RequestBox: @unchecked Sendable {
         private let lock = NSLock()
@@ -53,10 +53,12 @@ final class WakeWordListener {
               AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
               let recognizer = Self.recognizer, recognizer.isAvailable
         else { return }
+        guard let microphone = Microphones.engine() else { return }
+        audio = microphone.engine
         let input = audio.inputNode
         input.removeTap(onBus: 0)
         let box = self.box
-        input.installTap(onBus: 0, bufferSize: 2048, format: input.outputFormat(forBus: 0)) { buffer, _ in
+        input.installTap(onBus: 0, bufferSize: 2048, format: microphone.format) { buffer, _ in
             box.request?.append(buffer)
         }
         audio.prepare()

@@ -120,6 +120,7 @@ final class ScreenRecorder: NSObject {
             configuration.channelCount = 2
             if #available(macOS 15, *) {
                 configuration.captureMicrophone = recordsMicrophone
+                if let microphone = Microphones.selected { configuration.microphoneCaptureDeviceID = microphone.id }
             } else {
                 recordsMicrophone = false // the microphone track needs macOS 15
             }

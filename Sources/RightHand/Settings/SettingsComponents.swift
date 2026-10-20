@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Row title with a coloured rounded icon, like in System Settings,
-/// and an optional grey explanation under the title.
+/// Row title with a quiet icon and an optional grey explanation under the title.
+/// (`color` is kept for callers; the minimal style draws every icon in one soft tone.)
 struct SettingsRowLabel: View {
     let title: String
     let subtitle: String?
@@ -28,10 +28,9 @@ struct SettingsRowLabel: View {
             }
         } icon: {
             Image(systemName: systemImage)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.white)
+                .font(.system(size: 13, weight: .regular))
+                .foregroundStyle(Theme.neon.opacity(0.85))
                 .frame(width: 22, height: 22)
-                .background(color.gradient, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
         }
     }
 }

@@ -55,7 +55,6 @@ struct AssistantSettingsPane: View {
                 Text("ChatGPT")
             }
 
-            VoiceSettingsSection()
 
             Section {
                 Toggle(isOn: $wholeMac) {
@@ -149,6 +148,13 @@ private struct APIKeyRow: View {
 }
 
 /// Talking to the AI with a shortcut, and reading answers aloud with the Mac's own voices.
+/// Settings → Ellipse.
+struct EllipseSettingsPane: View {
+    var body: some View {
+        Form { VoiceSettingsSection() }.formStyle(.grouped)
+    }
+}
+
 private struct VoiceSettingsSection: View {
     @AppStorage(VoiceSettings.Key.voiceID) private var voiceID = ""
     @AppStorage(VoiceSettings.Key.rate) private var rate = 0.52
@@ -160,6 +166,8 @@ private struct VoiceSettingsSection: View {
     @State private var monitor: Any?
     @State private var shortcutMessage: String?
     @AppStorage(VoiceSettings.Key.enabled) private var enabled = true
+    @AppStorage(Microphones.key) private var microphone = ""
+    @State private var microphones = Microphones.all
 
     var body: some View {
         Section {
@@ -197,6 +205,17 @@ private struct VoiceSettingsSection: View {
                 }
                 .padding(.leading, 30)
             }
+            LabeledContent {
+                Picker("Microphone", selection: $microphone) {
+                    Text("Mac default").tag("")
+                    ForEach(microphones) { Text(verbatim: $0.name).tag($0.id) }
+                }
+                .labelsHidden().fixedSize()
+                .onAppear { microphones = Microphones.all }
+            } label: {
+                SettingsRowLabel("Microphone", subtitle: L("For Ellipse and the “My voice” track of recordings"),
+                                 systemImage: "mic", color: .blue)
+            }
             Toggle(isOn: $wakeWord) {
                 SettingsRowLabel("Wake word “Hey Ellipse”",
                                  subtitle: L("Say “Hey Ellipse” (or “Эй, Эллипс”), then your request; it's sent when you pause. Listens on your Mac only; the microphone indicator stays on."),
@@ -231,8 +250,6 @@ private struct VoiceSettingsSection: View {
             }
             }
             .disabled(!enabled)
-        } header: {
-            Text("Ellipse — voice assistant")
         } footer: {
             SettingsFooter("Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.")
         }

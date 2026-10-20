@@ -25,8 +25,9 @@ final class MeetingAnalyzer {
     @ObservationIgnored private var queue: [URL] = []
     @ObservationIgnored private var worker: Task<Void, Never>?
 
-    static func reviewURL(for recording: URL) -> URL { recording.deletingPathExtension().appendingPathExtension("review.md") }
-    static func transcriptURL(for recording: URL) -> URL { recording.deletingPathExtension().appendingPathExtension("transcript.txt") }
+    nonisolated static func reviewURL(for recording: URL) -> URL { recording.deletingPathExtension().appendingPathExtension("review.md") }
+    nonisolated static func transcriptURL(for recording: URL) -> URL { recording.deletingPathExtension().appendingPathExtension("transcript.txt") }
+    nonisolated static func jsonURL(for recording: URL) -> URL { recording.deletingPathExtension().appendingPathExtension("review.json") }
 
     func hasReview(_ recording: URL) -> Bool {
         _ = revision
@@ -79,7 +80,10 @@ final class MeetingAnalyzer {
 
                 jobs[recording] = .reviewing
                 let review = try await MeetingReviewer.review(transcript: transcript, utterances: utterances, recording: recording)
-                try review.write(to: Self.reviewURL(for: recording), atomically: true, encoding: .utf8)
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+                try encoder.encode(review).write(to: Self.jsonURL(for: recording))
+                try review.markdown.write(to: Self.reviewURL(for: recording), atomically: true, encoding: .utf8)
                 jobs[recording] = nil
                 revision += 1
                 Notifier.shared.notify(title: L("Meeting review is ready"), body: recording.deletingPathExtension().lastPathComponent)
@@ -95,16 +99,81 @@ final class MeetingAnalyzer {
     }
 }
 
+/// A meeting review as the AI writes it (JSON), shown as cards and saved as Markdown too.
+struct MeetingReview: Codable {
+    struct Task: Codable, Hashable {
+        var owner: String
+        var task: String
+        var due: String?
+        var time: String?
+    }
+    struct Assessment: Codable {
+        var score: Int
+        var wentWell: [String]
+        var wentWrong: [String]
+        var goalReached: String
+        var tips: [String]
+    }
+
+    var title: String
+    var participants: [String]
+    var summary: String
+    var decisions: [String]
+    var tasks: [Task]
+    var openQuestions: [String]
+    var assessment: Assessment
+
+    static func load(for recording: URL) -> MeetingReview? {
+        (try? Data(contentsOf: MeetingAnalyzer.jsonURL(for: recording))).flatMap { try? JSONDecoder().decode(MeetingReview.self, from: $0) }
+    }
+
+    /// The same review as a Markdown document (saved next to the video, and for Copy).
+    var markdown: String {
+        func list(_ items: [String]) -> String { items.isEmpty ? "—" : items.map { "- \($0)" }.joined(separator: "\n") }
+        let taskLines = tasks.map { task in
+            "- **\(task.owner)** — \(task.task)" + (task.due.map { " — \($0)" } ?? "") + (task.time.map { " — [\($0)]" } ?? "")
+        }
+        return """
+        # \(title)
+
+        \(participants.joined(separator: ", "))
+
+        ## \(L("Summary"))
+        \(summary)
+
+        ## \(L("Decisions"))
+        \(list(decisions))
+
+        ## \(L("Tasks"))
+        \(taskLines.isEmpty ? "—" : taskLines.joined(separator: "\n"))
+
+        ## \(L("Open questions"))
+        \(list(openQuestions))
+
+        ## \(L("Assessment")) — \(assessment.score)/10
+        \(assessment.goalReached)
+
+        **\(L("What went well"))**
+        \(list(assessment.wentWell))
+
+        **\(L("What didn't"))**
+        \(list(assessment.wentWrong))
+
+        **\(L("Next time"))**
+        \(list(assessment.tips))
+        """
+    }
+}
+
 /// Writes the meeting review with the AI chosen in Settings (Claude or ChatGPT).
 enum MeetingReviewer {
-    static func review(transcript: String, utterances: [Utterance], recording: URL) async throws -> String {
+    static func review(transcript: String, utterances: [Utterance], recording: URL) async throws -> MeetingReview {
         let provider = ChatSettings.provider
         guard let apiKey = Keychain.read(provider.keychainAccount) else {
             throw ChatError(message: L("Add your %@ API key in Settings → Assistant.", provider.title))
         }
         let language = mainLanguage(of: utterances)
-        let minutes = Int((utterances.last?.end ?? 0) / 60)
-        let date = (try? recording.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? Date()
+        let languageName = Locale(identifier: "en").localizedString(forLanguageCode: language) ?? language
 
         let system = """
         You review recorded meetings for the user. You get a transcript with timestamps; "\(L("Me"))" is the user \
@@ -112,30 +181,25 @@ enum MeetingReviewer {
         from automatic speech recognition, so it has mistakes: read through them. \(AboutMe.text.isEmpty ? "" : "About the user: \(AboutMe.text)")
         """
         let request = """
-        Write a review of this meeting in \(Locale(identifier: "en").localizedString(forLanguageCode: language) ?? language). \
-        Use Markdown with exactly these sections, and refer to moments as [hh:mm:ss]:
+        Review this meeting. Answer with only a JSON object (no Markdown, no code fence), all text in \(languageName):
 
-        # A short title for the meeting
-        One line: date \(date.formatted(date: .long, time: .shortened)), about \(minutes) minutes, participants if they are clear.
+        {
+          "title": "a short title for the meeting",
+          "participants": ["names if they are clear, else roles like 'Me', 'Client'"],
+          "summary": "5–8 sentences: what it was about and how it went",
+          "decisions": ["what was decided"],
+          "tasks": [{"owner": "who", "task": "what", "due": "deadline or null", "time": "hh:mm:ss in the recording or null"}],
+          "openQuestions": ["what stayed unclear or needs follow-up"],
+          "assessment": {
+            "score": 1-10 for how productive it was,
+            "wentWell": ["…"],
+            "wentWrong": ["going in circles, no agenda, unclear owners, running over time…"],
+            "goalReached": "one sentence: was the goal reached?",
+            "tips": ["2–3 concrete tips for the next meeting"]
+          }
+        }
 
-        ## Summary
-        5–8 sentences: what the meeting was about and how it went.
-
-        ## Decisions
-        Bullet list of what was decided (or "No decisions were made.").
-
-        ## Tasks
-        Bullet list: **who** — what — deadline if mentioned — [time]. Only tasks actually agreed on.
-
-        ## Open questions
-        What stayed unclear or needs follow-up.
-
-        ## Assessment
-        - Score: n/10 for how productive it was.
-        - What went well.
-        - What didn't: going in circles, missing agenda, unclear owners, running over time…
-        - Was the goal reached?
-        - 2–3 concrete tips for the next meeting.
+        Only tasks actually agreed on; empty lists are fine.
 
         Transcript:
 
@@ -150,9 +214,16 @@ enum MeetingReviewer {
         chat.messages.append(turn.message)
         let answer = ChatDisplayItem.items(for: chat).reversed().lazy.compactMap { item -> String? in
             if case .assistant(_, let text) = item { return text } else { return nil }
-        }.first
-        guard let answer, !answer.isEmpty else { throw ChatError(message: L("No answer came back.")) }
-        return answer
+        }.first ?? ""
+        return try parse(answer)
+    }
+
+    /// The JSON object in the answer (models sometimes wrap it in a code fence anyway).
+    static func parse(_ answer: String) throws -> MeetingReview {
+        guard let start = answer.firstIndex(of: "{"), let end = answer.lastIndex(of: "}"),
+              let review = try? JSONDecoder().decode(MeetingReview.self, from: Data(answer[start...end].utf8))
+        else { throw ChatError(message: L("The review came back in an unexpected form. Try Analyze Again.")) }
+        return review
     }
 
     /// The language most of the meeting was spoken in.
