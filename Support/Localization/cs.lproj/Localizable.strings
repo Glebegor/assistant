@@ -60,6 +60,7 @@
 "Analyze again (choose the kind of meeting)" = "Analyzovat znovu (vyber typ schůzky)";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Libovolný název modelu z tvého účtu OpenAI, např. gpt-5.";
 "Anyone (show all tasks)" = "Kdokoli (zobrazit všechny úkoly)";
+"Application (client) ID" = "Application (client) ID";
 "Ask %@ anything" = "Zeptej se %@ na cokoli";
 "Ask Again" = "Znovu se ptát";
 "Ask before the AI uses a tool" = "Ptát se, než AI použije nástroj";
@@ -169,6 +170,7 @@
 "ElevenLabs error %lld%@" = "Chyba ElevenLabs %lld%@";
 "Ellipse" = "Ellipse";
 "Ellipse — voice assistant" = "Ellipse — hlasový asistent";
+"Email" = "E-mail";
 "Empty folder. Drop files or Shelf items here." = "Prázdná složka. Přetáhni sem soubory nebo položky z Poličky.";
 "Error %lld." = "Chyba %lld.";
 "Error %lld: %@" = "Chyba %lld: %@";
@@ -219,6 +221,8 @@
 "Integration token from %@" = "Token integrace z %@";
 "Interview" = "Pohovor";
 "Its chats, files and memory are moved to the Trash." = "Jeho chaty, soubory a paměť se přesunou do Koše.";
+"Jira isn't connected. Check Settings → Services." = "Jira není připojená. Zkontroluj Nastavení → Služby.";
+"Jira rejected the email or token. Check them in Settings → Services." = "Jira odmítla e-mail nebo token. Zkontroluj je v Nastavení → Služby.";
 "Join" = "Připojit se";
 "Join the call" = "Připojit se k hovoru";
 "Keep panel open" = "Nechat panel otevřený";
@@ -253,6 +257,8 @@
 "Memory" = "Paměť";
 "Message %@…" = "Zpráva pro %@…";
 "Microphone" = "Mikrofon";
+"Microsoft sign-in failed. Try again." = "Přihlášení k Microsoftu se nepovedlo. Zkus to znovu.";
+"Microsoft sign-in was cancelled (%@)." = "Přihlášení k Microsoftu bylo zrušeno (%@).";
 "Minimize" = "Minimalizovat";
 "Model" = "Model";
 "Models from GitHub Models; a Copilot subscription gives higher limits." = "Modely z GitHub Models; předplatné Copilot dává vyšší limity.";
@@ -301,6 +307,7 @@
 "Off" = "Vypnuto";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Vypnuto: žádná zkratka, žádné probouzecí slovo, žádný mikrofon, žádná tlačítka nahrávání.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Jednou v Google Cloud: 1. Vytvoř projekt. 2. Zapni „Gmail API“, „Google Drive API“ a „Google Calendar API“. 3. Google Auth Platform → nastav aplikaci jako External, přidej sebe jako uživatele, pak Audience → Publish app (jinak přihlášení každých 7 dní vyprší). 4. Clients → Create client → Desktop app a vlož sem jeho ID a secret. Google upozorní, že aplikace není ověřená: je to tvoje vlastní aplikace, zvol Continue. AI bude moct hledat a číst e-maily a hledat, číst, vytvářet, nahrávat a stahovat soubory na Disku; karta Kalendář ukazuje tvůj den.";
+"Once, in Microsoft Entra → App registrations → New registration: account types “Any organizational directory and personal Microsoft accounts”, redirect URI “Public client/native” http://localhost. Then API permissions → Microsoft Graph → Mail.Read. Paste the Application (client) ID here. Work accounts may need your admin's approval. The AI can search and read your Outlook mail." = "Jednou v Microsoft Entra → App registrations → New registration: typy účtů „Any organizational directory and personal Microsoft accounts“, redirect URI „Public client/native“ http://localhost. Pak API permissions → Microsoft Graph → Mail.Read. Vlož sem Application (client) ID. Pracovní účty mohou potřebovat schválení správce. AI bude moct hledat a číst tvou poštu v Outlooku.";
 "One-on-one" = "Schůzka 1:1";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Jen poprvé: model rozpoznávání řeči (630 MB) se stáhne do tvého Macu.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Jen jazyky, kterými mluvíš. Čím méně jazyků, tím rychlejší a přesnější rozpoznávání.";
@@ -309,19 +316,24 @@
 "Open %@" = "Otevřít %@";
 "Open Folder" = "Otevřít složku";
 "Open Google Cloud" = "Otevřít Google Cloud";
+"Open Microsoft Entra" = "Otevřít Microsoft Entra";
 "Open Privacy & Security → Automation" = "Otevřít Soukromí a zabezpečení → Automatizace";
 "Open Settings" = "Otevřít Nastavení";
 "Open Video" = "Otevřít video";
 "Open apps, links and files" = "Otevírání aplikací, odkazů a souborů";
 "Open in ClickUp" = "Otevřít v ClickUp";
 "Open in Google Calendar" = "Otevřít v Google Kalendáři";
+"Open in Jira" = "Otevřít v Jiře";
 "Open in Notion" = "Otevřít v Notionu";
+"Open issues assigned to you" = "Otevřené úkoly přiřazené tobě";
 "Open questions" = "Otevřené otázky";
 "Open tasks assigned to you or to nobody" = "Otevřené úkoly přiřazené tobě nebo nikomu";
 "Open the Projects window for long work" = "Otevřít okno Projekty pro delší práci";
 "Open the meeting review" = "Otevřít shrnutí schůzky";
 "Opus is the smartest, Haiku the fastest and cheapest." = "Opus je nejchytřejší, Haiku nejrychlejší a nejlevnější.";
 "Others" = "Ostatní";
+"Outlook isn't connected. Sign in in Settings → Services." = "Outlook není připojený. Přihlas se v Nastavení → Služby.";
+"Outlook sign-in expired. Sign in again in Settings → Services." = "Přihlášení k Outlooku vypršelo. Přihlas se znovu v Nastavení → Služby.";
 "Overdue · %@" = "Po termínu · %@";
 "Overview" = "Přehled";
 "Overwrite %@" = "Přepsat %@";
@@ -356,8 +368,11 @@
 "Read Aloud" = "Přečíst nahlas";
 "Read ClickUp tasks" = "Čtení úkolů v ClickUp";
 "Read Google Drive files" = "Čtení souborů z Google Drive";
+"Read Jira issue %@" = "Přečíst úkol v Jiře %@";
+"Read Jira issues" = "Čtení úkolů v Jiře";
 "Read Notion databases" = "Čtení databází v Notionu";
 "Read Notion pages" = "Čtení stránek v Notionu";
+"Read Outlook mail" = "Čtení pošty Outlook";
 "Read a ClickUp task" = "Přečíst úkol v ClickUp";
 "Read a Google Drive file" = "Přečíst soubor z Google Drive";
 "Read a Notion database" = "Přečíst databázi v Notionu";
@@ -406,6 +421,7 @@
 "Review" = "Shrnutí";
 "RightHand %@ is available" = "Je k dispozici RightHand %@";
 "RightHand is connected to Google. You can close this tab." = "RightHand je připojený ke Googlu. Tuto kartu můžeš zavřít.";
+"RightHand is connected. You can close this tab." = "RightHand je připojený. Tuto kartu můžeš zavřít.";
 "RightHand is up to date" = "RightHand je aktuální";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand potřebuje přístup k Ploše, aby mohl automaticky přidávat snímky obrazovky";
 "Run Terminal commands" = "Příkazy Terminálu";
@@ -425,8 +441,12 @@
 "Search Gmail for “%@”" = "Hledat v Gmailu „%@“";
 "Search Google Drive" = "Hledání na Google Drive";
 "Search Google Drive for “%@”" = "Hledat na Google Drive „%@“";
+"Search Jira" = "Hledání v Jiře";
+"Search Jira for “%@”" = "Hledat v Jiře „%@“";
 "Search Notion" = "Hledání v Notionu";
 "Search Notion for “%@”" = "Hledat v Notionu „%@“";
+"Search Outlook for “%@”" = "Hledat v Outlooku „%@“";
+"Search Outlook mail" = "Hledání v poště Outlook";
 "Search files" = "Hledání v souborech";
 "Search files for “%@”" = "Hledat v souborech „%@“";
 "Select All" = "Vybrat vše";
@@ -448,7 +468,9 @@
 "Show the files in Finder" = "Zobrazit soubory ve Finderu";
 "Sign Out" = "Odhlásit";
 "Sign in with Google" = "Přihlásit přes Google";
+"Sign in with Microsoft" = "Přihlásit přes Microsoft";
 "Signed in" = "Přihlášeno";
+"Site" = "Web";
 "Sites blocked during focus." = "Weby blokované během soustředění.";
 "Skip" = "Přeskočit";
 "Skip Phase" = "Přeskočit fázi";
@@ -507,6 +529,7 @@
 "The voice assistant: shortcut, wake word, microphone, languages and voice." = "Hlasový asistent: zkratka, probouzecí slovo, mikrofon, jazyky a hlas.";
 "Thinking…" = "Přemýšlím…";
 "This ClickUp list has no done status." = "Tento seznam v ClickUp nemá stav hotovo.";
+"This Jira issue can't be moved to Done from here." = "Tento úkol v Jiře odsud nejde přesunout do Done.";
 "This database has no status or checkbox to mark it done" = "Tato databáze nemá stav ani zaškrtávací pole pro označení hotových";
 "This is me" = "To jsem já";
 "This recording has no sound." = "Tato nahrávka nemá zvuk.";
@@ -567,6 +590,7 @@
 "You have %@." = "Máš %@.";
 "You have %@. RightHand downloads the new version, replaces itself in Applications and starts again." = "Máš %@. RightHand stáhne novou verzi, nahradí se v Aplikacích a znovu se spustí.";
 "Your microphone, on its own track" = "Tvůj mikrofon, na samostatné stopě";
+"Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues." = "Tvoje otevřené úkoly z Jiry se objeví na kartě Úkoly (kolečko je přesune do Done) a AI je může hledat a číst.";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Tady se objeví tvoje nahrávky. Ukládají se do Filmy → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Tvoje pravá ruka na Macu: Pomodoro, Polička a AI asistent ve výřezu.";
 "a file" = "soubor";
@@ -575,6 +599,7 @@
 "due %@" = "termín %@";
 "finished focus sessions" = "dokončená sezení";
 "from your calendar" = "z tvého kalendáře";
+"id.atlassian.com → Security → API tokens" = "id.atlassian.com → Security → API tokens";
 "mark done" = "označit jako hotové";
 "min" = "min";
 "priority “%@”" = "priorita „%@“";

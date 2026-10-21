@@ -60,6 +60,7 @@
 "Analyze again (choose the kind of meeting)" = "Проаналізувати знову (вибери тип зустрічі)";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Будь-яка назва моделі з твого акаунта OpenAI, напр. gpt-5.";
 "Anyone (show all tasks)" = "Будь-хто (показувати всі задачі)";
+"Application (client) ID" = "Application (client) ID";
 "Ask %@ anything" = "Запитай %@ про що завгодно";
 "Ask Again" = "Знову питати";
 "Ask before the AI uses a tool" = "Питати, перш ніж AI використає інструмент";
@@ -169,6 +170,7 @@
 "ElevenLabs error %lld%@" = "Помилка ElevenLabs %lld%@";
 "Ellipse" = "Ellipse";
 "Ellipse — voice assistant" = "Ellipse — голосовий помічник";
+"Email" = "Email";
 "Empty folder. Drop files or Shelf items here." = "Папка порожня. Перетягни сюди файли або елементи Полиці.";
 "Error %lld." = "Помилка %lld.";
 "Error %lld: %@" = "Помилка %lld: %@";
@@ -219,6 +221,8 @@
 "Integration token from %@" = "Токен інтеграції з %@";
 "Interview" = "Співбесіда";
 "Its chats, files and memory are moved to the Trash." = "Його чати, файли й пам'ять буде переміщено в Кошик.";
+"Jira isn't connected. Check Settings → Services." = "Jira не підключено. Перевір Налаштування → Сервіси.";
+"Jira rejected the email or token. Check them in Settings → Services." = "Jira відхилила email або токен. Перевір їх у Налаштування → Сервіси.";
 "Join" = "Приєднатися";
 "Join the call" = "Приєднатися до дзвінка";
 "Keep panel open" = "Тримати панель відкритою";
@@ -253,6 +257,8 @@
 "Memory" = "Пам'ять";
 "Message %@…" = "Повідомлення для %@…";
 "Microphone" = "Мікрофон";
+"Microsoft sign-in failed. Try again." = "Не вдалося увійти в Microsoft. Спробуй ще раз.";
+"Microsoft sign-in was cancelled (%@)." = "Вхід у Microsoft скасовано (%@).";
 "Minimize" = "Згорнути";
 "Model" = "Модель";
 "Models from GitHub Models; a Copilot subscription gives higher limits." = "Моделі з GitHub Models; підписка Copilot дає більші ліміти.";
@@ -301,6 +307,7 @@
 "Off" = "Вимкнено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Вимкнено: ні сполучення клавіш, ні слова виклику, ні мікрофона, ні кнопок запису.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API», «Google Drive API» і «Google Calendar API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive; вкладка «Календар» показує твій день.";
+"Once, in Microsoft Entra → App registrations → New registration: account types “Any organizational directory and personal Microsoft accounts”, redirect URI “Public client/native” http://localhost. Then API permissions → Microsoft Graph → Mail.Read. Paste the Application (client) ID here. Work accounts may need your admin's approval. The AI can search and read your Outlook mail." = "Один раз у Microsoft Entra → App registrations → New registration: типи акаунтів «Any organizational directory and personal Microsoft accounts», redirect URI «Public client/native» http://localhost. Потім API permissions → Microsoft Graph → Mail.Read. Встав сюди Application (client) ID. Робочим акаунтам може знадобитися дозвіл адміна. AI зможе шукати й читати твою пошту Outlook.";
 "One-on-one" = "Один на один";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Лише перший раз: модель розпізнавання (630 МБ) завантажується на твій Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.";
@@ -309,19 +316,24 @@
 "Open %@" = "Відкрити %@";
 "Open Folder" = "Відкрити папку";
 "Open Google Cloud" = "Відкрити Google Cloud";
+"Open Microsoft Entra" = "Відкрити Microsoft Entra";
 "Open Privacy & Security → Automation" = "Відкрити Конфіденційність і безпека → Автоматизація";
 "Open Settings" = "Відкрити Налаштування";
 "Open Video" = "Відкрити відео";
 "Open apps, links and files" = "Відкривання застосунків, посилань і файлів";
 "Open in ClickUp" = "Відкрити в ClickUp";
 "Open in Google Calendar" = "Відкрити в Google Calendar";
+"Open in Jira" = "Відкрити в Jira";
 "Open in Notion" = "Відкрити в Notion";
+"Open issues assigned to you" = "Відкриті тікети, призначені тобі";
 "Open questions" = "Відкриті питання";
 "Open tasks assigned to you or to nobody" = "Відкриті задачі, призначені тобі або нікому";
 "Open the Projects window for long work" = "Відкрити вікно Проєкти для тривалої роботи";
 "Open the meeting review" = "Відкрити рев'ю зустрічі";
 "Opus is the smartest, Haiku the fastest and cheapest." = "Opus найрозумніший, Haiku найшвидший і найдешевший.";
 "Others" = "Співрозмовники";
+"Outlook isn't connected. Sign in in Settings → Services." = "Outlook не підключено. Увійди в Налаштування → Сервіси.";
+"Outlook sign-in expired. Sign in again in Settings → Services." = "Вхід в Outlook застарів. Увійди знову в Налаштування → Сервіси.";
 "Overdue · %@" = "Прострочено · %@";
 "Overview" = "Огляд";
 "Overwrite %@" = "Перезаписати %@";
@@ -356,8 +368,11 @@
 "Read Aloud" = "Озвучити";
 "Read ClickUp tasks" = "Читання задач ClickUp";
 "Read Google Drive files" = "Читання файлів Google Drive";
+"Read Jira issue %@" = "Прочитати тікет Jira %@";
+"Read Jira issues" = "Читання тікетів Jira";
 "Read Notion databases" = "Читання баз Notion";
 "Read Notion pages" = "Читання сторінок Notion";
+"Read Outlook mail" = "Читання пошти Outlook";
 "Read a ClickUp task" = "Прочитати задачу ClickUp";
 "Read a Google Drive file" = "Прочитати файл Google Drive";
 "Read a Notion database" = "Прочитати базу Notion";
@@ -406,6 +421,7 @@
 "Review" = "Рев'ю";
 "RightHand %@ is available" = "Доступний RightHand %@";
 "RightHand is connected to Google. You can close this tab." = "RightHand підключено до Google. Цю вкладку можна закрити.";
+"RightHand is connected. You can close this tab." = "RightHand підключено. Цю вкладку можна закрити.";
 "RightHand is up to date" = "RightHand оновлений";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand потрібен доступ до Робочого столу, щоб додавати знімки екрана автоматично";
 "Run Terminal commands" = "Команди Терміналу";
@@ -425,8 +441,12 @@
 "Search Gmail for “%@”" = "Шукати в Gmail «%@»";
 "Search Google Drive" = "Пошук у Google Drive";
 "Search Google Drive for “%@”" = "Шукати в Google Drive «%@»";
+"Search Jira" = "Пошук у Jira";
+"Search Jira for “%@”" = "Шукати в Jira «%@»";
 "Search Notion" = "Пошук у Notion";
 "Search Notion for “%@”" = "Шукати в Notion «%@»";
+"Search Outlook for “%@”" = "Шукати в Outlook «%@»";
+"Search Outlook mail" = "Пошук у пошті Outlook";
 "Search files" = "Пошук у файлах";
 "Search files for “%@”" = "Шукати у файлах «%@»";
 "Select All" = "Вибрати все";
@@ -448,7 +468,9 @@
 "Show the files in Finder" = "Показати файли у Finder";
 "Sign Out" = "Вийти";
 "Sign in with Google" = "Увійти через Google";
+"Sign in with Microsoft" = "Увійти через Microsoft";
 "Signed in" = "Вхід виконано";
+"Site" = "Сайт";
 "Sites blocked during focus." = "Сайти, заблоковані під час фокусу.";
 "Skip" = "Пропустити";
 "Skip Phase" = "Пропустити фазу";
@@ -507,6 +529,7 @@
 "The voice assistant: shortcut, wake word, microphone, languages and voice." = "Голосовий помічник: сполучення клавіш, слово виклику, мікрофон, мови й голос.";
 "Thinking…" = "Думаю…";
 "This ClickUp list has no done status." = "У цьому списку ClickUp немає статусу «готово».";
+"This Jira issue can't be moved to Done from here." = "Цей тікет Jira звідси не можна перевести в Done.";
 "This database has no status or checkbox to mark it done" = "У цій базі немає статусу чи прапорця, щоб позначити виконання";
 "This is me" = "Це я";
 "This recording has no sound." = "У цьому записі немає звуку.";
@@ -567,6 +590,7 @@
 "You have %@." = "У тебе %@.";
 "You have %@. RightHand downloads the new version, replaces itself in Applications and starts again." = "У тебе %@. RightHand завантажить нову версію, замінить себе в «Програмах» і перезапуститься.";
 "Your microphone, on its own track" = "Твій мікрофон, на окремій доріжці";
+"Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues." = "Твої відкриті тікети Jira з'являються у вкладці «Задачі» (кружечок — перевести в Done), а AI може шукати й читати тікети.";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Тут з'являться твої записи. Вони зберігаються у Фільми → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Твоя права рука на Mac: Pomodoro, Полиця й AI-асистент у нотчі.";
 "a file" = "файл";
@@ -575,6 +599,7 @@
 "due %@" = "термін %@";
 "finished focus sessions" = "завершені сесії фокусу";
 "from your calendar" = "з твого календаря";
+"id.atlassian.com → Security → API tokens" = "id.atlassian.com → Security → API tokens";
 "mark done" = "позначити виконаною";
 "min" = "хв";
 "priority “%@”" = "пріоритет «%@»";

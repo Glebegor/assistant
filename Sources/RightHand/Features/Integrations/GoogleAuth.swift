@@ -137,7 +137,7 @@ enum GoogleAuth {
 }
 
 /// Waits for the browser to come back to http://127.0.0.1:<port>/?code=… after signing in.
-private final class LoopbackReceiver: @unchecked Sendable {
+final class LoopbackReceiver: @unchecked Sendable {
     private let listener: NWListener
     private let queue = DispatchQueue(label: "RightHand.GoogleSignIn")
     private var continuation: CheckedContinuation<[String: String], Error>?
@@ -197,7 +197,7 @@ private final class LoopbackReceiver: @unchecked Sendable {
             let items = URLComponents(string: "http://127.0.0.1" + target)?.queryItems ?? []
             let query = Dictionary(items.compactMap { item in item.value.map { (item.name, $0) } }, uniquingKeysWith: { $1 })
             let isResult = query["code"] != nil || query["error"] != nil
-            let page = isResult ? L("RightHand is connected to Google. You can close this tab.") : ""
+            let page = isResult ? L("RightHand is connected. You can close this tab.") : ""
             let html = "<html><body style=\"font: 16px -apple-system; text-align: center; padding-top: 80px\">\(page)</body></html>"
             let response = "HTTP/1.1 \(isResult ? "200 OK" : "404 Not Found")\r\nContent-Type: text/html; charset=utf-8\r\n"
                 + "Content-Length: \(html.utf8.count)\r\nConnection: close\r\n\r\n" + html

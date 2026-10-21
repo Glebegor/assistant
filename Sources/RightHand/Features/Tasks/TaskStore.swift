@@ -4,7 +4,7 @@ import os
 
 /// A task from Notion or ClickUp.
 struct TaskItem: Identifiable, Hashable, Sendable {
-    enum Source: Sendable { case notion, clickUp }
+    enum Source: Sendable { case notion, clickUp, jira }
     enum Priority: Int, Comparable, Sendable {
         case high, medium, low, none
         static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
@@ -92,6 +92,7 @@ final class TaskStore {
 
     var isConfigured: Bool {
         TasksSettings.connections.contains { !$0.enabledDatabaseIDs.isEmpty } || (ClickUpSettings.isConnected && ClickUpSettings.showsInTasks)
+            || (JiraSettings.isConnected && JiraSettings.showsInTasks)
     }
 
     /// Refreshes when the tab is shown and the list is older than a minute.
@@ -122,6 +123,14 @@ final class TaskStore {
                     }
                 }
             }
+            if JiraSettings.showsInTasks, let jira = JiraSettings.client {
+                do {
+                    loaded += try await jira.search("assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC, duedate ASC", limit: 100)
+                        .compactMap { JiraClient.taskItem($0, client: jira) }
+                } catch {
+                    failures.append("Jira: \(error.localizedDescription)")
+                }
+            }
             if ClickUpSettings.showsInTasks, let token = ClickUpSettings.token {
                 do {
                     loaded += try await Self.clickUpTasks(ClickUpClient(token: token))
@@ -150,6 +159,7 @@ final class TaskStore {
     func complete(_ task: TaskItem) {
         Self.log.info("Mark done: \(task.title, privacy: .private) (\(String(describing: task.source)))")
         if task.source == .clickUp { return completeInClickUp(task) }
+        if task.source == .jira { return completeInJira(task) }
         guard !completing.contains(task.id) else { return }
         guard let connection = TasksSettings.connections.first(where: { $0.databases.contains { $0.id == task.databaseID } }),
               let token = Keychain.read(connection.keychainAccount)
@@ -180,6 +190,24 @@ final class TaskStore {
     private func fail(_ message: String) {
         Self.log.error("Mark done failed: \(message, privacy: .public)")
         errorMessage = message
+    }
+
+    private func completeInJira(_ task: TaskItem) {
+        guard !completing.contains(task.id) else { return }
+        guard let client = JiraSettings.client else { return fail(L("Jira isn't connected. Check Settings → Services.")) }
+        completing.insert(task.id)
+        errorMessage = nil
+        Task {
+            do {
+                try await client.complete(task.databaseID)
+                ActivityLog.shared.taskDone(source: "jira")
+                try? await Task.sleep(for: .milliseconds(500))
+                tasks.removeAll { $0.id == task.id }
+            } catch {
+                fail(error.localizedDescription)
+            }
+            completing.remove(task.id)
+        }
     }
 
     private func completeInClickUp(_ task: TaskItem) {

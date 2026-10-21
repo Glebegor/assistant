@@ -60,6 +60,7 @@
 "Analyze again (choose the kind of meeting)" = "Analyze again (choose the kind of meeting)";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Any model name from your OpenAI account, e.g. gpt-5.";
 "Anyone (show all tasks)" = "Anyone (show all tasks)";
+"Application (client) ID" = "Application (client) ID";
 "Ask %@ anything" = "Ask %@ anything";
 "Ask Again" = "Ask Again";
 "Ask before the AI uses a tool" = "Ask before the AI uses a tool";
@@ -169,6 +170,7 @@
 "ElevenLabs error %lld%@" = "ElevenLabs error %lld%@";
 "Ellipse" = "Ellipse";
 "Ellipse — voice assistant" = "Ellipse — voice assistant";
+"Email" = "Email";
 "Empty folder. Drop files or Shelf items here." = "Empty folder. Drop files or Shelf items here.";
 "Error %lld." = "Error %lld.";
 "Error %lld: %@" = "Error %lld: %@";
@@ -219,6 +221,8 @@
 "Integration token from %@" = "Integration token from %@";
 "Interview" = "Interview";
 "Its chats, files and memory are moved to the Trash." = "Its chats, files and memory are moved to the Trash.";
+"Jira isn't connected. Check Settings → Services." = "Jira isn't connected. Check Settings → Services.";
+"Jira rejected the email or token. Check them in Settings → Services." = "Jira rejected the email or token. Check them in Settings → Services.";
 "Join" = "Join";
 "Join the call" = "Join the call";
 "Keep panel open" = "Keep panel open";
@@ -253,6 +257,8 @@
 "Memory" = "Memory";
 "Message %@…" = "Message %@…";
 "Microphone" = "Microphone";
+"Microsoft sign-in failed. Try again." = "Microsoft sign-in failed. Try again.";
+"Microsoft sign-in was cancelled (%@)." = "Microsoft sign-in was cancelled (%@).";
 "Minimize" = "Minimize";
 "Model" = "Model";
 "Models from GitHub Models; a Copilot subscription gives higher limits." = "Models from GitHub Models; a Copilot subscription gives higher limits.";
@@ -301,6 +307,7 @@
 "Off" = "Off";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Off: no shortcut, no wake word, no microphone, no record buttons.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day.";
+"Once, in Microsoft Entra → App registrations → New registration: account types “Any organizational directory and personal Microsoft accounts”, redirect URI “Public client/native” http://localhost. Then API permissions → Microsoft Graph → Mail.Read. Paste the Application (client) ID here. Work accounts may need your admin's approval. The AI can search and read your Outlook mail." = "Once, in Microsoft Entra → App registrations → New registration: account types “Any organizational directory and personal Microsoft accounts”, redirect URI “Public client/native” http://localhost. Then API permissions → Microsoft Graph → Mail.Read. Paste the Application (client) ID here. Work accounts may need your admin's approval. The AI can search and read your Outlook mail.";
 "One-on-one" = "One-on-one";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Only the first time: the speech model (630 MB) is downloaded to your Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Only the languages you speak. Fewer languages are recognized faster and better.";
@@ -309,19 +316,24 @@
 "Open %@" = "Open %@";
 "Open Folder" = "Open Folder";
 "Open Google Cloud" = "Open Google Cloud";
+"Open Microsoft Entra" = "Open Microsoft Entra";
 "Open Privacy & Security → Automation" = "Open Privacy & Security → Automation";
 "Open Settings" = "Open Settings";
 "Open Video" = "Open Video";
 "Open apps, links and files" = "Open apps, links and files";
 "Open in ClickUp" = "Open in ClickUp";
 "Open in Google Calendar" = "Open in Google Calendar";
+"Open in Jira" = "Open in Jira";
 "Open in Notion" = "Open in Notion";
+"Open issues assigned to you" = "Open issues assigned to you";
 "Open questions" = "Open questions";
 "Open tasks assigned to you or to nobody" = "Open tasks assigned to you or to nobody";
 "Open the Projects window for long work" = "Open the Projects window for long work";
 "Open the meeting review" = "Open the meeting review";
 "Opus is the smartest, Haiku the fastest and cheapest." = "Opus is the smartest, Haiku the fastest and cheapest.";
 "Others" = "Others";
+"Outlook isn't connected. Sign in in Settings → Services." = "Outlook isn't connected. Sign in in Settings → Services.";
+"Outlook sign-in expired. Sign in again in Settings → Services." = "Outlook sign-in expired. Sign in again in Settings → Services.";
 "Overdue · %@" = "Overdue · %@";
 "Overview" = "Overview";
 "Overwrite %@" = "Overwrite %@";
@@ -356,8 +368,11 @@
 "Read Aloud" = "Read Aloud";
 "Read ClickUp tasks" = "Read ClickUp tasks";
 "Read Google Drive files" = "Read Google Drive files";
+"Read Jira issue %@" = "Read Jira issue %@";
+"Read Jira issues" = "Read Jira issues";
 "Read Notion databases" = "Read Notion databases";
 "Read Notion pages" = "Read Notion pages";
+"Read Outlook mail" = "Read Outlook mail";
 "Read a ClickUp task" = "Read a ClickUp task";
 "Read a Google Drive file" = "Read a Google Drive file";
 "Read a Notion database" = "Read a Notion database";
@@ -406,6 +421,7 @@
 "Review" = "Review";
 "RightHand %@ is available" = "RightHand %@ is available";
 "RightHand is connected to Google. You can close this tab." = "RightHand is connected to Google. You can close this tab.";
+"RightHand is connected. You can close this tab." = "RightHand is connected. You can close this tab.";
 "RightHand is up to date" = "RightHand is up to date";
 "RightHand needs access to your Desktop to add screenshots automatically" = "RightHand needs access to your Desktop to add screenshots automatically";
 "Run Terminal commands" = "Run Terminal commands";
@@ -425,8 +441,12 @@
 "Search Gmail for “%@”" = "Search Gmail for “%@”";
 "Search Google Drive" = "Search Google Drive";
 "Search Google Drive for “%@”" = "Search Google Drive for “%@”";
+"Search Jira" = "Search Jira";
+"Search Jira for “%@”" = "Search Jira for “%@”";
 "Search Notion" = "Search Notion";
 "Search Notion for “%@”" = "Search Notion for “%@”";
+"Search Outlook for “%@”" = "Search Outlook for “%@”";
+"Search Outlook mail" = "Search Outlook mail";
 "Search files" = "Search files";
 "Search files for “%@”" = "Search files for “%@”";
 "Select All" = "Select All";
@@ -448,7 +468,9 @@
 "Show the files in Finder" = "Show the files in Finder";
 "Sign Out" = "Sign Out";
 "Sign in with Google" = "Sign in with Google";
+"Sign in with Microsoft" = "Sign in with Microsoft";
 "Signed in" = "Signed in";
+"Site" = "Site";
 "Sites blocked during focus." = "Sites blocked during focus.";
 "Skip" = "Skip";
 "Skip Phase" = "Skip Phase";
@@ -507,6 +529,7 @@
 "The voice assistant: shortcut, wake word, microphone, languages and voice." = "The voice assistant: shortcut, wake word, microphone, languages and voice.";
 "Thinking…" = "Thinking…";
 "This ClickUp list has no done status." = "This ClickUp list has no done status.";
+"This Jira issue can't be moved to Done from here." = "This Jira issue can't be moved to Done from here.";
 "This database has no status or checkbox to mark it done" = "This database has no status or checkbox to mark it done";
 "This is me" = "This is me";
 "This recording has no sound." = "This recording has no sound.";
@@ -567,6 +590,7 @@
 "You have %@." = "You have %@.";
 "You have %@. RightHand downloads the new version, replaces itself in Applications and starts again." = "You have %@. RightHand downloads the new version, replaces itself in Applications and starts again.";
 "Your microphone, on its own track" = "Your microphone, on its own track";
+"Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues." = "Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues.";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Your recordings will appear here. They're saved in Movies → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch.";
 "a file" = "a file";
@@ -575,6 +599,7 @@
 "due %@" = "due %@";
 "finished focus sessions" = "finished focus sessions";
 "from your calendar" = "from your calendar";
+"id.atlassian.com → Security → API tokens" = "id.atlassian.com → Security → API tokens";
 "mark done" = "mark done";
 "min" = "min";
 "priority “%@”" = "priority “%@”";
