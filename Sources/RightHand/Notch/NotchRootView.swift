@@ -24,6 +24,12 @@ struct NotchRootView: View {
             && (voice.displayID == nil || voice.displayID == model.displayID)
     }
 
+    /// The Pomodoro line on the closed notch, unless a card or the voice light is using it.
+    private var showsPomodoro: Bool {
+        (pomodoro.isRunning || pomodoro.isPaused) && !model.isExpanded && !showsVoice && !showsApproval && !showsSleep
+            && !voice.isVisible
+    }
+
     /// A permission question opens the closed notch into a small card with the buttons, on the
     /// screen you were on — not the whole panel.
     private var showsApproval: Bool {
@@ -93,6 +99,13 @@ struct NotchRootView: View {
                 }
             }
             .frame(width: size.width, height: size.height)
+            // A running (or paused) Pomodoro shows on the closed notch as a thin line in the phase's colour.
+            .overlay(alignment: .bottom) {
+                if showsPomodoro {
+                    PomodoroEdge(timer: pomodoro, inset: radius)
+                        .transition(.opacity)
+                }
+            }
             // The open panel fills its window, so light outside it would be cut off at the edges:
             // there it glows along the inside of its border instead.
             .overlay {
@@ -108,12 +121,20 @@ struct NotchRootView: View {
                 if glows && !model.isExpanded {
                     NotchGlow(radius: radius, level: voice.level, isListening: voice.phase == .listening)
                         .transition(.opacity)
+                } else if showsPomodoro && !model.hidesWhenCollapsed {
+                    // A soft light in the phase's colour under the notch.
+                    shape.fill(pomodoro.phase.color.opacity(pomodoro.isRunning ? 0.45 : 0.2))
+                        .blur(radius: 7)
+                        .offset(y: 3)
+                        .transition(.opacity)
                 }
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: voice.phase)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: showsApproval)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: sleep.phase)
+        .animation(.easeInOut(duration: 0.4), value: pomodoro.isRunning)
+        .animation(.easeInOut(duration: 0.4), value: pomodoro.phase)
         .animation(.easeInOut(duration: 0.3), value: glows)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.selectedTab)
@@ -197,5 +218,34 @@ struct NotchRootView: View {
         }
         .buttonStyle(.plain)
         .help(Text(LocalizedStringKey(help)))
+    }
+}
+
+/// Time left in the Pomodoro phase as a line along the bottom of the closed notch:
+/// orange for focus, green or teal for breaks; dimmed and slowly breathing while paused.
+private struct PomodoroEdge: View {
+    let timer: PomodoroTimer
+    /// Keeps the line clear of the rounded corners.
+    let inset: CGFloat
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 10, paused: timer.isRunning)) { timeline in
+            let fraction = timer.phaseDuration > 0 ? max(0, min(1, timer.remaining / timer.phaseDuration)) : 0
+            let breathe = timer.isRunning ? 1 : 0.45 + 0.25 * (sin(timeline.date.timeIntervalSinceReferenceDate * 2) + 1) / 2
+            GeometryReader { geometry in
+                let width = geometry.size.width - inset * 2
+                ZStack(alignment: .leading) {
+                    Capsule().fill(timer.phase.color.opacity(0.18))
+                    Capsule().fill(timer.phase.color.gradient)
+                        .frame(width: max(3, width * fraction))
+                        .shadow(color: timer.phase.color.opacity(0.8), radius: 3)
+                }
+                .frame(width: width, height: 2.5)
+                .opacity(breathe)
+                .position(x: geometry.size.width / 2, y: geometry.size.height - 3)
+            }
+        }
+        .allowsHitTesting(false)
+        .help(timer.phase.title)
     }
 }
