@@ -143,13 +143,13 @@ struct NotchRootView: View {
 
     /// Top row: tabs on the left of the camera, actions on the right.
     private var header: some View {
-        HStack(spacing: 4) {
-            ForEach(NotchTab.allCases) { tab in
-                headerButton(tab.systemImage, help: tab.title, isOn: model.selectedTab == tab) {
-                    model.selectedTab = tab
-                }
-            }
-            Spacer(minLength: model.geometry.collapsedSize.width)
+        // The tabs sit on both sides of the camera, so none ends up under it.
+        let tabs = NotchTab.allCases
+        let left = Array(tabs.prefix((tabs.count + 2) / 2)), right = Array(tabs.dropFirst(left.count))
+        return HStack(spacing: 4) {
+            ForEach(left) { tabButton($0) }
+            Spacer(minLength: model.geometry.collapsedSize.width + 12)
+            ForEach(right) { tabButton($0) }
             headerButton(model.isPinned ? "pin.fill" : "pin",
                          help: model.isPinned ? "Unpin panel" : "Keep panel open",
                          isOn: model.isPinned) {
@@ -159,6 +159,12 @@ struct NotchRootView: View {
         }
         .padding(.horizontal, 16)
         .frame(height: max(model.geometry.collapsedSize.height, 32))
+    }
+
+    private func tabButton(_ tab: NotchTab) -> some View {
+        headerButton(tab.systemImage, help: tab.title, isOn: model.selectedTab == tab) {
+            model.selectedTab = tab
+        }
     }
 
     private func headerButton(_ systemImage: String, help: String, isOn: Bool,
