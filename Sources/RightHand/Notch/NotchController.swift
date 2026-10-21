@@ -292,7 +292,7 @@ final class NotchController {
 
     /// Screen area of the open panel on its current tab (the window itself is bigger).
     private func visibleFrame(of notch: ScreenNotch) -> NSRect {
-        let size = notch.model.selectedTab.panelSize
+        let size = notch.model.panelSize
         let window = notch.panel.frame
         return NSRect(x: window.midX - size.width / 2, y: window.maxY - size.height,
                       width: size.width, height: size.height)

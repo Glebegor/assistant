@@ -15,6 +15,7 @@ struct NotchRootView: View {
     let openSettings: () -> Void
     let openProjects: () -> Void
     @State private var isDropTargeted = false
+    @State private var weekStats = WeekStats()
 
     /// The voice card shows on the closed notch of the screen you started talking on.
     private var showsVoice: Bool {
@@ -38,7 +39,7 @@ struct NotchRootView: View {
     var body: some View {
         let collapsed = model.geometry.collapsedSize
         let showsRecording = recorder.state != .idle && !model.isExpanded && !showsApproval && !showsVoice
-        let size = model.isExpanded ? model.selectedTab.panelSize
+        let size = model.isExpanded ? model.panelSize
             : showsApproval ? approvalSize
             : showsVoice ? VoiceHUD.size(for: voice.phase, collapsed: collapsed)
             // While recording, the closed notch grows a little to the right for the red dot and time.
@@ -104,6 +105,7 @@ struct NotchRootView: View {
         .animation(.easeInOut(duration: 0.3), value: glows)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.selectedTab)
+        .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.showsStats)
         .animation(.easeInOut(duration: 0.2), value: model.hidesWhenCollapsed)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .environment(\.colorScheme, .dark)
@@ -114,7 +116,12 @@ struct NotchRootView: View {
             header
             Group {
                 switch model.selectedTab {
-                case .pomodoro: PomodoroView(timer: pomodoro)
+                case .pomodoro:
+                    if model.showsStats {
+                        StatsView(stats: weekStats) { model.showsStats = false }
+                    } else {
+                        PomodoroView(timer: pomodoro) { model.showsStats = true }
+                    }
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .calendar: CalendarView(store: calendar, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)

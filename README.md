@@ -136,5 +136,6 @@ Sources/RightHand/
 - [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
 - [x] Updates: checks GitHub releases, tells you when a new version is out, installs it from the ✋ menu or Settings → About
 - [x] Calendar tab: the day as a timeline from Google Calendar (what Notion Calendar shows), next meeting with Join
+- [x] Weekly statistics in the Pomodoro tab: focus time and change against last week, sessions and streak, tasks done, meetings
 - [ ] Integrations: Reminders / Notes (EventKit), more
 - [ ] Global hotkey, launch at login, Pomodoro statistics

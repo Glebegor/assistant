@@ -13,6 +13,8 @@ struct CalendarEvent: Identifiable, Hashable {
     /// Google Meet, Zoom, Teams… link to join the call.
     let joinURL: URL?
     let pageURL: URL?
+    /// Other people are invited, or there's a call link.
+    var isMeeting: Bool = false
 
     struct Color: Hashable { let red, green, blue: Double }
 }
@@ -72,28 +74,31 @@ final class CalendarStore {
         guard hasAccess, !isLoading else { return }
         isLoading = true
         defer { isLoading = false }
-        let start = day
-        let end = Calendar.current.date(byAdding: .day, value: 1, to: start)!
         do {
-            let calendars = try await GoogleAPI.json("https://www.googleapis.com/calendar/v3/users/me/calendarList?minAccessRole=reader")
-            var loaded: [CalendarEvent] = []
-            for calendar in calendars["items"]?.array ?? [] where calendar["selected"]?.bool ?? false || calendar["primary"]?.bool == true {
-                guard let id = calendar["id"]?.string else { continue }
-                let color = Self.color(hex: calendar["backgroundColor"]?.string)
-                let iso = ISO8601DateFormatter()
-                let url = "https://www.googleapis.com/calendar/v3/calendars/\(GoogleAPI.query(id))/events?singleEvents=true&orderBy=startTime"
-                    + "&maxResults=100&timeMin=\(GoogleAPI.query(iso.string(from: start)))&timeMax=\(GoogleAPI.query(iso.string(from: end)))"
-                let response = try await GoogleAPI.json(url)
-                loaded += (response["items"]?.array ?? []).compactMap { Self.event($0, color: color) }
-            }
-            // The same meeting can be in two calendars.
-            var seen = Set<String>()
-            events = loaded.filter { seen.insert("\($0.title)|\($0.start)").inserted }.sorted { $0.start < $1.start }
+            events = try await Self.events(from: day, to: Calendar.current.date(byAdding: .day, value: 1, to: day)!)
             lastLoad = Date()
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    /// Events of the calendars shown in Google Calendar between two dates.
+    static func events(from start: Date, to end: Date) async throws -> [CalendarEvent] {
+        let calendars = try await GoogleAPI.json("https://www.googleapis.com/calendar/v3/users/me/calendarList?minAccessRole=reader")
+        var loaded: [CalendarEvent] = []
+        let iso = ISO8601DateFormatter()
+        for calendar in calendars["items"]?.array ?? [] where calendar["selected"]?.bool ?? false || calendar["primary"]?.bool == true {
+            guard let id = calendar["id"]?.string else { continue }
+            let color = color(hex: calendar["backgroundColor"]?.string)
+            let url = "https://www.googleapis.com/calendar/v3/calendars/\(GoogleAPI.query(id))/events?singleEvents=true&orderBy=startTime"
+                + "&maxResults=250&timeMin=\(GoogleAPI.query(iso.string(from: start)))&timeMax=\(GoogleAPI.query(iso.string(from: end)))"
+            let response = try await GoogleAPI.json(url)
+            loaded += (response["items"]?.array ?? []).compactMap { event($0, color: color) }
+        }
+        // The same meeting can be in two calendars.
+        var seen = Set<String>()
+        return loaded.filter { seen.insert("\($0.title)|\($0.start)").inserted }.sorted { $0.start < $1.start }
     }
 
     // MARK: Reading Google's events
@@ -109,9 +114,11 @@ final class CalendarStore {
         let video = item["hangoutLink"]?.string
             ?? (item["conferenceData"]?["entryPoints"]?.array ?? []).first { $0["entryPointType"]?.string == "video" }?["uri"]?.string
             ?? meetingLink(in: (item["location"]?.string ?? "") + " " + (item["description"]?.string ?? ""))
-        return CalendarEvent(id: id, title: item["summary"]?.string ?? L("(No title)"), start: start, end: end, isAllDay: allDay,
-                             color: color, location: item["location"]?.string, joinURL: video.flatMap(URL.init(string:)),
-                             pageURL: item["htmlLink"]?.string.flatMap(URL.init(string:)))
+        var event = CalendarEvent(id: id, title: item["summary"]?.string ?? L("(No title)"), start: start, end: end, isAllDay: allDay,
+                                  color: color, location: item["location"]?.string, joinURL: video.flatMap(URL.init(string:)),
+                                  pageURL: item["htmlLink"]?.string.flatMap(URL.init(string:)))
+        event.isMeeting = !allDay && (video != nil || (item["attendees"]?.array?.count ?? 0) > 1)
+        return event
     }
 
     private static func date(_ value: JSONValue?) -> Date? {

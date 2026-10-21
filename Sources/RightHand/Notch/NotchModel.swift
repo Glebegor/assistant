@@ -84,6 +84,13 @@ final class NotchModel {
     /// When pinned, the panel stays open after the mouse leaves.
     var isPinned = false
     var selectedTab: NotchTab = .pomodoro
+    /// The Pomodoro tab shows the week's statistics instead of the timer.
+    var showsStats = false
+
+    /// Size of the open panel for what it shows now.
+    var panelSize: CGSize {
+        selectedTab == .pomodoro && showsStats ? CGSize(width: 580, height: 300) : selectedTab.panelSize
+    }
     var geometry: NotchGeometry
     /// The screen this notch is on.
     var displayID: CGDirectDisplayID?
