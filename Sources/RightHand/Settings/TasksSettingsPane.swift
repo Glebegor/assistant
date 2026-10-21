@@ -73,7 +73,9 @@ struct TasksSettingsPane: View {
             }
 
             ClickUpSection(store: store)
+            JiraSection(store: store)
             GoogleSection()
+            OutlookSection()
         }
         .formStyle(.grouped)
         // Databases connected in Notion after setup show up without pressing Reload.
@@ -261,6 +263,123 @@ private struct GoogleSection: View {
             try await GoogleAuth.signIn(clientID: clientID.trimmingCharacters(in: .whitespacesAndNewlines),
                                         secret: secret.trimmingCharacters(in: .whitespacesAndNewlines))
             self.secret = ""
+            isConnected = true
+        } catch {
+            message = error.localizedDescription
+        }
+    }
+}
+
+/// Jira Cloud: site, email and API token; open issues in the Tasks tab, search for the AI.
+private struct JiraSection: View {
+    let store: TaskStore
+    @AppStorage(JiraSettings.siteKey) private var site = ""
+    @AppStorage(JiraSettings.emailKey) private var email = ""
+    @AppStorage(JiraSettings.nameKey) private var name = ""
+    @AppStorage(JiraSettings.showInTasksKey) private var showInTasks = true
+    @State private var token = ""
+    @State private var isConnected = JiraSettings.isConnected
+    @State private var message: String?
+
+    var body: some View {
+        Section {
+            if isConnected {
+                LabeledContent {
+                    Button("Disconnect", role: .destructive) {
+                        Keychain.delete(JiraSettings.tokenAccount)
+                        isConnected = false
+                        store.refresh()
+                    }
+                } label: {
+                    SettingsRowLabel("Connected", subtitle: "\(name) · \(JiraSettings.site?.host() ?? site)", systemImage: "checkmark.circle.fill", color: .blue)
+                }
+                Toggle(isOn: $showInTasks) {
+                    SettingsRowLabel("Show in the Tasks tab", subtitle: L("Open issues assigned to you"), systemImage: "checklist", color: .blue)
+                }
+                .onChange(of: showInTasks) { _, _ in store.refresh() }
+            } else {
+                TextField("Site", text: $site, prompt: Text(verbatim: "your-company.atlassian.net"))
+                TextField("Email", text: $email, prompt: Text(verbatim: "you@company.com"))
+                LabeledContent {
+                    HStack(spacing: 8) {
+                        SecureField("API token", text: $token).textFieldStyle(.roundedBorder).labelsHidden().frame(width: 170)
+                            .onSubmit { Task { await connect() } }
+                        Button("Connect") { Task { await connect() } }
+                            .disabled(site.isEmpty || email.isEmpty || token.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                } label: {
+                    SettingsRowLabel("API token", subtitle: L("id.atlassian.com → Security → API tokens"), systemImage: "key.fill", color: .blue)
+                        .onTapGesture { NSWorkspace.shared.open(JiraSettings.tokenURL) }
+                }
+            }
+            if let message { Text(message).font(.callout).foregroundStyle(.orange) }
+        } header: {
+            Text("Jira")
+        } footer: {
+            SettingsFooter("Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues.")
+        }
+    }
+
+    private func connect() async {
+        Keychain.save(token.trimmingCharacters(in: .whitespacesAndNewlines), for: JiraSettings.tokenAccount)
+        guard let client = JiraSettings.client else { return }
+        do {
+            name = try await client.myself()
+            token = ""
+            message = nil
+            isConnected = true
+            store.refresh()
+        } catch {
+            Keychain.delete(JiraSettings.tokenAccount)
+            message = error.localizedDescription
+        }
+    }
+}
+
+/// Outlook: an app registered in Microsoft Entra (Client ID only), then "Sign in with Microsoft".
+private struct OutlookSection: View {
+    @State private var isConnected = Outlook.isConnected
+    @State private var clientID = Outlook.clientID ?? ""
+    @State private var isSigningIn = false
+    @State private var message: String?
+
+    var body: some View {
+        Section {
+            if isConnected {
+                LabeledContent {
+                    Button("Sign Out", role: .destructive) {
+                        Task { await Outlook.signOut(); isConnected = false }
+                    }
+                } label: {
+                    SettingsRowLabel("Signed in", subtitle: Outlook.email, systemImage: "checkmark.circle.fill", color: .blue)
+                }
+            } else {
+                TextField("Application (client) ID", text: $clientID, prompt: Text(verbatim: "00000000-0000-0000-0000-000000000000"))
+                HStack {
+                    Button("Sign in with Microsoft") { Task { await signIn() } }
+                        .disabled(clientID.trimmingCharacters(in: .whitespaces).isEmpty || isSigningIn)
+                    if isSigningIn {
+                        ProgressView().controlSize(.small)
+                        Text("Finish signing in in your browser…").foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button("Open Microsoft Entra") { NSWorkspace.shared.open(Outlook.registrationURL) }
+                }
+            }
+            if let message { Text(message).font(.callout).foregroundStyle(.orange) }
+        } header: {
+            Text("Outlook")
+        } footer: {
+            SettingsFooter("Once, in Microsoft Entra → App registrations → New registration: account types “Any organizational directory and personal Microsoft accounts”, redirect URI “Public client/native” http://localhost. Then API permissions → Microsoft Graph → Mail.Read. Paste the Application (client) ID here. Work accounts may need your admin's approval. The AI can search and read your Outlook mail.")
+        }
+    }
+
+    private func signIn() async {
+        isSigningIn = true
+        message = nil
+        defer { isSigningIn = false }
+        do {
+            try await Outlook.signIn(clientID: clientID.trimmingCharacters(in: .whitespacesAndNewlines))
             isConnected = true
         } catch {
             message = error.localizedDescription

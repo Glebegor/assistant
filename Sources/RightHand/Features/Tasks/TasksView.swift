@@ -111,11 +111,11 @@ private struct TaskRow: View {
             }
             Spacer(minLength: 0)
             if isHovered, let url = task.url {
-                Button(task.source == .notion ? "Open in Notion" : "Open in ClickUp", systemImage: "arrow.up.right.square") { NSWorkspace.shared.open(url) }
+                Button(openTitle, systemImage: "arrow.up.right.square") { NSWorkspace.shared.open(url) }
                     .labelStyle(.iconOnly)
                     .buttonStyle(.plain)
                     .foregroundStyle(.secondary)
-                    .help(task.source == .notion ? "Open in Notion" : "Open in ClickUp")
+                    .help(openTitle)
             }
         }
         .padding(.horizontal, 8)
@@ -123,6 +123,14 @@ private struct TaskRow: View {
         .background(isHovered ? .white.opacity(0.07) : .clear, in: RoundedRectangle(cornerRadius: 8))
         .contentShape(Rectangle())
         .onHover { isHovered = $0 }
+    }
+
+    private var openTitle: LocalizedStringKey {
+        switch task.source {
+        case .notion: "Open in Notion"
+        case .clickUp: "Open in ClickUp"
+        case .jira: "Open in Jira"
+        }
     }
 
     @ViewBuilder

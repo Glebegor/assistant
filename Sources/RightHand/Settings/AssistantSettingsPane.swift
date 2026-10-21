@@ -5,6 +5,7 @@ import SwiftUI
 struct AssistantSettingsPane: View {
     @AppStorage(ChatSettings.Key.claudeModel) private var claudeModel = ChatSettings.Default.claudeModel
     @AppStorage(ChatSettings.Key.openAIModel) private var openAIModel = ChatSettings.Default.openAIModel
+    @AppStorage(ChatSettings.Key.copilotModel) private var copilotModel = ChatSettings.Default.copilotModel
     @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
     @AppStorage(ComputerAccess.key) private var wholeMac = true
     @AppStorage(AboutMe.key) private var aboutMe = ""
@@ -53,6 +54,26 @@ struct AssistantSettingsPane: View {
                 }
             } header: {
                 Text("ChatGPT")
+            }
+
+            Section {
+                APIKeyRow(account: ChatProvider.copilot.keychainAccount, keysURL: ChatProvider.copilot.keysURL,
+                          color: .gray, systemImage: "chevron.left.forwardslash.chevron.right")
+                LabeledContent {
+                    Picker("Model", selection: $copilotModel) {
+                        ForEach(ChatSettings.copilotModels, id: \.id) { Text(verbatim: $0.name).tag($0.id) }
+                        if !ChatSettings.copilotModels.contains(where: { $0.id == copilotModel }) { Text(verbatim: copilotModel).tag(copilotModel) }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                } label: {
+                    SettingsRowLabel("Model", subtitle: "Models from GitHub Models; a Copilot subscription gives higher limits.",
+                                     systemImage: "cpu", color: .gray)
+                }
+            } header: {
+                Text("GitHub Copilot")
+            } footer: {
+                SettingsFooter("Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
             }
 
 

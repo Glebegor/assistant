@@ -2,7 +2,7 @@
 
 Personal macOS productivity hub that lives in the camera notch. Move the mouse to the
 notch and a panel drops down with Pomodoro, tasks, a file/screenshot shelf, screen recording
-and an AI assistant that works with your Mac, Notion, ClickUp and Google — by text or by voice.
+and an AI assistant (Claude, ChatGPT or GitHub Copilot) that works with your Mac, Notion, ClickUp, Jira, Google and Outlook — by text or by voice.
 
 ![The AI in the notch working through Notion tasks](assets/screenshots/notch-chat-notion.jpg)
 
@@ -129,11 +129,12 @@ Sources/RightHand/
 - [x] Action approval: ask before every action, with "always allow" per tool; commands, deletions and anything outside the project folders always ask
 - [ ] Assistant tools: screen & clipboard, system control
 - [x] Tasks tab: open Notion tasks (yours or unassigned), overdue and high priority first, tick to mark done
-- [x] AI tools for Notion, ClickUp, Gmail (read) and Google Drive; ClickUp tasks in the Tasks tab
+- [x] AI tools for Notion, ClickUp, Jira, Gmail and Outlook (read) and Google Drive; ClickUp and Jira tasks in the Tasks tab
+- [x] Three AIs: Claude, ChatGPT and GitHub Copilot (GitHub Models), all with the same tools
 - [x] "About me" profile that every chat starts with
 - [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
 - [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours
-- [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
+- [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT written for the kind of meeting (lecture, team meeting, stand-up, client call, interview…): summary, timeline of its parts, key points, decisions, tasks or homework, open questions, assessment
 - [x] Updates: checks GitHub releases, tells you when a new version is out, installs it from the ✋ menu or Settings → About
 - [x] Calendar tab: the day as a timeline from Google Calendar (what Notion Calendar shows), next meeting with Join
 - [x] Weekly statistics in the Pomodoro tab: focus time and change against last week, sessions and streak, tasks done, meetings

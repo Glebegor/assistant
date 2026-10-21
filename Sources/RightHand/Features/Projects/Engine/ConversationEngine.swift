@@ -92,7 +92,7 @@ final class ConversationEngine {
     // MARK: The loop
 
     private var client: ModelClient {
-        chat.provider == .claude ? ClaudeClient() : OpenAIClient()
+        chat.provider == .claude ? ClaudeClient() : OpenAIClient(provider: chat.provider)
     }
 
     private func run(tools: [AssistantTool], apiKey: String) async {
@@ -194,8 +194,8 @@ final class ConversationEngine {
 
     /// ChatGPT has no built-in compaction, so long chats are summarized here.
     private func shortenIfNeeded(apiKey: String) async throws {
-        guard chat.provider == .openAI else { return }
-        let client = OpenAIClient()
+        guard chat.provider.usesChatCompletions else { return }
+        let client = OpenAIClient(provider: chat.provider)
         if let shortened = try? await client.shortened(chat, system: chat.system, apiKey: apiKey) {
             activity = L("Summarizing the earlier conversation…")
             chat.contextStart = shortened.start

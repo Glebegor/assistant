@@ -99,7 +99,17 @@ struct MeetingReviewView: View {
                     Text(verbatim: review?.title ?? recording.deletingPathExtension().lastPathComponent)
                         .font(.system(size: 26, weight: .semibold))
                         .lineLimit(2)
-                    Text(verbatim: meta).font(.callout).foregroundStyle(.secondary)
+                    HStack(spacing: 10) {
+                        if let review {
+                            Label(review.meetingKind.title, systemImage: review.meetingKind.systemImage)
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Theme.neon)
+                                .padding(.horizontal, 9).padding(.vertical, 3)
+                                .background(Theme.neonSoft, in: Capsule())
+                                .overlay(Capsule().strokeBorder(Theme.neon.opacity(0.35)))
+                        }
+                        Text(verbatim: meta).font(.callout).foregroundStyle(.secondary)
+                    }
                 }
                 Spacer()
                 if let score = review?.assessment.score { ScoreRing(score: score) }
@@ -124,7 +134,7 @@ struct MeetingReviewView: View {
                     NSPasteboard.general.setString(tab == 0 ? (review?.markdown ?? markdown) : transcript, forType: .string)
                 }
                 if analyzer.jobs[recording] == nil {
-                    IconButton(title: "Analyze Again", systemImage: "arrow.clockwise") { analyzer.analyze(recording) }
+                    AnalyzeMenu(analyzer: analyzer, recording: recording, compact: true)
                 }
             }
         }
@@ -158,13 +168,26 @@ private struct ReviewCards: View {
                 Text(verbatim: review.summary).font(.system(size: 15)).lineSpacing(5).foregroundStyle(.white.opacity(0.92))
             }
 
+            if let timeline = review.timeline, !timeline.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    ThemeCaption("Timeline")
+                    TimelineCard(chapters: timeline)
+                }
+            }
+
+            if let points = review.keyPoints, !points.isEmpty {
+                listCard(review.meetingKind == .lecture ? "Key ideas" : "Key points", items: points, icon: "sparkle", tint: Theme.neon)
+            }
+
             HStack(alignment: .top, spacing: 14) {
-                listCard("Decisions", items: review.decisions, icon: "checkmark", tint: Theme.neon)
+                if !(review.meetingKind == .lecture && review.decisions.isEmpty) {
+                    listCard("Decisions", items: review.decisions, icon: "checkmark", tint: Theme.neon)
+                }
                 listCard("Open questions", items: review.openQuestions, icon: "questionmark", tint: Theme.violet)
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                ThemeCaption("Tasks")
+                ThemeCaption(review.meetingKind == .lecture ? "Homework" : "Tasks")
                 if review.tasks.isEmpty {
                     Text("No tasks were agreed on.").foregroundStyle(.secondary).themeCard()
                 } else {
@@ -226,6 +249,74 @@ private struct ReviewCards: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+/// The meeting in parts: a thin neon line with a dot and the start time for each part.
+private struct TimelineCard: View {
+    let chapters: [MeetingReview.Chapter]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(chapters.enumerated()), id: \.offset) { index, chapter in
+                HStack(alignment: .top, spacing: 14) {
+                    Text(verbatim: chapter.time).font(.system(size: 11).monospacedDigit()).foregroundStyle(.secondary)
+                        .frame(width: 58, alignment: .trailing).padding(.top, 1)
+                    VStack(spacing: 0) {
+                        Circle().fill(Theme.neon).frame(width: 8, height: 8).neonGlow(index == 0, radius: 4).padding(.top, 4)
+                        if index < chapters.count - 1 {
+                            Rectangle().fill(Theme.neon.opacity(0.35)).frame(width: 1.5).frame(maxHeight: .infinity)
+                        }
+                    }
+                    .frame(width: 10)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(verbatim: chapter.title).font(.system(size: 13.5, weight: .semibold)).foregroundStyle(.white.opacity(0.95))
+                        if let summary = chapter.summary, !summary.isEmpty {
+                            Text(verbatim: summary).font(.system(size: 12.5)).foregroundStyle(.secondary).lineSpacing(2)
+                        }
+                    }
+                    .padding(.bottom, index < chapters.count - 1 ? 16 : 0)
+                    Spacer(minLength: 0)
+                }
+            }
+        }
+        .themeCard(padding: 16)
+    }
+}
+
+/// "Analyze" with a choice of what kind of meeting it is (Automatic recognizes it).
+struct AnalyzeMenu: View {
+    let analyzer: MeetingAnalyzer
+    let recording: URL
+    /// Just an icon (the review window) or a pill with a title (the Record tab).
+    var compact = false
+    var onStart: () -> Void = {}
+
+    var body: some View {
+        Menu {
+            Button { start(nil) } label: { Label("Automatic", systemImage: "sparkles") }
+            Divider()
+            ForEach(MeetingKind.allCases.filter { $0 != .other }) { kind in
+                Button { start(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
+            }
+        } label: {
+            if compact {
+                Image(systemName: "arrow.clockwise").font(.system(size: 13, weight: .medium))
+            } else {
+                Label("Analyze", systemImage: "sparkles")
+            }
+        } primaryAction: {
+            start(nil)
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(compact ? .hidden : .visible)
+        .fixedSize()
+        .help(compact ? "Analyze again (choose the kind of meeting)" : "Transcribe on your Mac and write a review; choose the kind of meeting, or let it recognize it")
+    }
+
+    private func start(_ kind: MeetingKind?) {
+        analyzer.analyze(recording, as: kind)
+        onStart()
     }
 }
 

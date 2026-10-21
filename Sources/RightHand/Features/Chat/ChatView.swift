@@ -221,7 +221,7 @@ private struct ChatTab: View {
             if engine.isRunning {
                 ProgressView().controlSize(.mini)
             } else {
-                Image(systemName: engine.chat.provider == .claude ? "sparkle" : "bubble.left.and.bubble.right.fill")
+                Image(systemName: engine.chat.provider.systemImage)
                     .font(.system(size: 9))
                     .foregroundStyle(engine.pendingApproval != nil ? .orange : .secondary)
             }

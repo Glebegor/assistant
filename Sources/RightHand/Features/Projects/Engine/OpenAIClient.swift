@@ -1,9 +1,19 @@
 import Foundation
 
-/// ChatGPT with tools (function calling) and streaming (Chat Completions API).
+/// ChatGPT with tools (function calling) and streaming (Chat Completions API). GitHub Copilot
+/// (GitHub Models) speaks the same API at another address.
 /// Long chats are shortened on our side: older messages are replaced by a summary.
 struct OpenAIClient: ModelClient {
-    private static let endpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
+    static let openAIEndpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
+    static let gitHubModelsEndpoint = URL(string: "https://models.github.ai/inference/chat/completions")!
+    var endpoint = openAIEndpoint
+
+    init(endpoint: URL = openAIEndpoint) { self.endpoint = endpoint }
+
+    /// The client for a provider that speaks the Chat Completions API.
+    init(provider: ChatProvider) {
+        self.init(endpoint: provider == .copilot ? Self.gitHubModelsEndpoint : Self.openAIEndpoint)
+    }
     /// Roughly 80k tokens; above this the older part of the chat is summarized.
     static let summarizeAboveCharacters = 320_000
 
@@ -20,7 +30,7 @@ struct OpenAIClient: ModelClient {
         var calls: [Int: (id: String, name: String, arguments: String)] = [:]
         var finishReason: String?
 
-        for try await data in try await ServerSentEvents.lines(for: Self.request(body: body, apiKey: apiKey)) {
+        for try await data in try await ServerSentEvents.lines(for: request(body: body, apiKey: apiKey)) {
             guard let data else { continue }
             if data == "[DONE]" { break }
             guard let choice = JSONValue.parse(data)?["choices"]?.array?.first else { continue }
@@ -111,7 +121,7 @@ struct OpenAIClient: ModelClient {
                 """,
             ]]),
         ]
-        let (data, response) = try await URLSession.shared.data(for: Self.request(body: request, apiKey: apiKey))
+        let (data, response) = try await URLSession.shared.data(for: self.request(body: request, apiKey: apiKey))
         guard (response as? HTTPURLResponse)?.statusCode == 200,
               let summary = JSONValue.parse(data)?["choices"]?.array?.first?["message"]?["content"]?.string
         else { return nil }
@@ -129,7 +139,7 @@ struct OpenAIClient: ModelClient {
         return messages + chat.messages[min(chat.contextStart, chat.messages.count)...]
     }
 
-    private static func request(body: [String: JSONValue], apiKey: String) throws -> URLRequest {
+    private func request(body: [String: JSONValue], apiKey: String) throws -> URLRequest {
         var request = URLRequest(url: endpoint, timeoutInterval: 900)
         request.httpMethod = "POST"
         request.httpBody = try JSONValue.object(body).encoded()
