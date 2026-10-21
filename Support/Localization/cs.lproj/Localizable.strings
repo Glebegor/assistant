@@ -24,6 +24,7 @@
 "+%lld%% vs last week" = "+%lld%% oproti minulému týdnu";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. Na notion.so/profile/integrations vytvoř interní integraci a zkopíruj její secret. 2. V Notionu otevři každou databázi úkolů → ••• → Connections a přidej integraci. 3. Vlož secret sem. Token zůstává v Klíčence tvého Macu. Karta Úkoly ukazuje otevřené úkoly přiřazené tobě nebo nikomu, nejdřív ty po termínu a s vysokou prioritou.";
 "A Pomodoro break already rests your eyes." = "Přestávka Pomodoro už očím odpočinek dává.";
+"A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits." = "Dlouhá schůzka je dlouhý text: silný model s velkým kontextem (Claude Opus nebo Sonnet, GPT-5, Gemini Pro) napíše mnohem lepší recenzi. GitHub Models má malé limity.";
 "A note before bedtime, then a card in the notch until you say good night." = "Upozornění před spaním, pak karta ve výřezu, dokud neřekneš dobrou noc.";
 "A reminder to go to bed on time." = "Připomenutí jít včas spát.";
 "API key" = "Klíč API";
@@ -59,6 +60,7 @@
 "Analyze" = "Analyzovat";
 "Analyze Again" = "Analyzovat znovu";
 "Analyze again (choose the kind of meeting)" = "Analyzovat znovu (vyber typ schůzky)";
+"Analyze meetings with" = "Analyzovat schůzky pomocí";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Libovolný název modelu z tvého účtu OpenAI, např. gpt-5.";
 "Anyone (show all tasks)" = "Kdokoli (zobrazit všechny úkoly)";
 "Application (client) ID" = "Application (client) ID";
@@ -261,6 +263,7 @@
 "Mark as done" = "Označit jako hotové";
 "Me" = "Já";
 "Meeting" = "Schůzka";
+"Meeting analysis" = "Analýza schůzek";
 "Meeting review is ready" = "Shrnutí schůzky je hotové";
 "Meetings" = "Schůzky";
 "Memory" = "Paměť";
@@ -430,6 +433,7 @@
 "Resume Eye Rest (paused until %@)" = "Obnovit odpočinek očí (pozastaveno do %@)";
 "Return sends, Shift-Return adds a new line." = "Return odešle, Shift-Return přidá nový řádek.";
 "Review" = "Shrnutí";
+"Reviews of your recordings: summary, timeline, tasks and assessment." = "Recenze tvých nahrávek: shrnutí, časová osa, úkoly a hodnocení.";
 "RightHand %@ is available" = "Je k dispozici RightHand %@";
 "RightHand is connected to Google. You can close this tab." = "RightHand je připojený ke Googlu. Tuto kartu můžeš zavřít.";
 "RightHand is connected. You can close this tab." = "RightHand je připojený. Tuto kartu můžeš zavřít.";
@@ -438,6 +442,7 @@
 "Run Terminal commands" = "Příkazy Terminálu";
 "Run a command in %@" = "Spustit příkaz v %@";
 "Same as RightHand" = "Stejně jako RightHand";
+"Same as the chat" = "Stejně jako v chatu";
 "Save" = "Uložit";
 "Saved" = "Uloženo";
 "Saving…" = "Ukládám…";

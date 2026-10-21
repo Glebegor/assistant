@@ -24,6 +24,7 @@
 "+%lld%% vs last week" = "+%lld%% к прошлой неделе";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. На notion.so/profile/integrations создай внутреннюю интеграцию (internal) и скопируй её секрет. 2. В Notion открой каждую базу задач → ••• → Connections и добавь интеграцию. 3. Вставь секрет сюда. Токен хранится в Keychain твоего Mac. Вкладка «Задачи» показывает открытые задачи, назначенные тебе или никому, сначала просроченные и с высоким приоритетом.";
 "A Pomodoro break already rests your eyes." = "Перерыв Pomodoro и так даёт глазам отдохнуть.";
+"A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits." = "Длинная встреча — это большой текст: сильная модель с большим контекстом (Claude Opus или Sonnet, GPT-5, Gemini Pro) пишет гораздо лучшее ревью. У GitHub Models маленькие лимиты.";
 "A note before bedtime, then a card in the notch until you say good night." = "Напоминание перед сном, потом карточка в вырезе, пока не скажешь «спокойной ночи».";
 "A reminder to go to bed on time." = "Напоминание ложиться спать вовремя.";
 "API key" = "Ключ API";
@@ -59,6 +60,7 @@
 "Analyze" = "Анализировать";
 "Analyze Again" = "Проанализировать снова";
 "Analyze again (choose the kind of meeting)" = "Проанализировать снова (выбери тип встречи)";
+"Analyze meetings with" = "Анализировать встречи с помощью";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Любое название модели из твоего аккаунта OpenAI, напр. gpt-5.";
 "Anyone (show all tasks)" = "Кто угодно (показывать все задачи)";
 "Application (client) ID" = "Application (client) ID";
@@ -261,6 +263,7 @@
 "Mark as done" = "Отметить выполненной";
 "Me" = "Я";
 "Meeting" = "Встреча";
+"Meeting analysis" = "Анализ встреч";
 "Meeting review is ready" = "Обзор встречи готов";
 "Meetings" = "Встречи";
 "Memory" = "Память";
@@ -430,6 +433,7 @@
 "Resume Eye Rest (paused until %@)" = "Возобновить отдых глаз (пауза до %@)";
 "Return sends, Shift-Return adds a new line." = "Return — отправить, Shift-Return — новая строка.";
 "Review" = "Обзор";
+"Reviews of your recordings: summary, timeline, tasks and assessment." = "Ревью твоих записей: итог, таймлайн, задачи и оценка.";
 "RightHand %@ is available" = "Доступен RightHand %@";
 "RightHand is connected to Google. You can close this tab." = "RightHand подключён к Google. Эту вкладку можно закрыть.";
 "RightHand is connected. You can close this tab." = "RightHand подключён. Эту вкладку можно закрыть.";
@@ -438,6 +442,7 @@
 "Run Terminal commands" = "Команды Терминала";
 "Run a command in %@" = "Выполнить команду в %@";
 "Same as RightHand" = "Как в RightHand";
+"Same as the chat" = "Как в чате";
 "Save" = "Сохранить";
 "Saved" = "Сохранено";
 "Saving…" = "Сохраняю…";

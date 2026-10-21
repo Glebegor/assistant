@@ -28,6 +28,8 @@ struct AssistantSettingsPane: View {
             ProviderSection(provider: .copilot, color: .gray, subtitle: "The models of your Copilot subscription, or of GitHub Models.",
                             footer: "Sign in with your Copilot subscription for the same models as in VS Code (Claude, the newest GPT). This uses the API of the Copilot editor plugins, which GitHub doesn't offer to other apps: it may stop working, and GitHub could limit the account. Without signing in, Copilot uses GitHub Models: create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
 
+            MeetingAISection()
+
             Section {
                 Toggle(isOn: $wholeMac) {
                     SettingsRowLabel("Work with the whole Mac", systemImage: "desktopcomputer", color: .gray)
@@ -371,5 +373,49 @@ private struct CopilotSubscriptionRow: View {
         UserDefaults.standard.set(ModelCatalog.builtIn(.copilot).first?.id, forKey: ChatSettings.Key.copilotModel)
         ModelCatalog.shared.reset(.copilot)
         onChange()
+    }
+}
+
+/// The AI and model that write meeting reviews.
+private struct MeetingAISection: View {
+    @AppStorage(MeetingAISettings.providerKey) private var provider = ""
+    @AppStorage(MeetingAISettings.modelKey) private var model = ""
+    private var catalog: ModelCatalog { .shared }
+
+    var body: some View {
+        Section {
+            LabeledContent {
+                Picker("AI", selection: $provider) {
+                    Text("Same as the chat").tag("")
+                    Divider()
+                    ForEach(ChatProvider.allCases) { Text(verbatim: $0 == .copilot ? "GitHub Copilot" : $0.title).tag($0.rawValue) }
+                }
+                .labelsHidden()
+                .fixedSize()
+            } label: {
+                SettingsRowLabel("Analyze meetings with", subtitle: "Reviews of your recordings: summary, timeline, tasks and assessment.",
+                                 systemImage: "waveform.badge.magnifyingglass", color: .purple)
+            }
+            if let chosen = ChatProvider(rawValue: provider) {
+                LabeledContent {
+                    Picker("Model", selection: $model) {
+                        ForEach(catalog.list(for: chosen)) { Text(verbatim: $0.name).tag($0.id) }
+                        if !catalog.list(for: chosen).contains(where: { $0.id == model }) { Text(verbatim: model).tag(model) }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                } label: {
+                    SettingsRowLabel("Model", systemImage: "cpu", color: .purple)
+                }
+            }
+        } header: {
+            Text("Meeting analysis")
+        } footer: {
+            SettingsFooter("A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits.")
+        }
+        .onChange(of: provider) { _, new in
+            // Start from the model that AI uses in the chat.
+            model = ChatProvider(rawValue: new).map { ChatSettings.model(for: $0) } ?? ""
+        }
     }
 }

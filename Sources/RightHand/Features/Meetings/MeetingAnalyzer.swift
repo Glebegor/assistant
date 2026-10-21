@@ -294,10 +294,28 @@ struct MeetingReview: Codable {
     }
 }
 
-/// Writes the meeting review with the AI chosen in Settings (Claude or ChatGPT).
+/// Which AI writes meeting reviews (Settings → Assistant → Meeting analysis). Empty means the
+/// AI you last chose in the notch chat, with its model.
+enum MeetingAISettings {
+    static let providerKey = "meetings.provider"
+    static let modelKey = "meetings.model"
+
+    static var provider: ChatProvider {
+        ChatProvider(rawValue: UserDefaults.standard.string(forKey: providerKey) ?? "") ?? ChatSettings.provider
+    }
+
+    static var model: String {
+        let chosen = UserDefaults.standard.string(forKey: providerKey).flatMap(ChatProvider.init(rawValue:)) != nil
+            ? UserDefaults.standard.string(forKey: modelKey) ?? "" : ""
+        if chosen.isEmpty { return ChatSettings.model(for: provider) }
+        return provider == .copilot ? ChatSettings.copilotModel(chosen) : chosen
+    }
+}
+
+/// Writes the meeting review with the AI chosen for it in Settings.
 enum MeetingReviewer {
     static func review(transcript: String, utterances: [Utterance], recording: URL, kind: MeetingKind? = nil) async throws -> MeetingReview {
-        let provider = ChatSettings.provider
+        let provider = MeetingAISettings.provider
         guard let apiKey = Keychain.read(provider.keychainAccount) else {
             throw ChatError(message: L("Add your %@ API key in Settings → Assistant.", provider.title))
         }
@@ -345,7 +363,7 @@ enum MeetingReviewer {
         \(transcript)
         """
 
-        var chat = ProjectChat(projectID: UUID(), provider: provider, model: ChatSettings.model(for: provider),
+        var chat = ProjectChat(projectID: UUID(), provider: provider, model: MeetingAISettings.model,
                                system: system, contextFingerprint: "")
         let client: ModelClient = provider == .claude ? ClaudeClient() : OpenAIClient(provider: provider)
         chat.messages = client.userMessages(text: request, contextUpdate: nil)
