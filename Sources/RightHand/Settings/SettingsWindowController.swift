@@ -35,7 +35,7 @@ final class SettingsWindowController {
 }
 
 enum SettingsPage: String, CaseIterable, Identifiable {
-    case general, assistant, ellipse, services, pomodoro, eyeRest, shelf, blocking, about
+    case general, assistant, ellipse, services, pomodoro, eyeRest, sleep, shelf, blocking, about
 
     var id: Self { self }
 
@@ -47,6 +47,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .services: "Services"
         case .pomodoro: "Pomodoro"
         case .eyeRest: "Eye Rest"
+        case .sleep: "Sleep"
         case .shelf: "Shelf"
         case .blocking: "Blocking"
         case .about: "About"
@@ -61,6 +62,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .services: "Notion, ClickUp and Google for tasks and for the AI."
         case .pomodoro: "Focus and break lengths, sounds."
         case .eyeRest: "Short breaks for your eyes."
+        case .sleep: "A reminder to go to bed on time."
         case .shelf: "Clipboard history, files and screenshots."
         case .blocking: "Sites blocked during focus."
         case .about: "Version and links."
@@ -75,6 +77,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .services: "square.stack.3d.up"
         case .pomodoro: "timer"
         case .eyeRest: "eye"
+        case .sleep: "moon"
         case .shelf: "tray"
         case .blocking: "hand.raised"
         case .about: "info.circle"
@@ -137,6 +140,7 @@ struct SettingsRootView: View {
         case .services: TasksSettingsPane(store: tasks)
         case .pomodoro: PomodoroSettingsPane()
         case .eyeRest: EyeRestSettingsPane()
+        case .sleep: SleepSettingsPane()
         case .shelf: ShelfSettingsPane()
         case .blocking: BlockerSettingsPane()
         case .about: AboutPane()

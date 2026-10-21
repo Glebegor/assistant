@@ -3,6 +3,7 @@ import SwiftUI
 /// Pomodoro tab inside the notch panel.
 struct PomodoroView: View {
     let timer: PomodoroTimer
+    var showStats: () -> Void = {}
 
     var body: some View {
         HStack(spacing: 32) {
@@ -29,6 +30,12 @@ struct PomodoroView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .topTrailing) {
+            Button("Statistics", systemImage: "chart.bar.fill", action: showStats)
+                .buttonStyle(.notchPill())
+                .labelStyle(.iconOnly)
+                .help("This week: focus, tasks and meetings")
+        }
     }
 
     private var ring: some View {

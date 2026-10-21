@@ -100,7 +100,9 @@ final class PomodoroTimer {
 
     private func advance(completed: Bool) {
         let finished = phase
+        let finishedMinutes = Int((phaseDuration / 60).rounded())
         stop()
+        if completed, finished == .focus { ActivityLog.shared.focusFinished(minutes: finishedMinutes) }
 
         switch finished {
         case .focus:

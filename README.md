@@ -107,6 +107,7 @@ Sources/RightHand/
     Pomodoro/                 Timer logic, settings, view
     Shelf/                    Files, screenshots and clipboard history
     Tasks/                    Notion and ClickUp tasks in the notch
+    Calendar/                 Google Calendar day timeline in the notch
     Recorder/                 Screen recording with separate voice and computer-sound tracks
     Meetings/                 Whisper transcripts and AI reviews of recorded meetings
     Integrations/             Notion, ClickUp and Google (Gmail, Drive) for the AI
@@ -134,5 +135,9 @@ Sources/RightHand/
 - [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours
 - [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
 - [x] Updates: checks GitHub releases, tells you when a new version is out, installs it from the ✋ menu or Settings → About
-- [ ] Integrations: Calendar / Reminders / Notes (EventKit), more
-- [ ] Global hotkey, launch at login, Pomodoro statistics
+- [x] Calendar tab: the day as a timeline from Google Calendar (what Notion Calendar shows), next meeting with Join
+- [x] Weekly statistics in the Pomodoro tab: focus time and change against last week, sessions and streak, tasks done, meetings
+- [x] Sleep reminder: a note before bedtime, then a card in the notch with “15 more minutes” / “Good night” (later bedtime on weekends)
+- [ ] Integrations: Apple Reminders, Notes and the macOS Calendar (EventKit), more
+- [x] Global hotkey (⌥Space for Ellipse)
+- [ ] Launch at login

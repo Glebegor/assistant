@@ -167,6 +167,7 @@ final class TaskStore {
                 }
                 try await client.update(page: task.id, properties: update)
                 Self.log.info("Marked done in Notion")
+                ActivityLog.shared.taskDone(source: "notion")
                 try? await Task.sleep(for: .milliseconds(500))
                 tasks.removeAll { $0.id == task.id }
             } catch {
@@ -194,6 +195,7 @@ final class TaskStore {
                 }
                 _ = try await client.updateTask(task.id, fields: ["status": .string(done)])
                 Self.log.info("Marked done in ClickUp")
+                ActivityLog.shared.taskDone(source: "clickup")
                 try? await Task.sleep(for: .milliseconds(500))
                 tasks.removeAll { $0.id == task.id }
             } catch {
