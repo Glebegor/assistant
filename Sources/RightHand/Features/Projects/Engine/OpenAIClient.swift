@@ -6,13 +6,23 @@ import Foundation
 struct OpenAIClient: ModelClient {
     static let openAIEndpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
     static let gitHubModelsEndpoint = URL(string: "https://models.github.ai/inference/chat/completions")!
+    static let geminiEndpoint = URL(string: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions")!
     var endpoint = openAIEndpoint
+    /// Copilot through your subscription: the key is the GitHub sign-in, exchanged for a Copilot token.
+    var usesCopilotSubscription = false
 
     init(endpoint: URL = openAIEndpoint) { self.endpoint = endpoint }
 
     /// The client for a provider that speaks the Chat Completions API.
     init(provider: ChatProvider) {
-        self.init(endpoint: provider == .copilot ? Self.gitHubModelsEndpoint : Self.openAIEndpoint)
+        switch provider {
+        case .copilot where CopilotAuth.isSignedIn:
+            self.init()
+            usesCopilotSubscription = true
+        case .copilot: self.init(endpoint: Self.gitHubModelsEndpoint)
+        case .gemini: self.init(endpoint: Self.geminiEndpoint)
+        default: self.init(endpoint: Self.openAIEndpoint)
+        }
     }
     /// Roughly 80k tokens; above this the older part of the chat is summarized.
     static let summarizeAboveCharacters = 320_000
@@ -20,7 +30,7 @@ struct OpenAIClient: ModelClient {
     func turn(system: String, chat: ProjectChat, tools: [AssistantTool], apiKey: String,
               onEvent: @escaping @Sendable (TurnEvent) -> Void) async throws -> ModelTurn {
         var body: [String: JSONValue] = [
-            "model": .string(chat.model),
+            "model": .string(model(chat)),
             "stream": true,
             "messages": .array(Self.context(system: system, chat: chat)),
         ]
@@ -30,7 +40,7 @@ struct OpenAIClient: ModelClient {
         var calls: [Int: (id: String, name: String, arguments: String)] = [:]
         var finishReason: String?
 
-        for try await data in try await ServerSentEvents.lines(for: request(body: body, apiKey: apiKey)) {
+        for try await data in try await ServerSentEvents.lines(for: await request(body: body, apiKey: apiKey)) {
             guard let data else { continue }
             if data == "[DONE]" { break }
             guard let choice = JSONValue.parse(data)?["choices"]?.array?.first else { continue }
@@ -112,7 +122,7 @@ struct OpenAIClient: ModelClient {
         var older = chat
         older.messages = Array(chat.messages[..<keepFrom])
         let request: [String: JSONValue] = [
-            "model": .string(chat.model),
+            "model": .string(model(chat)),
             "messages": .array(Self.context(system: system, chat: older) + [[
                 "role": "user",
                 "content": """
@@ -121,7 +131,7 @@ struct OpenAIClient: ModelClient {
                 """,
             ]]),
         ]
-        let (data, response) = try await URLSession.shared.data(for: self.request(body: request, apiKey: apiKey))
+        let (data, response) = try await URLSession.shared.data(for: await self.request(body: request, apiKey: apiKey))
         guard (response as? HTTPURLResponse)?.statusCode == 200,
               let summary = JSONValue.parse(data)?["choices"]?.array?.first?["message"]?["content"]?.string
         else { return nil }
@@ -139,12 +149,24 @@ struct OpenAIClient: ModelClient {
         return messages + chat.messages[min(chat.contextStart, chat.messages.count)...]
     }
 
-    private func request(body: [String: JSONValue], apiKey: String) throws -> URLRequest {
-        var request = URLRequest(url: endpoint, timeoutInterval: 900)
+    private func model(_ chat: ProjectChat) -> String {
+        usesCopilotSubscription ? String(chat.model.split(separator: "/").last ?? "") : chat.model
+    }
+
+    private func request(body: [String: JSONValue], apiKey: String) async throws -> URLRequest {
+        var request: URLRequest
+        if usesCopilotSubscription {
+            if let model = body["model"]?.string { await CopilotAuth.enableModel(model, oauth: apiKey) }
+            request = try await CopilotAuth.request(path: "chat/completions", oauth: apiKey)
+            request.setValue("conversation-panel", forHTTPHeaderField: "Openai-Intent")
+            request.timeoutInterval = 900
+        } else {
+            request = URLRequest(url: endpoint, timeoutInterval: 900)
+            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        }
         request.httpMethod = "POST"
         request.httpBody = try JSONValue.object(body).encoded()
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         return request
     }
 }

@@ -3,9 +3,6 @@ import SwiftUI
 
 /// Settings → Assistant: API keys (stored in the Keychain) and models.
 struct AssistantSettingsPane: View {
-    @AppStorage(ChatSettings.Key.claudeModel) private var claudeModel = ChatSettings.Default.claudeModel
-    @AppStorage(ChatSettings.Key.openAIModel) private var openAIModel = ChatSettings.Default.openAIModel
-    @AppStorage(ChatSettings.Key.copilotModel) private var copilotModel = ChatSettings.Default.copilotModel
     @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
     @AppStorage(ComputerAccess.key) private var wholeMac = true
     @AppStorage(AboutMe.key) private var aboutMe = ""
@@ -20,62 +17,16 @@ struct AssistantSettingsPane: View {
             } header: {
                 Text("About me")
             } footer: {
-                SettingsFooter("Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.")
+                SettingsFooter("Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Every AI reads this at the start of every chat.")
             }
 
-            Section {
-                APIKeyRow(account: ChatProvider.claude.keychainAccount, keysURL: ChatProvider.claude.keysURL,
-                          color: .orange, systemImage: "sparkle")
-                LabeledContent {
-                    Picker("Model", selection: $claudeModel) {
-                        ForEach(ChatSettings.claudeModels, id: \.id) { Text($0.name).tag($0.id) }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                } label: {
-                    SettingsRowLabel("Model", subtitle: "Opus is the smartest, Haiku the fastest and cheapest.",
-                                     systemImage: "cpu", color: .brown)
-                }
-            } header: {
-                Text("Claude")
-            }
-
-            Section {
-                APIKeyRow(account: ChatProvider.openAI.keychainAccount, keysURL: ChatProvider.openAI.keysURL,
-                          color: .green, systemImage: "bubble.left.and.bubble.right.fill")
-                LabeledContent {
-                    TextField("Model", text: $openAIModel, prompt: Text(ChatSettings.Default.openAIModel))
-                        .textFieldStyle(.roundedBorder)
-                        .labelsHidden()
-                        .frame(width: 160)
-                } label: {
-                    SettingsRowLabel("Model", subtitle: "Any model name from your OpenAI account, e.g. gpt-5.",
-                                     systemImage: "cpu", color: .mint)
-                }
-            } header: {
-                Text("ChatGPT")
-            }
-
-            Section {
-                APIKeyRow(account: ChatProvider.copilot.keychainAccount, keysURL: ChatProvider.copilot.keysURL,
-                          color: .gray, systemImage: "chevron.left.forwardslash.chevron.right")
-                LabeledContent {
-                    Picker("Model", selection: $copilotModel) {
-                        ForEach(ChatSettings.copilotModels, id: \.id) { Text(verbatim: $0.name).tag($0.id) }
-                        if !ChatSettings.copilotModels.contains(where: { $0.id == copilotModel }) { Text(verbatim: copilotModel).tag(copilotModel) }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                } label: {
-                    SettingsRowLabel("Model", subtitle: "Models from GitHub Models; a Copilot subscription gives higher limits.",
-                                     systemImage: "cpu", color: .gray)
-                }
-            } header: {
-                Text("GitHub Copilot")
-            } footer: {
-                SettingsFooter("Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
-            }
-
+            ProviderSection(provider: .claude, color: .orange,
+                            subtitle: "Fable and Opus are the smartest, Haiku the fastest and cheapest.")
+            ProviderSection(provider: .openAI, color: .green, subtitle: "The models your OpenAI account can use.")
+            ProviderSection(provider: .gemini, color: .blue, subtitle: "Google's models.",
+                            footer: "Create a free key in Google AI Studio and paste it as the API key.")
+            ProviderSection(provider: .copilot, color: .gray, subtitle: "The models of your Copilot subscription, or of GitHub Models.",
+                            footer: "Sign in with your Copilot subscription for the same models as in VS Code (Claude, the newest GPT). This uses the API of the Copilot editor plugins, which GitHub doesn't offer to other apps: it may stop working, and GitHub could limit the account. Without signing in, Copilot uses GitHub Models: create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
 
             Section {
                 Toggle(isOn: $wholeMac) {
@@ -306,5 +257,119 @@ private struct VoiceSettingsSection: View {
         if let monitor { NSEvent.removeMonitor(monitor) }
         monitor = nil
         NotificationCenter.default.post(name: VoiceAssistant.pauseShortcutNotification, object: false)
+    }
+}
+
+/// One AI: its key and its model (the list comes from the provider, so new models appear by themselves).
+private struct ProviderSection: View {
+    let provider: ChatProvider
+    let color: Color
+    let subtitle: String
+    var footer: String?
+    @AppStorage private var model: String
+    private var catalog: ModelCatalog { .shared }
+
+    init(provider: ChatProvider, color: Color, subtitle: String, footer: String? = nil) {
+        self.provider = provider
+        self.color = color
+        self.subtitle = subtitle
+        self.footer = footer
+        _model = AppStorage(wrappedValue: ChatSettings.model(for: provider), ChatSettings.modelKey(for: provider))
+    }
+
+    var body: some View {
+        Section {
+            if provider == .copilot {
+                CopilotSubscriptionRow(color: color) { model = ChatSettings.model(for: .copilot) }
+                APIKeyRow(account: ChatProvider.gitHubModelsAccount, keysURL: provider.keysURL, color: color, systemImage: provider.systemImage)
+            } else {
+                APIKeyRow(account: provider.keychainAccount, keysURL: provider.keysURL, color: color, systemImage: provider.systemImage)
+            }
+            LabeledContent {
+                HStack(spacing: 6) {
+                    Picker("Model", selection: $model) {
+                        ForEach(catalog.list(for: provider)) { Text(verbatim: $0.name).tag($0.id) }
+                        if !catalog.list(for: provider).contains(where: { $0.id == model }) { Text(verbatim: model).tag(model) }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                    Button("Refresh", systemImage: "arrow.clockwise") { Task { await catalog.refresh(provider) } }
+                        .labelStyle(.iconOnly).buttonStyle(.borderless)
+                        .disabled(catalog.loading.contains(provider))
+                        .help("Load the models your key can use")
+                }
+            } label: {
+                SettingsRowLabel("Model", subtitle: subtitle, systemImage: "cpu", color: color)
+            }
+        } header: {
+            Text(verbatim: provider == .copilot ? "GitHub Copilot" : provider.title)
+        } footer: {
+            if let footer { SettingsFooter(footer) }
+        }
+        .task { await catalog.refresh(provider) }
+    }
+}
+
+/// Signing in to the Copilot subscription with a code entered on github.com.
+private struct CopilotSubscriptionRow: View {
+    let color: Color
+    /// Called after signing in or out (the model names change).
+    let onChange: () -> Void
+    @State private var isSignedIn = CopilotAuth.isSignedIn
+    @State private var code: CopilotAuth.DeviceCode?
+    @State private var error: String?
+    @State private var signIn: Task<Void, Never>?
+
+    var body: some View {
+        LabeledContent {
+            if isSignedIn {
+                Button("Sign Out") {
+                    CopilotAuth.signOut()
+                    changed()
+                }
+            } else if let code {
+                HStack(spacing: 8) {
+                    Text(verbatim: code.userCode)
+                        .font(.system(.body, design: .monospaced).weight(.semibold))
+                        .textSelection(.enabled)
+                    Button("Open GitHub") { NSWorkspace.shared.open(code.verificationURL) }
+                    Button("Cancel") { signIn?.cancel(); self.code = nil }
+                }
+            } else {
+                Button("Sign In") { start() }
+            }
+        } label: {
+            SettingsRowLabel("Copilot subscription",
+                             subtitle: error ?? (isSignedIn ? L("Signed in — Copilot uses your subscription's models.")
+                                 : code != nil ? L("Enter this code on GitHub (it's copied).") : L("Optional: the models you have in VS Code.")),
+                             systemImage: "person.crop.circle.badge.checkmark", color: color)
+        }
+    }
+
+    private func start() {
+        error = nil
+        signIn = Task {
+            do {
+                let code = try await CopilotAuth.startSignIn()
+                self.code = code
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(code.userCode, forType: .string)
+                NSWorkspace.shared.open(code.verificationURL)
+                try await CopilotAuth.finishSignIn(code)
+                self.code = nil
+                changed()
+            } catch is CancellationError {
+            } catch {
+                self.code = nil
+                self.error = error.localizedDescription
+            }
+        }
+    }
+
+    private func changed() {
+        isSignedIn = CopilotAuth.isSignedIn
+        UserDefaults.standard.set(ModelCatalog.builtIn(.copilot).first?.id, forKey: ChatSettings.Key.copilotModel)
+        ModelCatalog.shared.reset(.copilot)
+        onChange()
     }
 }

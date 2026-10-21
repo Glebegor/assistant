@@ -125,6 +125,7 @@
 "Copied" = "Скопировано";
 "Copied image" = "Скопированное изображение";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Копируются в проект. Текст этих файлов есть в каждом новом чате (PDF, Markdown, код, заметки…).";
+"Copilot subscription" = "Подписка Copilot";
 "Copy" = "Копировать";
 "Copy %@ to %@" = "Скопировать %@ в %@";
 "Copy answer" = "Копировать ответ";
@@ -138,6 +139,7 @@
 "Create Google Doc “%@”" = "Создать Google Doc «%@»";
 "Create Google Docs" = "Создание Google Docs";
 "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Создай fine-grained токен GitHub с разрешением «Models: read» и вставь его как ключ API.";
+"Create a free key in Google AI Studio and paste it as the API key." = "Создай бесплатный ключ в Google AI Studio и вставь его как ключ API.";
 "Create folder %@" = "Создать папку %@";
 "Create folders" = "Создание папок";
 "Cut" = "Вырезать";
@@ -172,11 +174,13 @@
 "Ellipse — voice assistant" = "Ellipse — голосовой помощник";
 "Email" = "Email";
 "Empty folder. Drop files or Shelf items here." = "Папка пуста. Перетащи сюда файлы или элементы Полки.";
+"Enter this code on GitHub (it's copied)." = "Введи этот код на GitHub (он уже скопирован).";
 "Error %lld." = "Ошибка %lld.";
 "Error %lld: %@" = "Ошибка %lld: %@";
 "Every" = "Каждые";
 "Eye Rest" = "Отдых глаз";
 "Eye Rest Reminders" = "Напоминания об отдыхе глаз";
+"Fable and Opus are the smartest, Haiku the fastest and cheapest." = "Fable и Opus самые умные, Haiku самый быстрый и дешёвый.";
 "Failed" = "Не удалось";
 "Files" = "Файлы";
 "Files folder" = "Папка для файлов";
@@ -197,6 +201,8 @@
 "Friday and Saturday nights" = "Ночи с пятницы и субботы";
 "General" = "Основные";
 "Get one at %@" = "Получить на %@";
+"GitHub didn't start the sign-in. Try again." = "GitHub не начал вход. Попробуй ещё раз.";
+"GitHub signed you out of Copilot. Sign in again in Settings → Assistant." = "GitHub вышел из Copilot. Войди снова в Настройки → Ассистент.";
 "Good night" = "Спокойной ночи";
 "Google (Gmail and Drive)" = "Google (Gmail и Drive)";
 "Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project." = "Google спросит один раз в браузере. В Google Cloud включи «Google Calendar API» для своего проекта.";
@@ -205,6 +211,7 @@
 "Google sign-in failed. Try again." = "Не удалось войти в Google. Попробуй ещё раз.";
 "Google sign-in timed out. Try again." = "Время на вход в Google вышло. Попробуй ещё раз.";
 "Google sign-in was cancelled (%@)." = "Вход в Google отменён (%@).";
+"Google's models." = "Модели Google.";
 "Hi! I'm RightHand, your right hand on the Mac." = "Привет! Я RightHand, твоя правая рука на Mac.";
 "Homework" = "Домашние задания";
 "How productive the meeting was" = "Насколько продуктивной была встреча";
@@ -242,6 +249,7 @@
 "Listening…" = "Слушаю…";
 "Load tasks again" = "Загрузить задачи заново";
 "Load tasks from Notion again" = "Загрузить задачи из Notion заново";
+"Load the models your key can use" = "Загрузить модели, доступные твоему ключу";
 "Loading speech model…" = "Загружаю модель распознавания…";
 "Long Break" = "Длинный перерыв";
 "Long break" = "Длинный перерыв";
@@ -315,6 +323,7 @@
 "Open" = "Открыть";
 "Open %@" = "Открыть %@";
 "Open Folder" = "Открыть папку";
+"Open GitHub" = "Открыть GitHub";
 "Open Google Cloud" = "Открыть Google Cloud";
 "Open Microsoft Entra" = "Открыть Microsoft Entra";
 "Open Privacy & Security → Automation" = "Открыть Конфиденциальность и безопасность → Автоматизация";
@@ -330,6 +339,7 @@
 "Open tasks assigned to you or to nobody" = "Открытые задачи, назначенные тебе или никому";
 "Open the Projects window for long work" = "Открыть окно Проекты для долгой работы";
 "Open the meeting review" = "Открыть обзор встречи";
+"Optional: the models you have in VS Code." = "Необязательно: модели, которые у тебя есть в VS Code.";
 "Opus is the smartest, Haiku the fastest and cheapest." = "Opus самый умный, Haiku самый быстрый и дешёвый.";
 "Others" = "Собеседники";
 "Outlook isn't connected. Sign in in Settings → Services." = "Outlook не подключён. Войди в Настройки → Сервисы.";
@@ -466,10 +476,13 @@
 "Show in Finder" = "Показать в Finder";
 "Show in the Tasks tab" = "Показывать во вкладке «Задачи»";
 "Show the files in Finder" = "Показать файлы в Finder";
+"Sign In" = "Войти";
 "Sign Out" = "Выйти";
 "Sign in with Google" = "Войти через Google";
 "Sign in with Microsoft" = "Войти через Microsoft";
+"Sign in with your Copilot subscription for the same models as in VS Code (Claude, the newest GPT). This uses the API of the Copilot editor plugins, which GitHub doesn't offer to other apps: it may stop working, and GitHub could limit the account. Without signing in, Copilot uses GitHub Models: create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Войди с подпиской Copilot, чтобы получить те же модели, что и в VS Code (Claude, новейшие GPT). Это API плагинов Copilot для редакторов, которое GitHub не открывает другим программам: оно может перестать работать, а GitHub может ограничить аккаунт. Без входа Copilot использует GitHub Models: создай fine-grained токен GitHub с правом «Models: read» и вставь его как ключ API.";
 "Signed in" = "Вход выполнен";
+"Signed in — Copilot uses your subscription's models." = "Вход выполнен — Copilot использует модели твоей подписки.";
 "Site" = "Сайт";
 "Sites blocked during focus." = "Сайты, блокируемые во время фокуса.";
 "Skip" = "Пропустить";
@@ -518,17 +531,23 @@
 "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good." = "AI может просматривать, искать, читать и записывать файлы в этих папках. Он спрашивает перед каждым действием, если ты не разрешил инструмент навсегда.";
 "The API key was rejected. Check it in Settings → Assistant." = "Ключ API отклонён. Проверь его в Настройках → Ассистент.";
 "The ElevenLabs API key was rejected." = "Ключ API ElevenLabs отклонён.";
+"The GitHub sign-in failed." = "Не удалось войти через GitHub.";
+"The code expired. Sign in again." = "Код устарел. Войди ещё раз.";
 "The download doesn't contain RightHand." = "В загрузке нет RightHand.";
 "The download failed." = "Загрузка не удалась.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "В первый раз macOS спросит, разрешить ли RightHand управлять каждым браузером. Нажми OK.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "Микрофон не даёт звука. Выбери другой в Настройки → Ellipse.";
+"The models of your Copilot subscription, or of GitHub Models." = "Модели твоей подписки Copilot или GitHub Models.";
+"The models your OpenAI account can use." = "Модели, доступные твоему аккаунту OpenAI.";
 "The project's instructions, files and memory are already part of this chat." = "Инструкции, файлы и память проекта уже есть в этом чате.";
 "The recording couldn't be saved." = "Запись не удалось сохранить.";
 "The review came back in an unexpected form. Try Analyze Again." = "Обзор пришёл в неожиданном виде. Попробуй «Проанализировать снова».";
+"The sign-in was cancelled on GitHub." = "Вход отменён на GitHub.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "Таймер начинается заново, если ты отошёл от Mac на 2 минуты или заблокировал экран. Во время перерыва нажми Esc, чтобы пропустить.";
 "The voice assistant: shortcut, wake word, microphone, languages and voice." = "Голосовой помощник: сочетание клавиш, слово вызова, микрофон, языки и голос.";
 "Thinking…" = "Думаю…";
 "This ClickUp list has no done status." = "В этом списке ClickUp нет статуса «готово».";
+"This GitHub account has no Copilot subscription (or Copilot is turned off for it)." = "У этого аккаунта GitHub нет подписки Copilot (или Copilot для него отключён).";
 "This Jira issue can't be moved to Done from here." = "Этот тикет Jira отсюда нельзя перевести в Done.";
 "This database has no status or checkbox to mark it done" = "В этой базе нет статуса или флажка, чтобы отметить выполнение";
 "This is me" = "Это я";
@@ -581,6 +600,7 @@
 "What you hear: the other people in a call, videos…, on its own track" = "То, что ты слышишь: собеседники в звонке, видео… — на отдельной дорожке";
 "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper слушает на твоём Mac: около 15–20 минут на двухчасовую встречу.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Кто ты, над чем работаешь, какие ответы любишь, ссылки (GitHub, LinkedIn, сайт…). Claude и ChatGPT читают это в начале каждого чата.";
+"Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Every AI reads this at the start of every chat." = "Кто ты, над чем работаешь, какие ответы любишь, ссылки (GitHub, LinkedIn, сайт…). Каждый AI читает это в начале каждого чата.";
 "Window" = "Окно";
 "Work with the whole Mac" = "Работать со всем Mac";
 "Workshop" = "Воркшоп";

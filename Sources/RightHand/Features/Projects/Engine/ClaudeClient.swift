@@ -2,23 +2,32 @@ import Foundation
 
 /// Claude with tools, streaming and automatic compaction of long chats (Messages API over HTTP).
 struct ClaudeClient: ModelClient {
+    /// Claude 5 models (Fable, Opus/Sonnet/Haiku 5.x).
+    static func isModern(_ model: String) -> Bool {
+        model.contains("fable") || model.range(of: "(opus|sonnet|haiku)-5", options: .regularExpression) != nil
+    }
+
     var endpoint = URL(string: "https://api.anthropic.com/v1/messages")!
 
     func turn(system: String, chat: ProjectChat, tools: [AssistantTool], apiKey: String,
               onEvent: @escaping @Sendable (TurnEvent) -> Void) async throws -> ModelTurn {
-        let usesFallbacks = !chat.model.contains("haiku")
+        // Effort, compaction and fallbacks exist on the Claude 5 family; older models get a plain request.
+        let isModern = Self.isModern(chat.model)
+        let usesFallbacks = isModern && !chat.model.contains("haiku")
         var body: [String: JSONValue] = [
             "model": .string(chat.model),
-            "max_tokens": 64000,
+            "max_tokens": isModern ? 64000 : 32000,
             "stream": true,
             "system": .string(system),
             "messages": .array(chat.messages),
-            "output_config": ["effort": "medium"],
             // Cache the conversation so each turn only pays for what's new.
             "cache_control": ["type": "ephemeral"],
-            // When the chat gets long (150k tokens), Claude summarizes the older part itself.
-            "context_management": ["edits": [["type": "compact_20260112"]]],
         ]
+        if isModern {
+            body["output_config"] = ["effort": "medium"]
+            // When the chat gets long (150k tokens), Claude summarizes the older part itself.
+            body["context_management"] = ["edits": [["type": "compact_20260112"]]]
+        }
         if !tools.isEmpty {
             body["tools"] = .array(tools.map { tool in
                 // Our own tools stream their input as it's generated (it's validated before running).
@@ -38,8 +47,8 @@ struct ClaudeClient: ModelClient {
         request.setValue("application/json", forHTTPHeaderField: "content-type")
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
-        request.setValue((["compact-2026-01-12"] + (usesFallbacks ? ["server-side-fallback-2026-07-01"] : [])).joined(separator: ","),
-                         forHTTPHeaderField: "anthropic-beta")
+        let betas = (isModern ? ["compact-2026-01-12"] : []) + (usesFallbacks ? ["server-side-fallback-2026-07-01"] : [])
+        if !betas.isEmpty { request.setValue(betas.joined(separator: ","), forHTTPHeaderField: "anthropic-beta") }
 
         var blocks: [Int: [String: JSONValue]] = [:]
         var partialInputs: [Int: String] = [:]
