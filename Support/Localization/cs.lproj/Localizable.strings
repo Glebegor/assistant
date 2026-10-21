@@ -14,6 +14,8 @@
 "%lld h" = "%lld h";
 "%lld h %lld min" = "%lld h %lld min";
 "%lld min" = "%lld min";
+"%lld min past your bedtime" = "Už %lld min po čase spánku";
+"%lld more min" = "Ještě %lld min";
 "%lld overdue" = "%lld po termínu";
 "%lld tasks · %lld meetings" = "úkolů: %lld · schůzek: %lld";
 "%lld%% vs last week" = "%lld%% oproti minulému týdnu";
@@ -21,6 +23,8 @@
 "+%lld%% vs last week" = "+%lld%% oproti minulému týdnu";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. Na notion.so/profile/integrations vytvoř interní integraci a zkopíruj její secret. 2. V Notionu otevři každou databázi úkolů → ••• → Connections a přidej integraci. 3. Vlož secret sem. Token zůstává v Klíčence tvého Macu. Karta Úkoly ukazuje otevřené úkoly přiřazené tobě nebo nikomu, nejdřív ty po termínu a s vysokou prioritou.";
 "A Pomodoro break already rests your eyes." = "Přestávka Pomodoro už očím odpočinek dává.";
+"A note before bedtime, then a card in the notch until you say good night." = "Upozornění před spaním, pak karta ve výřezu, dokud neřekneš dobrou noc.";
+"A reminder to go to bed on time." = "Připomenutí jít včas spát.";
 "API key" = "Klíč API";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "Klíče API jsou uložené v Klíčence tvého Macu a posílají se jen do Anthropic nebo OpenAI. Používání API si účtují oni.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "Klíče API jsou uložené v Klíčence tvého Macu a posílají se jen do Anthropic, OpenAI nebo ElevenLabs. Používání API si účtují oni.";
@@ -67,6 +71,8 @@
 "Back" = "Zpět";
 "Back to Shelf" = "Zpět na Poličku";
 "Back to the timer" = "Zpět na časovač";
+"Bedtime" = "Čas spánku";
+"Bedtime in %lld min" = "Do spánku %lld min";
 "Block distracting sites during focus" = "Blokovat rušivé weby během soustředění";
 "Blocked sites" = "Blokované weby";
 "Blocking" = "Blokování";
@@ -102,6 +108,8 @@
 "Clipboard history, files and screenshots." = "Historie schránky, soubory a snímky obrazovky.";
 "Close" = "Zavřít";
 "Close tab" = "Zavřít kartu";
+"Close the laptop and get some rest." = "Zavři notebook a odpočiň si.";
+"Close the laptop and get some rest. Good night!" = "Zavři notebook a odpočiň si. Dobrou noc!";
 "Computer sound" = "Zvuk z počítače";
 "Connect" = "Připojit";
 "Connect Google to see your calendar" = "Připoj Google a uvidíš svůj kalendář";
@@ -180,8 +188,10 @@
 "For Ellipse and the “My voice” track of recordings" = "Pro Ellipse a stopu „Můj hlas“ v nahrávkách";
 "For This Chat" = "Pro tento chat";
 "For This Project" = "Pro projekt";
+"Friday and Saturday nights" = "Pátek a sobota v noci";
 "General" = "Obecné";
 "Get one at %@" = "Získáš na %@";
+"Good night" = "Dobrou noc";
 "Google (Gmail and Drive)" = "Google (Gmail a Drive)";
 "Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project." = "Google se jednou zeptá v prohlížeči. V Google Cloud zapni pro svůj projekt „Google Calendar API“.";
 "Google isn't connected. Sign in in Settings → Services." = "Google není připojený. Přihlas se v Nastavení → Služby.";
@@ -211,6 +221,7 @@
 "Language" = "Jazyk";
 "Language of RightHand." = "Jazyk RightHand.";
 "Later" = "Později";
+"Later on weekends" = "O víkendu později";
 "List %@" = "Zobrazit obsah %@";
 "List ClickUp tasks" = "Vypsat úkoly v ClickUp";
 "List files" = "Výpis souborů";
@@ -359,6 +370,7 @@
 "Refresh" = "Obnovit";
 "Releases" = "Vydání";
 "Reload Databases" = "Znovu načíst databáze";
+"Remind before" = "Připomenout předem";
 "Remind me to rest my eyes" = "Připomínat odpočinek očí";
 "Remove" = "Odebrat";
 "Remove all copied items" = "Odebrat všechny zkopírované položky";
@@ -429,6 +441,8 @@
 "Skip Phase" = "Přeskočit fázi";
 "Skip This Version" = "Přeskočit tuto verzi";
 "Skip to next phase" = "Přejít na další fázi";
+"Sleep" = "Spánek";
+"Sleep reminder" = "Připomínka spánku";
 "Sounds" = "Zvuky";
 "Speak your message (%@)" = "Namluvit zprávu (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Řeč vytváří tvůj Mac, offline a zdarma. Hezčí hlasy (★) si stáhneš v Nastavení systému → Zpřístupnění → Mluvený obsah → Systémový hlas → Spravovat hlasy.";
@@ -485,6 +499,9 @@
 "This week: focus, tasks and meetings" = "Tento týden: soustředění, úkoly a schůzky";
 "Time for a long break." = "Čas na dlouhou přestávku.";
 "Time for a short break." = "Čas na krátkou přestávku.";
+"Time to sleep" = "Čas jít spát";
+"Time to wind down." = "Čas zpomalit.";
+"Time to wind down: finish what you're doing." = "Čas zpomalit: dokonči, co děláš.";
 "Timer" = "Časovač";
 "Title" = "Název";
 "Today" = "Dnes";
@@ -518,6 +535,7 @@
 "Waiting…" = "Čekám…";
 "Wake word “Hey Ellipse”" = "Probouzecí slovo „Hey Ellipse“";
 "Week" = "Týden";
+"Weekend bedtime" = "Čas spánku o víkendu";
 "What didn't" = "Co ne";
 "What went well" = "Co se povedlo";
 "What you hear: the other people in a call, videos…, on its own track" = "Co slyšíš: ostatní v hovoru, videa… — na samostatné stopě";
@@ -551,3 +569,4 @@
 "the project folder" = "složku projektu";
 "this week" = "tento týden";
 "title “%@”" = "název „%@“";
+"“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown." = "„Ještě 15 min“ kartu vrátí později; „Dobrou noc“ ukončí připomínky do zítřejšího večera. Při nahrávání obrazovky přijde jen oznámení.";

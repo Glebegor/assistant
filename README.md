@@ -137,6 +137,7 @@ Sources/RightHand/
 - [x] Updates: checks GitHub releases, tells you when a new version is out, installs it from the ✋ menu or Settings → About
 - [x] Calendar tab: the day as a timeline from Google Calendar (what Notion Calendar shows), next meeting with Join
 - [x] Weekly statistics in the Pomodoro tab: focus time and change against last week, sessions and streak, tasks done, meetings
+- [x] Sleep reminder: a note before bedtime, then a card in the notch with “15 more minutes” / “Good night” (later bedtime on weekends)
 - [ ] Integrations: Apple Reminders, Notes and the macOS Calendar (EventKit), more
 - [x] Global hotkey (⌥Space for Ellipse)
 - [ ] Launch at login

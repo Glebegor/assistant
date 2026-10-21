@@ -14,6 +14,8 @@
 "%lld h" = "%lld ч";
 "%lld h %lld min" = "%lld ч %lld мин";
 "%lld min" = "%lld мин";
+"%lld min past your bedtime" = "Уже %lld мин после времени сна";
+"%lld more min" = "Ещё %lld мин";
 "%lld overdue" = "%lld просрочено";
 "%lld tasks · %lld meetings" = "задач: %lld · встреч: %lld";
 "%lld%% vs last week" = "%lld%% к прошлой неделе";
@@ -21,6 +23,8 @@
 "+%lld%% vs last week" = "+%lld%% к прошлой неделе";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. На notion.so/profile/integrations создай внутреннюю интеграцию (internal) и скопируй её секрет. 2. В Notion открой каждую базу задач → ••• → Connections и добавь интеграцию. 3. Вставь секрет сюда. Токен хранится в Keychain твоего Mac. Вкладка «Задачи» показывает открытые задачи, назначенные тебе или никому, сначала просроченные и с высоким приоритетом.";
 "A Pomodoro break already rests your eyes." = "Перерыв Pomodoro и так даёт глазам отдохнуть.";
+"A note before bedtime, then a card in the notch until you say good night." = "Напоминание перед сном, потом карточка в вырезе, пока не скажешь «спокойной ночи».";
+"A reminder to go to bed on time." = "Напоминание ложиться спать вовремя.";
 "API key" = "Ключ API";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "Ключи API хранятся в Keychain твоего Mac и отправляются только в Anthropic или OpenAI. За использование API платишь им.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "Ключи API хранятся в Keychain твоего Mac и отправляются только в Anthropic, OpenAI или ElevenLabs. За использование API платишь им.";
@@ -67,6 +71,8 @@
 "Back" = "Назад";
 "Back to Shelf" = "Назад к Полке";
 "Back to the timer" = "Назад к таймеру";
+"Bedtime" = "Время сна";
+"Bedtime in %lld min" = "До сна %lld мин";
 "Block distracting sites during focus" = "Блокировать отвлекающие сайты во время фокуса";
 "Blocked sites" = "Заблокированные сайты";
 "Blocking" = "Блокировка";
@@ -102,6 +108,8 @@
 "Clipboard history, files and screenshots." = "История буфера, файлы и скриншоты.";
 "Close" = "Закрыть";
 "Close tab" = "Закрыть вкладку";
+"Close the laptop and get some rest." = "Закрывай ноутбук и отдыхай.";
+"Close the laptop and get some rest. Good night!" = "Закрывай ноутбук и отдыхай. Спокойной ночи!";
 "Computer sound" = "Звук с компьютера";
 "Connect" = "Подключить";
 "Connect Google to see your calendar" = "Подключи Google, чтобы видеть календарь";
@@ -180,8 +188,10 @@
 "For Ellipse and the “My voice” track of recordings" = "Для Ellipse и дорожки «Мой голос» в записях";
 "For This Chat" = "Для чата";
 "For This Project" = "Для проекта";
+"Friday and Saturday nights" = "Ночи с пятницы и субботы";
 "General" = "Основные";
 "Get one at %@" = "Получить на %@";
+"Good night" = "Спокойной ночи";
 "Google (Gmail and Drive)" = "Google (Gmail и Drive)";
 "Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project." = "Google спросит один раз в браузере. В Google Cloud включи «Google Calendar API» для своего проекта.";
 "Google isn't connected. Sign in in Settings → Services." = "Google не подключён. Войди в Настройки → Сервисы.";
@@ -211,6 +221,7 @@
 "Language" = "Язык";
 "Language of RightHand." = "Язык RightHand.";
 "Later" = "Позже";
+"Later on weekends" = "Позже на выходных";
 "List %@" = "Показать содержимое %@";
 "List ClickUp tasks" = "Показать задачи ClickUp";
 "List files" = "Просмотр файлов";
@@ -359,6 +370,7 @@
 "Refresh" = "Обновить";
 "Releases" = "Релизы";
 "Reload Databases" = "Обновить базы";
+"Remind before" = "Напомнить заранее";
 "Remind me to rest my eyes" = "Напоминать об отдыхе глаз";
 "Remove" = "Убрать";
 "Remove all copied items" = "Убрать всё скопированное";
@@ -429,6 +441,8 @@
 "Skip Phase" = "Пропустить фазу";
 "Skip This Version" = "Пропустить эту версию";
 "Skip to next phase" = "Перейти к следующей фазе";
+"Sleep" = "Сон";
+"Sleep reminder" = "Напоминание о сне";
 "Sounds" = "Звуки";
 "Speak your message (%@)" = "Сказать сообщение голосом (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Речь создаёт твой Mac, офлайн и бесплатно. Голоса лучше (★) можно скачать в Системные настройки → Универсальный доступ → Устный контент → Системный голос → Управлять голосами.";
@@ -485,6 +499,9 @@
 "This week: focus, tasks and meetings" = "Эта неделя: фокус, задачи и встречи";
 "Time for a long break." = "Время для длинного перерыва.";
 "Time for a short break." = "Время для короткого перерыва.";
+"Time to sleep" = "Пора спать";
+"Time to wind down." = "Пора закругляться.";
+"Time to wind down: finish what you're doing." = "Пора закругляться: заканчивай, что делаешь.";
 "Timer" = "Таймер";
 "Title" = "Название";
 "Today" = "Сегодня";
@@ -518,6 +535,7 @@
 "Waiting…" = "Жду…";
 "Wake word “Hey Ellipse”" = "Слово вызова «Эй, Эллипс»";
 "Week" = "Неделя";
+"Weekend bedtime" = "Время сна на выходных";
 "What didn't" = "Что нет";
 "What went well" = "Что получилось";
 "What you hear: the other people in a call, videos…, on its own track" = "То, что ты слышишь: собеседники в звонке, видео… — на отдельной дорожке";
@@ -551,3 +569,4 @@
 "the project folder" = "папку проекта";
 "this week" = "на этой неделе";
 "title “%@”" = "название «%@»";
+"“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown." = "«Ещё 15 мин» вернёт карточку позже; «Спокойной ночи» выключает напоминания до завтрашнего вечера. Во время записи экрана приходит только уведомление.";

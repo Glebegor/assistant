@@ -10,6 +10,7 @@ struct NotchRootView: View {
     let chat: ChatStore
     let voice: VoiceAssistant
     let recorder: ScreenRecorder
+    let sleep: SleepReminder
     let analyzer: MeetingAnalyzer
     let openReview: (URL) -> Void
     let openSettings: () -> Void
@@ -30,6 +31,12 @@ struct NotchRootView: View {
             && (chat.approvalDisplayID == nil || chat.approvalDisplayID == model.displayID)
     }
 
+    /// The bedtime card, on the screen that had the mouse when it came.
+    private var showsSleep: Bool {
+        sleep.isVisible && !model.isExpanded && !showsApproval && !showsVoice
+            && (sleep.displayID == nil || sleep.displayID == model.displayID)
+    }
+
     private var approvalSize: CGSize {
         let collapsed = model.geometry.collapsedSize
         let hasDetail = chat.waitingForApproval?.pendingApproval?.detail != nil
@@ -38,13 +45,14 @@ struct NotchRootView: View {
 
     var body: some View {
         let collapsed = model.geometry.collapsedSize
-        let showsRecording = recorder.state != .idle && !model.isExpanded && !showsApproval && !showsVoice
+        let showsRecording = recorder.state != .idle && !model.isExpanded && !showsApproval && !showsVoice && !showsSleep
         let size = model.isExpanded ? model.panelSize
             : showsApproval ? approvalSize
+            : showsSleep ? SleepCard.size(for: sleep.phase, collapsed: collapsed)
             : showsVoice ? VoiceHUD.size(for: voice.phase, collapsed: collapsed)
             // While recording, the closed notch grows a little to the right for the red dot and time.
             : showsRecording ? CGSize(width: collapsed.width + 150, height: collapsed.height) : collapsed
-        let radius: CGFloat = model.isExpanded ? 26 : (showsVoice || showsApproval ? 22 : 10)
+        let radius: CGFloat = model.isExpanded ? 26 : (showsVoice || showsApproval || showsSleep ? 22 : 10)
         let shape = UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius, style: .continuous)
         let voiceGlows = voice.isVisible && (voice.displayID == nil || voice.displayID == model.displayID)
             && (voice.phase == .listening || voice.phase == .transcribing || voice.phase == .working
@@ -57,7 +65,7 @@ struct NotchRootView: View {
             ZStack(alignment: .top) {
                 shape
                     .fill(.black)
-                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice || showsApproval || showsRecording ? 1 : 0)
+                    .opacity(model.isExpanded || !model.hidesWhenCollapsed || showsVoice || showsApproval || showsRecording || showsSleep ? 1 : 0)
                 if model.isExpanded {
                     content
                         .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
@@ -71,6 +79,9 @@ struct NotchRootView: View {
                     }
                     .foregroundStyle(.white)
                     .transition(.opacity)
+                } else if showsSleep {
+                    SleepCard(reminder: sleep, topInset: collapsed.height)
+                        .transition(.opacity)
                 } else if showsRecording {
                     RecordingIndicator(recorder: recorder)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
@@ -102,6 +113,7 @@ struct NotchRootView: View {
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: voice.phase)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: showsApproval)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: sleep.phase)
         .animation(.easeInOut(duration: 0.3), value: glows)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.isExpanded)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: model.selectedTab)

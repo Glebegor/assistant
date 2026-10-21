@@ -28,6 +28,7 @@ final class NotchController {
     private let calendar: CalendarStore
     private let voice: VoiceAssistant
     private let recorder: ScreenRecorder
+    private let sleep: SleepReminder
     private let analyzer: MeetingAnalyzer
     private let openReview: (URL) -> Void
     private let openSettings: () -> Void
@@ -42,7 +43,7 @@ final class NotchController {
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, calendar: CalendarStore, chat: ChatStore, voice: VoiceAssistant, recorder: ScreenRecorder,
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, calendar: CalendarStore, chat: ChatStore, voice: VoiceAssistant, recorder: ScreenRecorder, sleep: SleepReminder,
          analyzer: MeetingAnalyzer, openReview: @escaping (URL) -> Void,
          openSettings: @escaping () -> Void, openProjects: @escaping () -> Void) {
         self.pomodoro = pomodoro
@@ -52,6 +53,7 @@ final class NotchController {
         self.calendar = calendar
         self.voice = voice
         self.recorder = recorder
+        self.sleep = sleep
         self.analyzer = analyzer
         self.openReview = openReview
         self.openSettings = openSettings
@@ -62,6 +64,7 @@ final class NotchController {
         observeChanges { [weak self] in
             guard let self else { return }
             _ = self.chat.waitingForApproval?.pendingApproval
+            _ = self.sleep.phase
             self.updateApprovalClicks()
         }
 
@@ -140,7 +143,8 @@ final class NotchController {
     private func updateApprovalClicks() {
         let waiting = chat.waitingForApproval != nil
         for notch in notches where notch.panel !== expanded?.panel {
-            let asks = waiting && (chat.approvalDisplayID == nil || chat.approvalDisplayID == notch.model.displayID)
+            let sleepCard = sleep.isVisible && (sleep.displayID == nil || sleep.displayID == notch.model.displayID)
+            let asks = sleepCard || (waiting && (chat.approvalDisplayID == nil || chat.approvalDisplayID == notch.model.displayID))
             notch.panel.ignoresMouseEvents = !asks
             if asks { notch.panel.orderFrontRegardless() }
         }
@@ -171,7 +175,7 @@ final class NotchController {
         model.displayID = screen.displayID
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, calendar: calendar, chat: chat, voice: voice, recorder: recorder,
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, calendar: calendar, chat: chat, voice: voice, recorder: recorder, sleep: sleep,
                                    analyzer: analyzer, openReview: openReview,
                                    openSettings: openSettings, openProjects: openProjects)
         )

@@ -14,6 +14,8 @@
 "%lld h" = "%lld h";
 "%lld h %lld min" = "%lld h %lld min";
 "%lld min" = "%lld min";
+"%lld min past your bedtime" = "%lld min past your bedtime";
+"%lld more min" = "%lld more min";
 "%lld overdue" = "%lld overdue";
 "%lld tasks · %lld meetings" = "%lld tasks · %lld meetings";
 "%lld%% vs last week" = "%lld%% vs last week";
@@ -21,6 +23,8 @@
 "+%lld%% vs last week" = "+%lld%% vs last week";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first.";
 "A Pomodoro break already rests your eyes." = "A Pomodoro break already rests your eyes.";
+"A note before bedtime, then a card in the notch until you say good night." = "A note before bedtime, then a card in the notch until you say good night.";
+"A reminder to go to bed on time." = "A reminder to go to bed on time.";
 "API key" = "API key";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them.";
@@ -67,6 +71,8 @@
 "Back" = "Back";
 "Back to Shelf" = "Back to Shelf";
 "Back to the timer" = "Back to the timer";
+"Bedtime" = "Bedtime";
+"Bedtime in %lld min" = "Bedtime in %lld min";
 "Block distracting sites during focus" = "Block distracting sites during focus";
 "Blocked sites" = "Blocked sites";
 "Blocking" = "Blocking";
@@ -102,6 +108,8 @@
 "Clipboard history, files and screenshots." = "Clipboard history, files and screenshots.";
 "Close" = "Close";
 "Close tab" = "Close tab";
+"Close the laptop and get some rest." = "Close the laptop and get some rest.";
+"Close the laptop and get some rest. Good night!" = "Close the laptop and get some rest. Good night!";
 "Computer sound" = "Computer sound";
 "Connect" = "Connect";
 "Connect Google to see your calendar" = "Connect Google to see your calendar";
@@ -180,8 +188,10 @@
 "For Ellipse and the “My voice” track of recordings" = "For Ellipse and the “My voice” track of recordings";
 "For This Chat" = "For This Chat";
 "For This Project" = "For This Project";
+"Friday and Saturday nights" = "Friday and Saturday nights";
 "General" = "General";
 "Get one at %@" = "Get one at %@";
+"Good night" = "Good night";
 "Google (Gmail and Drive)" = "Google (Gmail and Drive)";
 "Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project." = "Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project.";
 "Google isn't connected. Sign in in Settings → Services." = "Google isn't connected. Sign in in Settings → Services.";
@@ -211,6 +221,7 @@
 "Language" = "Language";
 "Language of RightHand." = "Language of RightHand.";
 "Later" = "Later";
+"Later on weekends" = "Later on weekends";
 "List %@" = "List %@";
 "List ClickUp tasks" = "List ClickUp tasks";
 "List files" = "List files";
@@ -359,6 +370,7 @@
 "Refresh" = "Refresh";
 "Releases" = "Releases";
 "Reload Databases" = "Reload Databases";
+"Remind before" = "Remind before";
 "Remind me to rest my eyes" = "Remind me to rest my eyes";
 "Remove" = "Remove";
 "Remove all copied items" = "Remove all copied items";
@@ -429,6 +441,8 @@
 "Skip Phase" = "Skip Phase";
 "Skip This Version" = "Skip This Version";
 "Skip to next phase" = "Skip to next phase";
+"Sleep" = "Sleep";
+"Sleep reminder" = "Sleep reminder";
 "Sounds" = "Sounds";
 "Speak your message (%@)" = "Speak your message (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.";
@@ -485,6 +499,9 @@
 "This week: focus, tasks and meetings" = "This week: focus, tasks and meetings";
 "Time for a long break." = "Time for a long break.";
 "Time for a short break." = "Time for a short break.";
+"Time to sleep" = "Time to sleep";
+"Time to wind down." = "Time to wind down.";
+"Time to wind down: finish what you're doing." = "Time to wind down: finish what you're doing.";
 "Timer" = "Timer";
 "Title" = "Title";
 "Today" = "Today";
@@ -518,6 +535,7 @@
 "Waiting…" = "Waiting…";
 "Wake word “Hey Ellipse”" = "Wake word “Hey Ellipse”";
 "Week" = "Week";
+"Weekend bedtime" = "Weekend bedtime";
 "What didn't" = "What didn't";
 "What went well" = "What went well";
 "What you hear: the other people in a call, videos…, on its own track" = "What you hear: the other people in a call, videos…, on its own track";
@@ -551,3 +569,4 @@
 "the project folder" = "the project folder";
 "this week" = "this week";
 "title “%@”" = "title “%@”";
+"“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown." = "“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown.";

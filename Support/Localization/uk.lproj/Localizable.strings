@@ -14,6 +14,8 @@
 "%lld h" = "%lld год";
 "%lld h %lld min" = "%lld год %lld хв";
 "%lld min" = "%lld хв";
+"%lld min past your bedtime" = "Уже %lld хв після часу сну";
+"%lld more min" = "Ще %lld хв";
 "%lld overdue" = "%lld прострочено";
 "%lld tasks · %lld meetings" = "задач: %lld · зустрічей: %lld";
 "%lld%% vs last week" = "%lld%% до минулого тижня";
@@ -21,6 +23,8 @@
 "+%lld%% vs last week" = "+%lld%% до минулого тижня";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. На notion.so/profile/integrations створи внутрішню інтеграцію (internal) і скопіюй її секрет. 2. У Notion відкрий кожну базу задач → ••• → Connections і додай інтеграцію. 3. Встав секрет сюди. Токен зберігається в Keychain твого Mac. Вкладка «Задачі» показує відкриті задачі, призначені тобі або нікому, спершу прострочені й з високим пріоритетом.";
 "A Pomodoro break already rests your eyes." = "Перерва Pomodoro і так дає очам відпочити.";
+"A note before bedtime, then a card in the notch until you say good night." = "Нагадування перед сном, потім картка в нотчі, доки не скажеш «добраніч».";
+"A reminder to go to bed on time." = "Нагадування лягати спати вчасно.";
 "API key" = "Ключ API";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "Ключі API зберігаються у Keychain твого Mac і надсилаються лише в Anthropic або OpenAI. За використання API платиш їм.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "Ключі API зберігаються у Keychain твого Mac і надсилаються лише в Anthropic, OpenAI або ElevenLabs. За використання API платиш їм.";
@@ -67,6 +71,8 @@
 "Back" = "Назад";
 "Back to Shelf" = "Назад до Полиці";
 "Back to the timer" = "Назад до таймера";
+"Bedtime" = "Час сну";
+"Bedtime in %lld min" = "До сну %lld хв";
 "Block distracting sites during focus" = "Блокувати відволікаючі сайти під час фокусу";
 "Blocked sites" = "Заблоковані сайти";
 "Blocking" = "Блокування";
@@ -102,6 +108,8 @@
 "Clipboard history, files and screenshots." = "Історія буфера, файли й скріншоти.";
 "Close" = "Закрити";
 "Close tab" = "Закрити вкладку";
+"Close the laptop and get some rest." = "Закривай ноутбук і відпочивай.";
+"Close the laptop and get some rest. Good night!" = "Закривай ноутбук і відпочивай. Добраніч!";
 "Computer sound" = "Звук з комп'ютера";
 "Connect" = "Підключити";
 "Connect Google to see your calendar" = "Підключи Google, щоб бачити календар";
@@ -180,8 +188,10 @@
 "For Ellipse and the “My voice” track of recordings" = "Для Ellipse і доріжки «Мій голос» у записах";
 "For This Chat" = "Для чату";
 "For This Project" = "Для проєкту";
+"Friday and Saturday nights" = "Ночі з п'ятниці й суботи";
 "General" = "Загальні";
 "Get one at %@" = "Отримати на %@";
+"Good night" = "Добраніч";
 "Google (Gmail and Drive)" = "Google (Gmail і Drive)";
 "Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project." = "Google запитає один раз у браузері. У Google Cloud увімкни «Google Calendar API» для свого проєкту.";
 "Google isn't connected. Sign in in Settings → Services." = "Google не підключено. Увійди в Налаштування → Сервіси.";
@@ -211,6 +221,7 @@
 "Language" = "Мова";
 "Language of RightHand." = "Мова RightHand.";
 "Later" = "Пізніше";
+"Later on weekends" = "Пізніше на вихідних";
 "List %@" = "Переглянути вміст %@";
 "List ClickUp tasks" = "Показати задачі ClickUp";
 "List files" = "Перегляд файлів";
@@ -359,6 +370,7 @@
 "Refresh" = "Оновити";
 "Releases" = "Випуски";
 "Reload Databases" = "Оновити бази";
+"Remind before" = "Нагадати заздалегідь";
 "Remind me to rest my eyes" = "Нагадувати про відпочинок очей";
 "Remove" = "Прибрати";
 "Remove all copied items" = "Прибрати все скопійоване";
@@ -429,6 +441,8 @@
 "Skip Phase" = "Пропустити фазу";
 "Skip This Version" = "Пропустити цю версію";
 "Skip to next phase" = "Перейти до наступної фази";
+"Sleep" = "Сон";
+"Sleep reminder" = "Нагадування про сон";
 "Sounds" = "Звуки";
 "Speak your message (%@)" = "Сказати повідомлення голосом (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Мовлення створює твій Mac, офлайн і безкоштовно. Кращі голоси (★) можна завантажити в Системні параметри → Доступність → Озвучений вміст → Системний голос → Керувати голосами.";
@@ -485,6 +499,9 @@
 "This week: focus, tasks and meetings" = "Цей тиждень: фокус, задачі й зустрічі";
 "Time for a long break." = "Час для довгої перерви.";
 "Time for a short break." = "Час для короткої перерви.";
+"Time to sleep" = "Час спати";
+"Time to wind down." = "Час закруглятися.";
+"Time to wind down: finish what you're doing." = "Час закруглятися: завершуй, що робиш.";
 "Timer" = "Таймер";
 "Title" = "Назва";
 "Today" = "Сьогодні";
@@ -518,6 +535,7 @@
 "Waiting…" = "Чекаю…";
 "Wake word “Hey Ellipse”" = "Слово для виклику «Гей, Ellipse»";
 "Week" = "Тиждень";
+"Weekend bedtime" = "Час сну на вихідних";
 "What didn't" = "Що ні";
 "What went well" = "Що вдалося";
 "What you hear: the other people in a call, videos…, on its own track" = "Те, що ти чуєш: співрозмовники у дзвінку, відео… — на окремій доріжці";
@@ -551,3 +569,4 @@
 "the project folder" = "папку проєкту";
 "this week" = "цього тижня";
 "title “%@”" = "назва «%@»";
+"“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown." = "«Ще 15 хв» поверне картку пізніше; «Добраніч» вимикає нагадування до завтрашнього вечора. Під час запису екрана приходить лише сповіщення.";
