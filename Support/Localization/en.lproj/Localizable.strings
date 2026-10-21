@@ -5,6 +5,7 @@
 "%@ is listening…" = "%@ is listening…";
 "%@ is used by macOS (for example Spotlight). Choose another." = "%@ is used by macOS (for example Spotlight). Choose another.";
 "%@ is writing the review from the transcript." = "%@ is writing the review from the transcript.";
+"%@ sent an empty answer. Try Analyze Again or choose another model." = "%@ sent an empty answer. Try Analyze Again or choose another model.";
 "%@ to send · Esc to cancel" = "%@ to send · Esc to cancel";
 "%@ wants to: %@" = "%@ wants to: %@";
 "%@ · stops at %lld:00:00" = "%@ · stops at %lld:00:00";
@@ -23,6 +24,7 @@
 "+%lld%% vs last week" = "+%lld%% vs last week";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first.";
 "A Pomodoro break already rests your eyes." = "A Pomodoro break already rests your eyes.";
+"A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits." = "A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits.";
 "A note before bedtime, then a card in the notch until you say good night." = "A note before bedtime, then a card in the notch until you say good night.";
 "A reminder to go to bed on time." = "A reminder to go to bed on time.";
 "API key" = "API key";
@@ -58,6 +60,7 @@
 "Analyze" = "Analyze";
 "Analyze Again" = "Analyze Again";
 "Analyze again (choose the kind of meeting)" = "Analyze again (choose the kind of meeting)";
+"Analyze meetings with" = "Analyze meetings with";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Any model name from your OpenAI account, e.g. gpt-5.";
 "Anyone (show all tasks)" = "Anyone (show all tasks)";
 "Application (client) ID" = "Application (client) ID";
@@ -260,6 +263,7 @@
 "Mark as done" = "Mark as done";
 "Me" = "Me";
 "Meeting" = "Meeting";
+"Meeting analysis" = "Meeting analysis";
 "Meeting review is ready" = "Meeting review is ready";
 "Meetings" = "Meetings";
 "Memory" = "Memory";
@@ -429,6 +433,7 @@
 "Resume Eye Rest (paused until %@)" = "Resume Eye Rest (paused until %@)";
 "Return sends, Shift-Return adds a new line." = "Return sends, Shift-Return adds a new line.";
 "Review" = "Review";
+"Reviews of your recordings: summary, timeline, tasks and assessment." = "Reviews of your recordings: summary, timeline, tasks and assessment.";
 "RightHand %@ is available" = "RightHand %@ is available";
 "RightHand is connected to Google. You can close this tab." = "RightHand is connected to Google. You can close this tab.";
 "RightHand is connected. You can close this tab." = "RightHand is connected. You can close this tab.";
@@ -437,6 +442,7 @@
 "Run Terminal commands" = "Run Terminal commands";
 "Run a command in %@" = "Run a command in %@";
 "Same as RightHand" = "Same as RightHand";
+"Same as the chat" = "Same as the chat";
 "Save" = "Save";
 "Saved" = "Saved";
 "Saving…" = "Saving…";
@@ -542,6 +548,7 @@
 "The project's instructions, files and memory are already part of this chat." = "The project's instructions, files and memory are already part of this chat.";
 "The recording couldn't be saved." = "The recording couldn't be saved.";
 "The review came back in an unexpected form. Try Analyze Again." = "The review came back in an unexpected form. Try Analyze Again.";
+"The review was cut off (the model's answer limit). Try Analyze Again or choose another model." = "The review was cut off (the model's answer limit). Try Analyze Again or choose another model.";
 "The sign-in was cancelled on GitHub." = "The sign-in was cancelled on GitHub.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip.";
 "The voice assistant: shortcut, wake word, microphone, languages and voice." = "The voice assistant: shortcut, wake word, microphone, languages and voice.";

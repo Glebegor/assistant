@@ -439,7 +439,7 @@ struct AnalysisStatusView: View {
         case .downloadingModel: L("Only the first time: the speech model (630 MB) is downloaded to your Mac.")
         case .loadingModel: L("Preparing the speech model. The first time this takes a few minutes.")
         case .transcribing: L("Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting.")
-        case .reviewing: L("%@ is writing the review from the transcript.", ChatSettings.provider.title)
+        case .reviewing: L("%@ is writing the review from the transcript.", MeetingAISettings.provider.title)
         default: ""
         }
     }

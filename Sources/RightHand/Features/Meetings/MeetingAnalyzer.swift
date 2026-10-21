@@ -169,6 +169,14 @@ struct MeetingReview: Codable {
         var task: String
         var due: String?
         var time: String?
+
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            owner = c.text(.owner) ?? "—"
+            task = c.text(.task) ?? ""
+            due = c.text(.due)
+            time = c.text(.time)
+        }
     }
     struct Assessment: Codable {
         var score: Int
@@ -176,12 +184,30 @@ struct MeetingReview: Codable {
         var wentWrong: [String]
         var goalReached: String
         var tips: [String]
+
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            score = max(1, min(10, c.number(.score) ?? 5))
+            wentWell = c.texts(.wentWell)
+            wentWrong = c.texts(.wentWrong)
+            goalReached = c.text(.goalReached) ?? ""
+            tips = c.texts(.tips)
+        }
+
+        init() { (score, wentWell, wentWrong, goalReached, tips) = (5, [], [], "", []) }
     }
 
     struct Chapter: Codable, Hashable {
         var time: String
         var title: String
         var summary: String?
+
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            time = c.text(.time) ?? "00:00:00"
+            title = c.text(.title) ?? ""
+            summary = c.text(.summary)
+        }
     }
 
     var title: String
@@ -198,7 +224,26 @@ struct MeetingReview: Codable {
     var openQuestions: [String]
     var assessment: Assessment
 
-    var meetingKind: MeetingKind { kind.flatMap(MeetingKind.init(rawValue:)) ?? .other }
+    /// Also when the model wrote "Team meeting" or "team_meeting" instead of "teamMeeting".
+    var meetingKind: MeetingKind {
+        let simple = { (text: String) in text.lowercased().filter(\.isLetter) }
+        return kind.flatMap { kind in MeetingKind.allCases.first { simple($0.rawValue) == simple(kind) } } ?? .other
+    }
+
+    /// Forgiving: models sometimes leave a field out, write a number as text or null instead of a list.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        title = c.text(.title) ?? L("Meeting")
+        kind = c.text(.kind)
+        participants = c.texts(.participants)
+        summary = c.text(.summary) ?? ""
+        timeline = (try? c.decodeIfPresent([Chapter].self, forKey: .timeline)) ?? nil
+        keyPoints = c.texts(.keyPoints)
+        decisions = c.texts(.decisions)
+        tasks = ((try? c.decodeIfPresent([Task].self, forKey: .tasks)) ?? nil) ?? []
+        openQuestions = c.texts(.openQuestions)
+        assessment = ((try? c.decodeIfPresent(Assessment.self, forKey: .assessment)) ?? nil) ?? Assessment()
+    }
 
     static func load(for recording: URL) -> MeetingReview? {
         (try? Data(contentsOf: MeetingAnalyzer.jsonURL(for: recording))).flatMap { try? JSONDecoder().decode(MeetingReview.self, from: $0) }
@@ -249,10 +294,28 @@ struct MeetingReview: Codable {
     }
 }
 
-/// Writes the meeting review with the AI chosen in Settings (Claude or ChatGPT).
+/// Which AI writes meeting reviews (Settings → Assistant → Meeting analysis). Empty means the
+/// AI you last chose in the notch chat, with its model.
+enum MeetingAISettings {
+    static let providerKey = "meetings.provider"
+    static let modelKey = "meetings.model"
+
+    static var provider: ChatProvider {
+        ChatProvider(rawValue: UserDefaults.standard.string(forKey: providerKey) ?? "") ?? ChatSettings.provider
+    }
+
+    static var model: String {
+        let chosen = UserDefaults.standard.string(forKey: providerKey).flatMap(ChatProvider.init(rawValue:)) != nil
+            ? UserDefaults.standard.string(forKey: modelKey) ?? "" : ""
+        if chosen.isEmpty { return ChatSettings.model(for: provider) }
+        return provider == .copilot ? ChatSettings.copilotModel(chosen) : chosen
+    }
+}
+
+/// Writes the meeting review with the AI chosen for it in Settings.
 enum MeetingReviewer {
     static func review(transcript: String, utterances: [Utterance], recording: URL, kind: MeetingKind? = nil) async throws -> MeetingReview {
-        let provider = ChatSettings.provider
+        let provider = MeetingAISettings.provider
         guard let apiKey = Keychain.read(provider.keychainAccount) else {
             throw ChatError(message: L("Add your %@ API key in Settings → Assistant.", provider.title))
         }
@@ -300,7 +363,7 @@ enum MeetingReviewer {
         \(transcript)
         """
 
-        var chat = ProjectChat(projectID: UUID(), provider: provider, model: ChatSettings.model(for: provider),
+        var chat = ProjectChat(projectID: UUID(), provider: provider, model: MeetingAISettings.model,
                                system: system, contextFingerprint: "")
         let client: ModelClient = provider == .claude ? ClaudeClient() : OpenAIClient(provider: provider)
         chat.messages = client.userMessages(text: request, contextUpdate: nil)
@@ -309,13 +372,26 @@ enum MeetingReviewer {
         let answer = ChatDisplayItem.items(for: chat).reversed().lazy.compactMap { item -> String? in
             if case .assistant(_, let text) = item { return text } else { return nil }
         }.first ?? ""
-        return try parse(answer)
+        do {
+            return try parse(answer)
+        } catch {
+            // Kept next to the video, to see what the AI answered.
+            try? answer.write(to: recording.deletingPathExtension().appendingPathExtension("review-answer.txt"), atomically: true, encoding: .utf8)
+            if answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                throw ChatError(message: L("%@ sent an empty answer. Try Analyze Again or choose another model.", provider.title))
+            }
+            if turn.stopReason == "max_tokens" {
+                throw ChatError(message: L("The review was cut off (the model's answer limit). Try Analyze Again or choose another model."))
+            }
+            throw error
+        }
     }
 
     /// The JSON object in the answer (models sometimes wrap it in a code fence anyway).
     static func parse(_ answer: String) throws -> MeetingReview {
         guard let start = answer.firstIndex(of: "{"), let end = answer.lastIndex(of: "}"),
-              let review = try? JSONDecoder().decode(MeetingReview.self, from: Data(answer[start...end].utf8))
+              let review = try? JSONDecoder().decode(MeetingReview.self, from: Data(answer[start...end].utf8)),
+              !review.summary.isEmpty || !review.title.isEmpty
         else { throw ChatError(message: L("The review came back in an unexpected form. Try Analyze Again.")) }
         return review
     }
@@ -325,5 +401,31 @@ enum MeetingReviewer {
         var weight: [String: Int] = [:]
         for utterance in utterances { weight[utterance.language ?? "en", default: 0] += utterance.text.count }
         return weight.max { $0.value < $1.value }?.key ?? "en"
+    }
+}
+
+private extension KeyedDecodingContainer {
+    /// Text, also from a number; nil for null, missing or empty.
+    func text(_ key: Key) -> String? {
+        if let value = try? decodeIfPresent(String.self, forKey: key) { return value.isEmpty || value == "null" ? nil : value }
+        if let value = try? decodeIfPresent(Double.self, forKey: key) { return String(format: "%g", value) }
+        return nil
+    }
+
+    /// A list of texts; a single text becomes a list of one, objects are skipped.
+    func texts(_ key: Key) -> [String] {
+        if let values = try? decodeIfPresent([JSONValue].self, forKey: key) {
+            return values.compactMap { $0.string ?? $0.int.map(String.init) }.filter { !$0.isEmpty }
+        }
+        return text(key).map { [$0] } ?? []
+    }
+
+    /// A whole number, also from "7", "7/10" or 7.5.
+    func number(_ key: Key) -> Int? {
+        if let value = try? decodeIfPresent(Double.self, forKey: key) { return Int(value.rounded()) }
+        if let value = try? decodeIfPresent(String.self, forKey: key) {
+            return Double(value.prefix { $0.isNumber || $0 == "." }).map { Int($0.rounded()) }
+        }
+        return nil
     }
 }
