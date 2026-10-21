@@ -57,6 +57,7 @@
 "Always asks" = "Завжди питає";
 "Analyze" = "Аналізувати";
 "Analyze Again" = "Проаналізувати знову";
+"Analyze again (choose the kind of meeting)" = "Проаналізувати знову (вибери тип зустрічі)";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Будь-яка назва моделі з твого акаунта OpenAI, напр. gpt-5.";
 "Anyone (show all tasks)" = "Будь-хто (показувати всі задачі)";
 "Ask %@ anything" = "Запитай %@ про що завгодно";
@@ -64,6 +65,7 @@
 "Ask before the AI uses a tool" = "Питати, перш ніж AI використає інструмент";
 "Assessment" = "Оцінка";
 "Assistant" = "Асистент";
+"Automatic" = "Автоматично";
 "Automatic (English, Українська, Čeština, Русский)" = "Автоматично (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Автоматично (мова Mac)";
 "Automatic (best for the language)" = "Автоматично (найкращий для мови)";
@@ -102,6 +104,7 @@
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp відхилив токен. Перевір його в Налаштування → Сервіси.";
 "ClickUp → Settings → Apps → API Token" = "ClickUp → Settings → Apps → API Token";
 "Client ID" = "Client ID";
+"Client call" = "Дзвінок із клієнтом";
 "Client secret" = "Client secret";
 "Clipboard" = "Буфер обміну";
 "Clipboard history" = "Історія буфера обміну";
@@ -200,6 +203,7 @@
 "Google sign-in timed out. Try again." = "Час на вхід у Google вийшов. Спробуй ще раз.";
 "Google sign-in was cancelled (%@)." = "Вхід у Google скасовано (%@).";
 "Hi! I'm RightHand, your right hand on the Mac." = "Привіт! Я RightHand, твоя права рука на Mac.";
+"Homework" = "Домашні завдання";
 "How productive the meeting was" = "Наскільки продуктивною була зустріч";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Як AI має працювати в цьому проєкті, напр. «Допомагай з дипломом. Відповідай українською, коротко.»";
 "I didn't hear anything. Press the shortcut and speak." = "Я нічого не почув. Натисни сполучення клавіш і говори.";
@@ -212,16 +216,20 @@
 "Installing update…" = "Встановлюю оновлення…";
 "Instructions" = "Інструкції";
 "Integration token from %@" = "Токен інтеграції з %@";
+"Interview" = "Співбесіда";
 "Its chats, files and memory are moved to the Trash." = "Його чати, файли й пам'ять буде переміщено в Кошик.";
 "Join" = "Приєднатися";
 "Join the call" = "Приєднатися до дзвінка";
 "Keep panel open" = "Тримати панель відкритою";
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Зберігає останні %lld скопійованих елементів. Паролі з менеджерів паролів пропускаються.";
+"Key ideas" = "Ключові ідеї";
+"Key points" = "Головне";
 "Keys are stored securely in your Mac's Keychain." = "Ключі надійно зберігаються в Keychain твого Mac.";
 "Language" = "Мова";
 "Language of RightHand." = "Мова RightHand.";
 "Later" = "Пізніше";
 "Later on weekends" = "Пізніше на вихідних";
+"Lecture" = "Лекція";
 "List %@" = "Переглянути вміст %@";
 "List ClickUp tasks" = "Показати задачі ClickUp";
 "List files" = "Перегляд файлів";
@@ -238,6 +246,7 @@
 "Main screen" = "Основний екран";
 "Mark as done" = "Позначити виконаною";
 "Me" = "Я";
+"Meeting" = "Зустріч";
 "Meeting review is ready" = "Рев'ю зустрічі готове";
 "Meetings" = "Зустрічі";
 "Memory" = "Пам'ять";
@@ -290,6 +299,7 @@
 "Off" = "Вимкнено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Вимкнено: ні сполучення клавіш, ні слова виклику, ні мікрофона, ні кнопок запису.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API», «Google Drive API» і «Google Calendar API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive; вкладка «Календар» показує твій день.";
+"One-on-one" = "Один на один";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Лише перший раз: модель розпізнавання (630 МБ) завантажується на твій Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Лише під час сесії фокусу Pomodoro. У перерви — без обмежень.";
@@ -328,6 +338,7 @@
 "Postpone %lld min" = "Відкласти на %lld хв";
 "Preparing %@…" = "Готую: %@…";
 "Preparing the speech model. The first time this takes a few minutes." = "Готую модель розпізнавання. Перший раз це займає кілька хвилин.";
+"Presentation" = "Презентація";
 "Press keys…" = "Натисни клавіші…";
 "Press once to talk, again to send. Esc cancels." = "Натисни раз, щоб говорити, ще раз — щоб надіслати. Esc скасовує.";
 "Previous Day" = "Попередній день";
@@ -448,6 +459,7 @@
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Мовлення створює твій Mac, офлайн і безкоштовно. Кращі голоси (★) можна завантажити в Системні параметри → Доступність → Озвучений вміст → Системний голос → Керувати голосами.";
 "Speech recognition isn't available for %@." = "Розпізнавання мовлення недоступне для %@.";
 "Speed" = "Швидкість";
+"Stand-up" = "Стендап";
 "Start" = "Старт";
 "Start %@" = "Почати: %@";
 "Start Recording" = "Почати запис";
@@ -475,6 +487,7 @@
 "Tasks" = "Задачі";
 "Tasks assigned to others are hidden" = "Задачі, призначені іншим, приховано";
 "Tasks done" = "Виконані задачі";
+"Team meeting" = "Командна зустріч";
 "Text, images and files you copy appear here." = "Тут з'являється скопійований текст, зображення й файли.";
 "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds." = "Правило 20-20-20: кожні 20 хвилин дивись на 6 м удалину протягом 20 секунд.";
 "The AI can find, read and change your ClickUp tasks (it asks first)." = "AI може знаходити, читати й змінювати твої задачі ClickUp (спершу питає).";
@@ -502,6 +515,7 @@
 "Time to sleep" = "Час спати";
 "Time to wind down." = "Час закруглятися.";
 "Time to wind down: finish what you're doing." = "Час закруглятися: завершуй, що робиш.";
+"Timeline" = "Таймлайн";
 "Timer" = "Таймер";
 "Title" = "Назва";
 "Today" = "Сьогодні";
@@ -509,6 +523,7 @@
 "Token" = "Токен";
 "Too many requests or no credit left. Try again later." = "Забагато запитів або закінчились кошти. Спробуй пізніше.";
 "Transcribe on your Mac and write a meeting review" = "Розпізнати на Mac і написати рев'ю зустрічі";
+"Transcribe on your Mac and write a review; choose the kind of meeting, or let it recognize it" = "Розпізнати на Mac і написати рев'ю; вибери тип зустрічі або дай визначити самому";
 "Transcribing… %lld%%" = "Розпізнаю… %lld%%";
 "Transcript" = "Транскрипт";
 "Try" = "Спробувати";
@@ -543,6 +558,7 @@
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Хто ти, над чим працюєш, які відповіді любиш, посилання (GitHub, LinkedIn, сайт…). Claude і ChatGPT читають це на початку кожного чату.";
 "Window" = "Вікно";
 "Work with the whole Mac" = "Працювати з усім Mac";
+"Workshop" = "Воркшоп";
 "Write files" = "Запис файлів";
 "Write memory note %@" = "Записати нотатку в пам'ять %@";
 "Writing the review…" = "Пишу рев'ю…";

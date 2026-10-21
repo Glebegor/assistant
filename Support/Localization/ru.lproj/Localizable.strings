@@ -57,6 +57,7 @@
 "Always asks" = "Всегда спрашивает";
 "Analyze" = "Анализировать";
 "Analyze Again" = "Проанализировать снова";
+"Analyze again (choose the kind of meeting)" = "Проанализировать снова (выбери тип встречи)";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Любое название модели из твоего аккаунта OpenAI, напр. gpt-5.";
 "Anyone (show all tasks)" = "Кто угодно (показывать все задачи)";
 "Ask %@ anything" = "Спроси %@ о чём угодно";
@@ -64,6 +65,7 @@
 "Ask before the AI uses a tool" = "Спрашивать, прежде чем AI использует инструмент";
 "Assessment" = "Оценка";
 "Assistant" = "Ассистент";
+"Automatic" = "Автоматически";
 "Automatic (English, Українська, Čeština, Русский)" = "Автоматически (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Автоматически (язык Mac)";
 "Automatic (best for the language)" = "Автоматически (лучший для языка)";
@@ -102,6 +104,7 @@
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp отклонил токен. Проверь его в Настройки → Сервисы.";
 "ClickUp → Settings → Apps → API Token" = "ClickUp → Settings → Apps → API Token";
 "Client ID" = "Client ID";
+"Client call" = "Звонок с клиентом";
 "Client secret" = "Client secret";
 "Clipboard" = "Буфер обмена";
 "Clipboard history" = "История буфера обмена";
@@ -200,6 +203,7 @@
 "Google sign-in timed out. Try again." = "Время на вход в Google вышло. Попробуй ещё раз.";
 "Google sign-in was cancelled (%@)." = "Вход в Google отменён (%@).";
 "Hi! I'm RightHand, your right hand on the Mac." = "Привет! Я RightHand, твоя правая рука на Mac.";
+"Homework" = "Домашние задания";
 "How productive the meeting was" = "Насколько продуктивной была встреча";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Как AI должен работать в этом проекте, напр. «Помогай с дипломом. Отвечай по-русски, коротко.»";
 "I didn't hear anything. Press the shortcut and speak." = "Я ничего не услышал. Нажми сочетание клавиш и говори.";
@@ -212,16 +216,20 @@
 "Installing update…" = "Устанавливаю обновление…";
 "Instructions" = "Инструкции";
 "Integration token from %@" = "Токен интеграции с %@";
+"Interview" = "Собеседование";
 "Its chats, files and memory are moved to the Trash." = "Его чаты, файлы и память будут перемещены в Корзину.";
 "Join" = "Присоединиться";
 "Join the call" = "Присоединиться к звонку";
 "Keep panel open" = "Держать панель открытой";
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Хранит последние %lld скопированных элементов. Пароли из менеджеров паролей пропускаются.";
+"Key ideas" = "Ключевые идеи";
+"Key points" = "Главное";
 "Keys are stored securely in your Mac's Keychain." = "Ключи надёжно хранятся в Keychain твоего Mac.";
 "Language" = "Язык";
 "Language of RightHand." = "Язык RightHand.";
 "Later" = "Позже";
 "Later on weekends" = "Позже на выходных";
+"Lecture" = "Лекция";
 "List %@" = "Показать содержимое %@";
 "List ClickUp tasks" = "Показать задачи ClickUp";
 "List files" = "Просмотр файлов";
@@ -238,6 +246,7 @@
 "Main screen" = "Основной экран";
 "Mark as done" = "Отметить выполненной";
 "Me" = "Я";
+"Meeting" = "Встреча";
 "Meeting review is ready" = "Обзор встречи готов";
 "Meetings" = "Встречи";
 "Memory" = "Память";
@@ -290,6 +299,7 @@
 "Off" = "Выключено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Выключено: ни сочетания клавиш, ни слова вызова, ни микрофона, ни кнопок записи.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Один раз в Google Cloud: 1. Создай проект. 2. Включи «Gmail API», «Google Drive API» и «Google Calendar API». 3. Google Auth Platform → настрой приложение как External, добавь себя как пользователя, потом Audience → Publish app (иначе вход будет слетать каждые 7 дней). 4. Clients → Create client → Desktop app, и вставь сюда его ID и secret. Google предупредит, что приложение не проверено: это твоё собственное приложение, выбери Continue. AI сможет искать и читать почту, а также искать, читать, создавать, загружать и скачивать файлы Drive; вкладка «Календарь» показывает твой день.";
+"One-on-one" = "Один на один";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Только в первый раз: модель распознавания (630 МБ) скачивается на твой Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Только языки, на которых ты говоришь. Чем меньше языков, тем быстрее и точнее распознавание.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Только во время сессии фокуса Pomodoro. В перерывы — без ограничений.";
@@ -328,6 +338,7 @@
 "Postpone %lld min" = "Отложить на %lld мин";
 "Preparing %@…" = "Готовлю: %@…";
 "Preparing the speech model. The first time this takes a few minutes." = "Готовлю модель распознавания. В первый раз это занимает несколько минут.";
+"Presentation" = "Презентация";
 "Press keys…" = "Нажми клавиши…";
 "Press once to talk, again to send. Esc cancels." = "Нажми раз, чтобы говорить, ещё раз — чтобы отправить. Esc отменяет.";
 "Previous Day" = "Предыдущий день";
@@ -448,6 +459,7 @@
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Речь создаёт твой Mac, офлайн и бесплатно. Голоса лучше (★) можно скачать в Системные настройки → Универсальный доступ → Устный контент → Системный голос → Управлять голосами.";
 "Speech recognition isn't available for %@." = "Распознавание речи недоступно для %@.";
 "Speed" = "Скорость";
+"Stand-up" = "Стендап";
 "Start" = "Старт";
 "Start %@" = "Начать: %@";
 "Start Recording" = "Начать запись";
@@ -475,6 +487,7 @@
 "Tasks" = "Задачи";
 "Tasks assigned to others are hidden" = "Задачи, назначенные другим, скрыты";
 "Tasks done" = "Выполненные задачи";
+"Team meeting" = "Командная встреча";
 "Text, images and files you copy appear here." = "Здесь появляется скопированный текст, изображения и файлы.";
 "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds." = "Правило 20-20-20: каждые 20 минут смотри на 6 м вдаль в течение 20 секунд.";
 "The AI can find, read and change your ClickUp tasks (it asks first)." = "AI может находить, читать и менять твои задачи ClickUp (сначала спрашивает).";
@@ -502,6 +515,7 @@
 "Time to sleep" = "Пора спать";
 "Time to wind down." = "Пора закругляться.";
 "Time to wind down: finish what you're doing." = "Пора закругляться: заканчивай, что делаешь.";
+"Timeline" = "Таймлайн";
 "Timer" = "Таймер";
 "Title" = "Название";
 "Today" = "Сегодня";
@@ -509,6 +523,7 @@
 "Token" = "Токен";
 "Too many requests or no credit left. Try again later." = "Слишком много запросов или закончились средства. Попробуй позже.";
 "Transcribe on your Mac and write a meeting review" = "Распознать на Mac и написать обзор встречи";
+"Transcribe on your Mac and write a review; choose the kind of meeting, or let it recognize it" = "Распознать на Mac и написать обзор; выбери тип встречи или дай определить самому";
 "Transcribing… %lld%%" = "Распознаю… %lld%%";
 "Transcript" = "Транскрипт";
 "Try" = "Попробовать";
@@ -543,6 +558,7 @@
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Кто ты, над чем работаешь, какие ответы любишь, ссылки (GitHub, LinkedIn, сайт…). Claude и ChatGPT читают это в начале каждого чата.";
 "Window" = "Окно";
 "Work with the whole Mac" = "Работать со всем Mac";
+"Workshop" = "Воркшоп";
 "Write files" = "Запись файлов";
 "Write memory note %@" = "Записать заметку в память %@";
 "Writing the review…" = "Пишу обзор…";

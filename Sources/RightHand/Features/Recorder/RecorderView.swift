@@ -296,9 +296,8 @@ private struct RecordingRow: View {
                 .buttonStyle(.notchPill(prominent: true, tint: .white))
                 .help("Open the meeting review")
         } else {
-            Button { analyzer.analyze(recording.url); openReview(recording.url) } label: { Label("Analyze", systemImage: "sparkles") }
-                .buttonStyle(.notchPill())
-                .help("Transcribe on your Mac and write a meeting review")
+            AnalyzeMenu(analyzer: analyzer, recording: recording.url) { openReview(recording.url) }
+                .font(.caption)
         }
     }
 }

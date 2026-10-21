@@ -133,7 +133,7 @@ Sources/RightHand/
 - [x] "About me" profile that every chat starts with
 - [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
 - [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours
-- [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT: summary, decisions, tasks, open questions, assessment
+- [x] Meeting review from a recording: local Whisper transcript (you and the others separately, English/Ukrainian/Russian/Czech detected per phrase), then a review by Claude or ChatGPT written for the kind of meeting (lecture, team meeting, stand-up, client call, interview…): summary, timeline of its parts, key points, decisions, tasks or homework, open questions, assessment
 - [x] Updates: checks GitHub releases, tells you when a new version is out, installs it from the ✋ menu or Settings → About
 - [x] Calendar tab: the day as a timeline from Google Calendar (what Notion Calendar shows), next meeting with Join
 - [x] Weekly statistics in the Pomodoro tab: focus time and change against last week, sessions and streak, tasks done, meetings

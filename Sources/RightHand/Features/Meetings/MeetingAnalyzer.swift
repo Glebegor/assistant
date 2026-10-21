@@ -23,6 +23,8 @@ final class MeetingAnalyzer {
     private(set) var revision = 0
 
     @ObservationIgnored private var queue: [URL] = []
+    /// "Analyze as lecture": the kind you chose; otherwise the AI recognizes it.
+    @ObservationIgnored private var kinds: [URL: MeetingKind] = [:]
     @ObservationIgnored private var worker: Task<Void, Never>?
 
     nonisolated static func reviewURL(for recording: URL) -> URL { recording.deletingPathExtension().appendingPathExtension("review.md") }
@@ -34,7 +36,8 @@ final class MeetingAnalyzer {
         return FileManager.default.fileExists(atPath: Self.reviewURL(for: recording).path)
     }
 
-    func analyze(_ recording: URL) {
+    func analyze(_ recording: URL, as kind: MeetingKind? = nil) {
+        kinds[recording] = kind
         guard jobs[recording] == nil || isFailed(recording) else { return }
         jobs[recording] = .queued
         queue.append(recording)
@@ -79,7 +82,8 @@ final class MeetingAnalyzer {
                 try transcript.write(to: Self.transcriptURL(for: recording), atomically: true, encoding: .utf8)
 
                 jobs[recording] = .reviewing
-                let review = try await MeetingReviewer.review(transcript: transcript, utterances: utterances, recording: recording)
+                let review = try await MeetingReviewer.review(transcript: transcript, utterances: utterances, recording: recording,
+                                                              kind: kinds[recording])
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
                 try encoder.encode(review).write(to: Self.jsonURL(for: recording))
@@ -99,6 +103,65 @@ final class MeetingAnalyzer {
     }
 }
 
+/// What kind of meeting a recording is; the review is written for it.
+enum MeetingKind: String, Codable, CaseIterable, Identifiable {
+    case lecture, teamMeeting, standup, oneOnOne, clientCall, interview, workshop, presentation, other
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .lecture: L("Lecture")
+        case .teamMeeting: L("Team meeting")
+        case .standup: L("Stand-up")
+        case .oneOnOne: L("One-on-one")
+        case .clientCall: L("Client call")
+        case .interview: L("Interview")
+        case .workshop: L("Workshop")
+        case .presentation: L("Presentation")
+        case .other: L("Meeting")
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .lecture: "graduationcap"
+        case .teamMeeting: "person.3"
+        case .standup: "figure.stand"
+        case .oneOnOne: "person.2"
+        case .clientCall: "briefcase"
+        case .interview: "person.crop.rectangle"
+        case .workshop: "hammer"
+        case .presentation: "rectangle.on.rectangle"
+        case .other: "bubble.left.and.bubble.right"
+        }
+    }
+
+    /// What the review should focus on for this kind.
+    var guidance: String {
+        switch self {
+        case .lecture:
+            "It's a lecture or class: keyPoints are the main ideas, definitions and formulas to learn; tasks are homework, assignments and deadlines the lecturer gave (owner = 'Me'); decisions are usually empty; the assessment rates how clear and useful the lecture was and gives study tips."
+        case .teamMeeting:
+            "It's a team meeting: focus on decisions, who owns which task and deadlines; keyPoints are the main topics."
+        case .standup:
+            "It's a stand-up: keyPoints are each person's progress and blockers; tasks are what each person does next; keep the summary short."
+        case .oneOnOne:
+            "It's a one-on-one: keyPoints are feedback, concerns and agreements; tasks are follow-ups."
+        case .clientCall:
+            "It's a call with a client: keyPoints are the client's needs, objections and what was promised; tasks are follow-ups with owners."
+        case .interview:
+            "It's an interview: keyPoints are the questions asked and the main answers; the assessment rates how it went for the user and gives tips."
+        case .workshop:
+            "It's a workshop or brainstorm: keyPoints are the ideas that came up and which ones were chosen; tasks are next steps."
+        case .presentation:
+            "It's a presentation or demo: keyPoints are what was presented and the feedback; tasks are follow-ups."
+        case .other:
+            "Write a general meeting review."
+        }
+    }
+}
+
 /// A meeting review as the AI writes it (JSON), shown as cards and saved as Markdown too.
 struct MeetingReview: Codable {
     struct Task: Codable, Hashable {
@@ -115,13 +178,27 @@ struct MeetingReview: Codable {
         var tips: [String]
     }
 
+    struct Chapter: Codable, Hashable {
+        var time: String
+        var title: String
+        var summary: String?
+    }
+
     var title: String
+    /// MeetingKind raw value (missing in reviews made before kinds existed).
+    var kind: String?
     var participants: [String]
     var summary: String
+    /// The meeting in parts, with start times.
+    var timeline: [Chapter]?
+    /// Main ideas (a lecture's concepts, a team meeting's topics…).
+    var keyPoints: [String]?
     var decisions: [String]
     var tasks: [Task]
     var openQuestions: [String]
     var assessment: Assessment
+
+    var meetingKind: MeetingKind { kind.flatMap(MeetingKind.init(rawValue:)) ?? .other }
 
     static func load(for recording: URL) -> MeetingReview? {
         (try? Data(contentsOf: MeetingAnalyzer.jsonURL(for: recording))).flatMap { try? JSONDecoder().decode(MeetingReview.self, from: $0) }
@@ -133,13 +210,20 @@ struct MeetingReview: Codable {
         let taskLines = tasks.map { task in
             "- **\(task.owner)** — \(task.task)" + (task.due.map { " — \($0)" } ?? "") + (task.time.map { " — [\($0)]" } ?? "")
         }
+        let chapters = (timeline ?? []).map { "- [\($0.time)] **\($0.title)**" + ($0.summary.map { " — \($0)" } ?? "") }
         return """
         # \(title)
 
-        \(participants.joined(separator: ", "))
+        \(meetingKind.title) · \(participants.joined(separator: ", "))
 
         ## \(L("Summary"))
         \(summary)
+
+        ## \(L("Timeline"))
+        \(chapters.isEmpty ? "—" : chapters.joined(separator: "\n"))
+
+        ## \(L("Key points"))
+        \(list(keyPoints ?? []))
 
         ## \(L("Decisions"))
         \(list(decisions))
@@ -167,7 +251,7 @@ struct MeetingReview: Codable {
 
 /// Writes the meeting review with the AI chosen in Settings (Claude or ChatGPT).
 enum MeetingReviewer {
-    static func review(transcript: String, utterances: [Utterance], recording: URL) async throws -> MeetingReview {
+    static func review(transcript: String, utterances: [Utterance], recording: URL, kind: MeetingKind? = nil) async throws -> MeetingReview {
         let provider = ChatSettings.provider
         guard let apiKey = Keychain.read(provider.keychainAccount) else {
             throw ChatError(message: L("Add your %@ API key in Settings → Assistant.", provider.title))
@@ -181,12 +265,21 @@ enum MeetingReviewer {
         from automatic speech recognition, so it has mistakes: read through them. \(AboutMe.text.isEmpty ? "" : "About the user: \(AboutMe.text)")
         """
         let request = """
-        Review this meeting. Answer with only a JSON object (no Markdown, no code fence), all text in \(languageName):
+        Review this recording. Answer with only a JSON object (no Markdown, no code fence), all text in \(languageName).
+
+        \(kind.map { "The user says this is a \($0.rawValue). \($0.guidance)" } ?? """
+        First decide what kind of meeting it is — one of: \(MeetingKind.allCases.map(\.rawValue).joined(separator: ", ")) — \
+        and write the review for that kind:
+        \(MeetingKind.allCases.filter { $0 != .other }.map { "- \($0.rawValue): \($0.guidance)" }.joined(separator: "\n"))
+        """)
 
         {
           "title": "a short title for the meeting",
-          "participants": ["names if they are clear, else roles like 'Me', 'Client'"],
+          "kind": "\(kind?.rawValue ?? "one of the kinds above")",
+          "participants": ["names if they are clear, else roles like 'Me', 'Client', 'Professor'"],
           "summary": "5–8 sentences: what it was about and how it went",
+          "timeline": [{"time": "hh:mm:ss where this part starts", "title": "short name of the part", "summary": "one sentence"}],
+          "keyPoints": ["the main ideas, as fits the kind"],
           "decisions": ["what was decided"],
           "tasks": [{"owner": "who", "task": "what", "due": "deadline or null", "time": "hh:mm:ss in the recording or null"}],
           "openQuestions": ["what stayed unclear or needs follow-up"],
@@ -199,7 +292,8 @@ enum MeetingReviewer {
           }
         }
 
-        Only tasks actually agreed on; empty lists are fine.
+        The timeline splits the whole recording into 4–12 parts in order, from the first minute to the end. \
+        Only tasks actually agreed on (or assigned); empty lists are fine.
 
         Transcript:
 

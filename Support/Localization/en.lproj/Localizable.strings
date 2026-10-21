@@ -57,6 +57,7 @@
 "Always asks" = "Always asks";
 "Analyze" = "Analyze";
 "Analyze Again" = "Analyze Again";
+"Analyze again (choose the kind of meeting)" = "Analyze again (choose the kind of meeting)";
 "Any model name from your OpenAI account, e.g. gpt-5." = "Any model name from your OpenAI account, e.g. gpt-5.";
 "Anyone (show all tasks)" = "Anyone (show all tasks)";
 "Ask %@ anything" = "Ask %@ anything";
@@ -64,6 +65,7 @@
 "Ask before the AI uses a tool" = "Ask before the AI uses a tool";
 "Assessment" = "Assessment";
 "Assistant" = "Assistant";
+"Automatic" = "Automatic";
 "Automatic (English, Українська, Čeština, Русский)" = "Automatic (English, Українська, Čeština, Русский)";
 "Automatic (Mac language)" = "Automatic (Mac language)";
 "Automatic (best for the language)" = "Automatic (best for the language)";
@@ -102,6 +104,7 @@
 "ClickUp rejected the token. Check it in Settings → Services." = "ClickUp rejected the token. Check it in Settings → Services.";
 "ClickUp → Settings → Apps → API Token" = "ClickUp → Settings → Apps → API Token";
 "Client ID" = "Client ID";
+"Client call" = "Client call";
 "Client secret" = "Client secret";
 "Clipboard" = "Clipboard";
 "Clipboard history" = "Clipboard history";
@@ -200,6 +203,7 @@
 "Google sign-in timed out. Try again." = "Google sign-in timed out. Try again.";
 "Google sign-in was cancelled (%@)." = "Google sign-in was cancelled (%@).";
 "Hi! I'm RightHand, your right hand on the Mac." = "Hi! I'm RightHand, your right hand on the Mac.";
+"Homework" = "Homework";
 "How productive the meeting was" = "How productive the meeting was";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”";
 "I didn't hear anything. Press the shortcut and speak." = "I didn't hear anything. Press the shortcut and speak.";
@@ -212,16 +216,20 @@
 "Installing update…" = "Installing update…";
 "Instructions" = "Instructions";
 "Integration token from %@" = "Integration token from %@";
+"Interview" = "Interview";
 "Its chats, files and memory are moved to the Trash." = "Its chats, files and memory are moved to the Trash.";
 "Join" = "Join";
 "Join the call" = "Join the call";
 "Keep panel open" = "Keep panel open";
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Keeps the last %lld copied items. Passwords from password managers are skipped.";
+"Key ideas" = "Key ideas";
+"Key points" = "Key points";
 "Keys are stored securely in your Mac's Keychain." = "Keys are stored securely in your Mac's Keychain.";
 "Language" = "Language";
 "Language of RightHand." = "Language of RightHand.";
 "Later" = "Later";
 "Later on weekends" = "Later on weekends";
+"Lecture" = "Lecture";
 "List %@" = "List %@";
 "List ClickUp tasks" = "List ClickUp tasks";
 "List files" = "List files";
@@ -238,6 +246,7 @@
 "Main screen" = "Main screen";
 "Mark as done" = "Mark as done";
 "Me" = "Me";
+"Meeting" = "Meeting";
 "Meeting review is ready" = "Meeting review is ready";
 "Meetings" = "Meetings";
 "Memory" = "Memory";
@@ -290,6 +299,7 @@
 "Off" = "Off";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Off: no shortcut, no wake word, no microphone, no record buttons.";
 "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day.";
+"One-on-one" = "One-on-one";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Only the first time: the speech model (630 MB) is downloaded to your Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Only the languages you speak. Fewer languages are recognized faster and better.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Only while a Pomodoro focus session is running. Breaks are free.";
@@ -328,6 +338,7 @@
 "Postpone %lld min" = "Postpone %lld min";
 "Preparing %@…" = "Preparing %@…";
 "Preparing the speech model. The first time this takes a few minutes." = "Preparing the speech model. The first time this takes a few minutes.";
+"Presentation" = "Presentation";
 "Press keys…" = "Press keys…";
 "Press once to talk, again to send. Esc cancels." = "Press once to talk, again to send. Esc cancels.";
 "Previous Day" = "Previous Day";
@@ -448,6 +459,7 @@
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.";
 "Speech recognition isn't available for %@." = "Speech recognition isn't available for %@.";
 "Speed" = "Speed";
+"Stand-up" = "Stand-up";
 "Start" = "Start";
 "Start %@" = "Start %@";
 "Start Recording" = "Start Recording";
@@ -475,6 +487,7 @@
 "Tasks" = "Tasks";
 "Tasks assigned to others are hidden" = "Tasks assigned to others are hidden";
 "Tasks done" = "Tasks done";
+"Team meeting" = "Team meeting";
 "Text, images and files you copy appear here." = "Text, images and files you copy appear here.";
 "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds." = "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds.";
 "The AI can find, read and change your ClickUp tasks (it asks first)." = "The AI can find, read and change your ClickUp tasks (it asks first).";
@@ -502,6 +515,7 @@
 "Time to sleep" = "Time to sleep";
 "Time to wind down." = "Time to wind down.";
 "Time to wind down: finish what you're doing." = "Time to wind down: finish what you're doing.";
+"Timeline" = "Timeline";
 "Timer" = "Timer";
 "Title" = "Title";
 "Today" = "Today";
@@ -509,6 +523,7 @@
 "Token" = "Token";
 "Too many requests or no credit left. Try again later." = "Too many requests or no credit left. Try again later.";
 "Transcribe on your Mac and write a meeting review" = "Transcribe on your Mac and write a meeting review";
+"Transcribe on your Mac and write a review; choose the kind of meeting, or let it recognize it" = "Transcribe on your Mac and write a review; choose the kind of meeting, or let it recognize it";
 "Transcribing… %lld%%" = "Transcribing… %lld%%";
 "Transcript" = "Transcript";
 "Try" = "Try";
@@ -543,6 +558,7 @@
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.";
 "Window" = "Window";
 "Work with the whole Mac" = "Work with the whole Mac";
+"Workshop" = "Workshop";
 "Write files" = "Write files";
 "Write memory note %@" = "Write memory note %@";
 "Writing the review…" = "Writing the review…";
