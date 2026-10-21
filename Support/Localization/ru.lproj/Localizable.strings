@@ -5,6 +5,7 @@
 "%@ is listening…" = "%@ слушает…";
 "%@ is used by macOS (for example Spotlight). Choose another." = "%@ использует macOS (например, Spotlight). Выбери другое.";
 "%@ is writing the review from the transcript." = "%@ пишет обзор по транскрипту.";
+"%@ sent an empty answer. Try Analyze Again or choose another model." = "%@ прислал пустой ответ. Попробуй Analyze Again или выбери другую модель.";
 "%@ to send · Esc to cancel" = "%@ — отправить · Esc — отменить";
 "%@ wants to: %@" = "%@ хочет: %@";
 "%@ · stops at %lld:00:00" = "%@ · остановится в %lld:00:00";
@@ -542,6 +543,7 @@
 "The project's instructions, files and memory are already part of this chat." = "Инструкции, файлы и память проекта уже есть в этом чате.";
 "The recording couldn't be saved." = "Запись не удалось сохранить.";
 "The review came back in an unexpected form. Try Analyze Again." = "Обзор пришёл в неожиданном виде. Попробуй «Проанализировать снова».";
+"The review was cut off (the model's answer limit). Try Analyze Again or choose another model." = "Ревью оборвалось (лимит ответа модели). Попробуй Analyze Again или выбери другую модель.";
 "The sign-in was cancelled on GitHub." = "Вход отменён на GitHub.";
 "The timer starts over when you're away from the Mac for 2 minutes or lock the screen. During a break press Esc to skip." = "Таймер начинается заново, если ты отошёл от Mac на 2 минуты или заблокировал экран. Во время перерыва нажми Esc, чтобы пропустить.";
 "The voice assistant: shortcut, wake word, microphone, languages and voice." = "Голосовой помощник: сочетание клавиш, слово вызова, микрофон, языки и голос.";

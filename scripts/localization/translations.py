@@ -634,4 +634,7 @@ T = {
     'GitHub signed you out of Copilot. Sign in again in Settings → Assistant.': ('GitHub вийшов із Copilot. Увійди знову в Налаштування → Асистент.', 'GitHub tě z Copilotu odhlásil. Přihlas se znovu v Nastavení → Asistent.', 'GitHub вышел из Copilot. Войди снова в Настройки → Ассистент.'),
     'This GitHub account has no Copilot subscription (or Copilot is turned off for it).': ('У цього акаунта GitHub немає підписки Copilot (або Copilot для нього вимкнено).', 'Tento účet GitHub nemá předplatné Copilot (nebo je pro něj Copilot vypnutý).', 'У этого аккаунта GitHub нет подписки Copilot (или Copilot для него отключён).'),
     'Sign In': ('Увійти', 'Přihlásit', 'Войти'),
+    '%@ sent an empty answer. Try Analyze Again or choose another model.': ('%@ надіслав порожню відповідь. Спробуй Analyze Again або вибери іншу модель.', '%@ poslal prázdnou odpověď. Zkus Analyze Again nebo vyber jiný model.', '%@ прислал пустой ответ. Попробуй Analyze Again или выбери другую модель.'),
+    "The review was cut off (the model's answer limit). Try Analyze Again or choose another model.": ('Ревʼю обірвалося (ліміт відповіді моделі). Спробуй Analyze Again або вибери іншу модель.', 'Recenze byla useknutá (limit odpovědi modelu). Zkus Analyze Again nebo vyber jiný model.', 'Ревью оборвалось (лимит ответа модели). Попробуй Analyze Again или выбери другую модель.'),
+    'Meeting': ('Зустріч', 'Schůzka', 'Встреча'),
 }
