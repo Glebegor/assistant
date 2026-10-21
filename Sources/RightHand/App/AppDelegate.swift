@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let shelf = ShelfStore()
     private let chat = ChatStore()
     private let tasks = TaskStore()
+    private let calendar = CalendarStore()
     private lazy var voice = VoiceAssistant(chat: chat)
     private let recorder = ScreenRecorder()
     private let analyzer = MeetingAnalyzer()
@@ -31,7 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         blocker = URLBlocker(pomodoro: pomodoro)
         let projectsWindow = ProjectsWindowController(store: projects, openSettings: { settings.show() })
         self.projectsWindow = projectsWindow
-        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice, recorder: recorder,
+        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, tasks: tasks, calendar: calendar, chat: chat, voice: voice, recorder: recorder,
                                     analyzer: analyzer, openReview: { [weak self] in self?.reviewWindows.show($0) },
                                     openSettings: { settings.show() }, openProjects: { projectsWindow.show() })
         self.notch = notch

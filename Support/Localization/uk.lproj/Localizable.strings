@@ -9,7 +9,10 @@
 "%@ · stops at %lld:00:00" = "%@ · зупиниться о %lld:00:00";
 "%@. Press once to talk, again to send. Esc cancels." = "%@. Натисни раз, щоб говорити, ще раз — щоб надіслати. Esc скасовує.";
 "%lld done" = "%lld зроблено";
+"%lld h %lld min" = "%lld год %lld хв";
+"%lld min" = "%lld хв";
 "%lld overdue" = "%lld прострочено";
+"(No title)" = "(Без назви)";
 "1. At notion.so/profile/integrations create an internal integration and copy its secret. 2. In Notion open each task database → ••• → Connections and add the integration. 3. Paste the secret here. The token stays in your Mac's Keychain. The Tasks tab shows open tasks assigned to you or to nobody, overdue and high-priority ones first." = "1. На notion.so/profile/integrations створи внутрішню інтеграцію (internal) і скопіюй її секрет. 2. У Notion відкрий кожну базу задач → ••• → Connections і додай інтеграцію. 3. Встав секрет сюди. Токен зберігається в Keychain твого Mac. Вкладка «Задачі» показує відкриті задачі, призначені тобі або нікому, спершу прострочені й з високим пріоритетом.";
 "A Pomodoro break already rests your eyes." = "Перерва Pomodoro і так дає очам відпочити.";
 "API key" = "Ключ API";
@@ -29,7 +32,9 @@
 "Add your %@ API key" = "Додай свій ключ API %@";
 "Add your %@ API key in Settings → Assistant." = "Додай ключ API %@ у Налаштуваннях → Асистент.";
 "Add your Notion integration and choose task databases in Settings → Tasks." = "Додай інтеграцію Notion і вибери бази задач у Налаштування → Задачі.";
+"Allow Calendar" = "Дозволити календар";
 "Allow Once" = "Дозволити раз";
+"Allow RightHand to read your calendar" = "Дозволь RightHand читати твій календар";
 "Allow Screen Recording for RightHand in System Settings → Privacy & Security → Screen & System Audio Recording, then try again." = "Дозволь запис екрана для RightHand у Системні параметри → Приватність і безпека → Запис екрана й системного звуку, потім спробуй ще раз.";
 "Allow screenshots…" = "Дозволити знімки екрана…";
 "Allow speech recognition for RightHand in System Settings → Privacy & Security → Speech Recognition." = "Дозволь розпізнавання мовлення для RightHand у Системні параметри → Приватність і безпека → Розпізнавання мовлення.";
@@ -63,6 +68,7 @@
 "Break length" = "Тривалість перерви";
 "Breaks and focus sessions follow each other without pressing Start." = "Перерви й сесії фокусу йдуть одна за одною без натискання «Старт».";
 "Browsers" = "Браузери";
+"Calendar" = "Календар";
 "Cancel" = "Скасувати";
 "Change ClickUp tasks" = "Зміна задач ClickUp";
 "Change Notion tasks" = "Зміна задач Notion";
@@ -91,6 +97,7 @@
 "Close tab" = "Закрити вкладку";
 "Computer sound" = "Звук з комп'ютера";
 "Connect" = "Підключити";
+"Connect Google to see your calendar" = "Підключи Google, щоб бачити календар";
 "Connect Notion" = "Підключити Notion";
 "Connect Notion or ClickUp to see your tasks" = "Підключи Notion або ClickUp, щоб бачити задачі";
 "Connect Notion to see your tasks" = "Підключи Notion, щоб бачити задачі";
@@ -168,6 +175,7 @@
 "General" = "Загальні";
 "Get one at %@" = "Отримати на %@";
 "Google (Gmail and Drive)" = "Google (Gmail і Drive)";
+"Google asks once in the browser. In Google Cloud, enable the “Google Calendar API” for your project." = "Google запитає один раз у браузері. У Google Cloud увімкни «Google Calendar API» для свого проєкту.";
 "Google isn't connected. Sign in in Settings → Services." = "Google не підключено. Увійди в Налаштування → Сервіси.";
 "Google sign-in expired. Sign in again in Settings → Services." = "Вхід у Google застарів. Увійди знову в Налаштування → Сервіси.";
 "Google sign-in failed. Try again." = "Не вдалося увійти в Google. Спробуй ще раз.";
@@ -177,6 +185,7 @@
 "How productive the meeting was" = "Наскільки продуктивною була зустріч";
 "How the AI should work in this project, e.g. “Help me with my thesis. Answer in Ukrainian, briefly.”" = "Як AI має працювати в цьому проєкті, напр. «Допомагай з дипломом. Відповідай українською, коротко.»";
 "I didn't hear anything. Press the shortcut and speak." = "Я нічого не почув. Натисни сполучення клавіш і говори.";
+"In %@ · %@" = "Через %@ · %@";
 "In projects, the AI can read, create, move and delete files anywhere on your Mac and run Terminal commands. It asks you before every action outside the project folders, and before every command and deletion. Deleted files go to the Trash." = "У проєктах AI може читати, створювати, переміщувати й видаляти файли будь-де на твоєму Mac і виконувати команди Терміналу. Він питає тебе перед кожною дією поза папками проєкту, а також перед кожною командою й видаленням. Видалені файли потрапляють у Кошик.";
 "In this project these tools run without asking, also outside the project folders." = "У цьому проєкті ці інструменти працюють без питань, також поза папками проєкту.";
 "Install" = "Встановити";
@@ -186,6 +195,8 @@
 "Instructions" = "Інструкції";
 "Integration token from %@" = "Токен інтеграції з %@";
 "Its chats, files and memory are moved to the Trash." = "Його чати, файли й пам'ять буде переміщено в Кошик.";
+"Join" = "Приєднатися";
+"Join the call" = "Приєднатися до дзвінка";
 "Keep panel open" = "Тримати панель відкритою";
 "Keeps the last %lld copied items. Passwords from password managers are skipped." = "Зберігає останні %lld скопійованих елементів. Паролі з менеджерів паролів пропускаються.";
 "Keys are stored securely in your Mac's Keychain." = "Ключі надійно зберігаються в Keychain твого Mac.";
@@ -231,6 +242,7 @@
 "New folder" = "Нова папка";
 "New project" = "Новий проєкт";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Нові знімки екрана (⌘⇧3, ⌘⇧4, ⌘⇧5) з'являються на Полиці.";
+"Next Day" = "Наступний день";
 "Next time" = "Наступного разу";
 "No answer came back." = "Відповідь не надійшла.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Баз не знайдено. У Notion відкрий базу задач → ••• → Connections → додай свою інтеграцію, потім натисни «Оновити бази».";
@@ -252,9 +264,10 @@
 "Notion isn't connected for this database. Check Settings → Services." = "Notion не підключено для цієї бази. Перевір Налаштування → Сервіси.";
 "Notion rejected the token. Check it in Settings → Tasks." = "Notion відхилив токен. Перевір його в Налаштування → Задачі.";
 "Notion, ClickUp and Google for tasks and for the AI." = "Notion, ClickUp і Google — для задач і для AI.";
+"Now · until %@" = "Зараз · до %@";
 "Off" = "Вимкнено";
 "Off: no shortcut, no wake word, no microphone, no record buttons." = "Вимкнено: ні сполучення клавіш, ні слова виклику, ні мікрофона, ні кнопок запису.";
-"Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API» і «Google Drive API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive.";
+"Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day." = "Один раз у Google Cloud: 1. Створи проєкт. 2. Увімкни «Gmail API», «Google Drive API» і «Google Calendar API». 3. Google Auth Platform → налаштуй застосунок як External, додай себе як користувача, потім Audience → Publish app (інакше вхід злітатиме кожні 7 днів). 4. Clients → Create client → Desktop app, і встав сюди його ID і secret. Google попередить, що застосунок не перевірений: це твій власний застосунок, обери Continue. AI зможе шукати й читати пошту, а також шукати, читати, створювати, вивантажувати й завантажувати файли Drive; вкладка «Календар» показує твій день.";
 "Only the first time: the speech model (630 MB) is downloaded to your Mac." = "Лише перший раз: модель розпізнавання (630 МБ) завантажується на твій Mac.";
 "Only the languages you speak. Fewer languages are recognized faster and better." = "Лише мови, якими ти говориш. Що менше мов, то швидше й точніше розпізнавання.";
 "Only while a Pomodoro focus session is running. Breaks are free." = "Лише під час сесії фокусу Pomodoro. У перерви — без обмежень.";
@@ -267,6 +280,7 @@
 "Open Video" = "Відкрити відео";
 "Open apps, links and files" = "Відкривання застосунків, посилань і файлів";
 "Open in ClickUp" = "Відкрити в ClickUp";
+"Open in Google Calendar" = "Відкрити в Google Calendar";
 "Open in Notion" = "Відкрити в Notion";
 "Open questions" = "Відкриті питання";
 "Open tasks assigned to you or to nobody" = "Відкриті задачі, призначені тобі або нікому";
@@ -294,6 +308,7 @@
 "Preparing the speech model. The first time this takes a few minutes." = "Готую модель розпізнавання. Перший раз це займає кілька хвилин.";
 "Press keys…" = "Натисни клавіші…";
 "Press once to talk, again to send. Esc cancels." = "Натисни раз, щоб говорити, ще раз — щоб надіслати. Esc скасовує.";
+"Previous Day" = "Попередній день";
 "Project memory" = "Пам'ять проєкту";
 "Projects" = "Проєкти";
 "Projects keep instructions, files and memory for long work with Claude or ChatGPT." = "Проєкти зберігають інструкції, файли й пам'ять для тривалої роботи з Claude або ChatGPT.";
@@ -383,6 +398,7 @@
 "Send Recording" = "Надіслати запис";
 "Services" = "Сервіси";
 "Settings" = "Налаштування";
+"Settings → Services → Google." = "Налаштування → Сервіси → Google.";
 "Settings…" = "Налаштування…";
 "Shelf" = "Полиця";
 "Short Break" = "Коротка перерва";

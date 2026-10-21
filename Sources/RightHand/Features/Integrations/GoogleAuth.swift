@@ -15,7 +15,24 @@ enum GoogleAuth {
     static let scopes = [
         "https://www.googleapis.com/auth/gmail.readonly",
         "https://www.googleapis.com/auth/drive",
+        calendarScope,
     ]
+    static let calendarScope = "https://www.googleapis.com/auth/calendar.readonly"
+    private static let grantedScopesKey = "google.grantedScopes"
+
+    /// Signed in before the calendar was added, or the calendar box was unticked on Google's page.
+    static var hasCalendarAccess: Bool {
+        isConnected && (UserDefaults.standard.string(forKey: grantedScopesKey) ?? "").contains(calendarScope)
+    }
+
+    /// Signs in again with the saved client (e.g. to add calendar access).
+    @MainActor
+    static func signInAgain() async throws {
+        guard let clientID, let secret = Keychain.read(secretAccount) else {
+            throw ChatError(message: L("Google isn't connected. Sign in in Settings → Services."))
+        }
+        try await signIn(clientID: clientID, secret: secret)
+    }
 
     static var clientID: String? { UserDefaults.standard.string(forKey: clientIDKey).flatMap { $0.isEmpty ? nil : $0 } }
     static var email: String? { UserDefaults.standard.string(forKey: emailKey) }
@@ -76,6 +93,7 @@ enum GoogleAuth {
             throw ChatError(message: response["error_description"]?.string ?? L("Google sign-in failed. Try again."))
         }
         UserDefaults.standard.set(clientID, forKey: clientIDKey)
+        UserDefaults.standard.set(response["scope"]?.string ?? "", forKey: grantedScopesKey)
         Keychain.save(secret, for: secretAccount)
         Keychain.save(refresh, for: refreshAccount)
         await tokens.store(access, lifetime: TimeInterval(response["expires_in"]?.int ?? 3600))

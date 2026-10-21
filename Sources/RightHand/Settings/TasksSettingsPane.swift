@@ -248,7 +248,7 @@ private struct GoogleSection: View {
         } header: {
             Text("Google (Gmail and Drive)")
         } footer: {
-            SettingsFooter("Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API” and “Google Drive API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files.")
+            SettingsFooter("Once, in Google Cloud: 1. Create a project. 2. Enable “Gmail API”, “Google Drive API” and “Google Calendar API”. 3. Google Auth Platform → set up the app as External, add yourself as a user, then Audience → Publish app (otherwise sign-in expires every 7 days). 4. Clients → Create client → Desktop app, and paste its ID and secret here. Google warns that the app isn't verified: it's your own app, choose Continue. The AI can search and read your email, and search, read, create, upload and download Drive files; the Calendar tab shows your day.")
         }
     }
 

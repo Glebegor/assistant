@@ -6,6 +6,7 @@ struct NotchRootView: View {
     let pomodoro: PomodoroTimer
     let shelf: ShelfStore
     let tasks: TaskStore
+    let calendar: CalendarStore
     let chat: ChatStore
     let voice: VoiceAssistant
     let recorder: ScreenRecorder
@@ -115,6 +116,7 @@ struct NotchRootView: View {
                 switch model.selectedTab {
                 case .pomodoro: PomodoroView(timer: pomodoro)
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
+                case .calendar: CalendarView(store: calendar, openSettings: openSettings)
                 case .shelf: ShelfView(store: shelf)
                 case .recorder: RecorderView(recorder: recorder, analyzer: analyzer, openReview: openReview)
                 case .chat: ChatView(store: chat, voice: voice, openSettings: openSettings, openProjects: openProjects)

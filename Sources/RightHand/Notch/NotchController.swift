@@ -25,6 +25,7 @@ final class NotchController {
     private let shelf: ShelfStore
     private let chat: ChatStore
     private let tasks: TaskStore
+    private let calendar: CalendarStore
     private let voice: VoiceAssistant
     private let recorder: ScreenRecorder
     private let analyzer: MeetingAnalyzer
@@ -41,13 +42,14 @@ final class NotchController {
     private var exitPoller: Timer?
     private var mouseOutsideSince: Date?
 
-    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, chat: ChatStore, voice: VoiceAssistant, recorder: ScreenRecorder,
+    init(pomodoro: PomodoroTimer, shelf: ShelfStore, tasks: TaskStore, calendar: CalendarStore, chat: ChatStore, voice: VoiceAssistant, recorder: ScreenRecorder,
          analyzer: MeetingAnalyzer, openReview: @escaping (URL) -> Void,
          openSettings: @escaping () -> Void, openProjects: @escaping () -> Void) {
         self.pomodoro = pomodoro
         self.shelf = shelf
         self.chat = chat
         self.tasks = tasks
+        self.calendar = calendar
         self.voice = voice
         self.recorder = recorder
         self.analyzer = analyzer
@@ -169,7 +171,7 @@ final class NotchController {
         model.displayID = screen.displayID
         let panel = NotchPanel()
         panel.contentView = FirstClickHostingView(
-            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, chat: chat, voice: voice, recorder: recorder,
+            rootView: NotchRootView(model: model, pomodoro: pomodoro, shelf: shelf, tasks: tasks, calendar: calendar, chat: chat, voice: voice, recorder: recorder,
                                    analyzer: analyzer, openReview: openReview,
                                    openSettings: openSettings, openProjects: openProjects)
         )
