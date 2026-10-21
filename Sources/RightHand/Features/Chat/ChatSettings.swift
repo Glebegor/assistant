@@ -27,15 +27,18 @@ enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
         }
     }
 
-    /// Keychain entry that holds this provider's API key.
+    /// Keychain entry that holds this provider's API key. Copilot: the subscription sign-in
+    /// when you signed in, otherwise the GitHub Models token.
     var keychainAccount: String {
         switch self {
         case .claude: "anthropic-api-key"
         case .openAI: "openai-api-key"
-        case .copilot: "github-models-token"
+        case .copilot: CopilotAuth.isSignedIn ? CopilotAuth.oauthAccount : Self.gitHubModelsAccount
         case .gemini: "gemini-api-key"
         }
     }
+
+    static let gitHubModelsAccount = "github-models-token"
 
     var keysURL: URL {
         switch self {
@@ -109,7 +112,12 @@ enum ChatSettings {
         case .gemini: (key, fallback) = (Key.geminiModel, Default.geminiModel)
         }
         let value = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespaces) ?? ""
-        return value.isEmpty ? fallback : value
+        return provider == .copilot ? copilotModel(value.isEmpty ? fallback : value) : (value.isEmpty ? fallback : value)
+    }
+
+    /// GitHub Models names models "openai/gpt-4.1", the Copilot subscription just "gpt-4.1".
+    static func copilotModel(_ id: String) -> String {
+        CopilotAuth.isSignedIn ? String(id.split(separator: "/").last ?? Substring(id)) : id
     }
 
     @MainActor

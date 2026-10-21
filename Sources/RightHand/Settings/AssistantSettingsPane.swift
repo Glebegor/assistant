@@ -25,8 +25,8 @@ struct AssistantSettingsPane: View {
             ProviderSection(provider: .openAI, color: .green, subtitle: "The models your OpenAI account can use.")
             ProviderSection(provider: .gemini, color: .blue, subtitle: "Google's models.",
                             footer: "Create a free key in Google AI Studio and paste it as the API key.")
-            ProviderSection(provider: .copilot, color: .gray, subtitle: "Models from GitHub Models; a Copilot subscription gives higher limits.",
-                            footer: "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
+            ProviderSection(provider: .copilot, color: .gray, subtitle: "The models of your Copilot subscription, or of GitHub Models.",
+                            footer: "Sign in with your Copilot subscription for the same models as in VS Code (Claude, the newest GPT). This uses the API of the Copilot editor plugins, which GitHub doesn't offer to other apps: it may stop working, and GitHub could limit the account. Without signing in, Copilot uses GitHub Models: create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
 
             Section {
                 Toggle(isOn: $wholeMac) {
@@ -279,7 +279,12 @@ private struct ProviderSection: View {
 
     var body: some View {
         Section {
-            APIKeyRow(account: provider.keychainAccount, keysURL: provider.keysURL, color: color, systemImage: provider.systemImage)
+            if provider == .copilot {
+                CopilotSubscriptionRow(color: color) { model = ChatSettings.model(for: .copilot) }
+                APIKeyRow(account: ChatProvider.gitHubModelsAccount, keysURL: provider.keysURL, color: color, systemImage: provider.systemImage)
+            } else {
+                APIKeyRow(account: provider.keychainAccount, keysURL: provider.keysURL, color: color, systemImage: provider.systemImage)
+            }
             LabeledContent {
                 HStack(spacing: 6) {
                     Picker("Model", selection: $model) {
@@ -302,5 +307,69 @@ private struct ProviderSection: View {
             if let footer { SettingsFooter(footer) }
         }
         .task { await catalog.refresh(provider) }
+    }
+}
+
+/// Signing in to the Copilot subscription with a code entered on github.com.
+private struct CopilotSubscriptionRow: View {
+    let color: Color
+    /// Called after signing in or out (the model names change).
+    let onChange: () -> Void
+    @State private var isSignedIn = CopilotAuth.isSignedIn
+    @State private var code: CopilotAuth.DeviceCode?
+    @State private var error: String?
+    @State private var signIn: Task<Void, Never>?
+
+    var body: some View {
+        LabeledContent {
+            if isSignedIn {
+                Button("Sign Out") {
+                    CopilotAuth.signOut()
+                    changed()
+                }
+            } else if let code {
+                HStack(spacing: 8) {
+                    Text(verbatim: code.userCode)
+                        .font(.system(.body, design: .monospaced).weight(.semibold))
+                        .textSelection(.enabled)
+                    Button("Open GitHub") { NSWorkspace.shared.open(code.verificationURL) }
+                    Button("Cancel") { signIn?.cancel(); self.code = nil }
+                }
+            } else {
+                Button("Sign In") { start() }
+            }
+        } label: {
+            SettingsRowLabel("Copilot subscription",
+                             subtitle: error ?? (isSignedIn ? L("Signed in — Copilot uses your subscription's models.")
+                                 : code != nil ? L("Enter this code on GitHub (it's copied).") : L("Optional: the models you have in VS Code.")),
+                             systemImage: "person.crop.circle.badge.checkmark", color: color)
+        }
+    }
+
+    private func start() {
+        error = nil
+        signIn = Task {
+            do {
+                let code = try await CopilotAuth.startSignIn()
+                self.code = code
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(code.userCode, forType: .string)
+                NSWorkspace.shared.open(code.verificationURL)
+                try await CopilotAuth.finishSignIn(code)
+                self.code = nil
+                changed()
+            } catch is CancellationError {
+            } catch {
+                self.code = nil
+                self.error = error.localizedDescription
+            }
+        }
+    }
+
+    private func changed() {
+        isSignedIn = CopilotAuth.isSignedIn
+        UserDefaults.standard.set(ModelCatalog.builtIn(.copilot).first?.id, forKey: ChatSettings.Key.copilotModel)
+        ModelCatalog.shared.reset(.copilot)
+        onChange()
     }
 }

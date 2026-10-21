@@ -25,7 +25,18 @@ final class ModelCatalog {
         }
     }
 
-    func list(for provider: ChatProvider) -> [Model] { models[provider] ?? Self.builtIn(provider) }
+    func list(for provider: ChatProvider) -> [Model] {
+        let list = models[provider] ?? Self.builtIn(provider)
+        // GitHub Models ids have a publisher ("openai/gpt-4.1"), the subscription's don't.
+        if provider == .copilot, list.contains(where: { $0.id.contains("/") }) == CopilotAuth.isSignedIn { return Self.builtIn(provider) }
+        return list
+    }
+
+    /// After signing in to or out of the Copilot subscription.
+    func reset(_ provider: ChatProvider) {
+        models[provider] = Self.builtIn(provider)
+        Task { await refresh(provider) }
+    }
 
     func name(of id: String, provider: ChatProvider) -> String {
         list(for: provider).first { $0.id == id }?.name ?? id
@@ -69,6 +80,21 @@ final class ModelCatalog {
                 let aGPT = a.hasPrefix("gpt-"), bGPT = b.hasPrefix("gpt-")
                 return aGPT != bGPT ? aGPT : newestFirst(a, b)
             }.map { Model(id: $0, name: $0) }
+        case .copilot where CopilotAuth.isSignedIn:
+            // The subscription's models, as in the VS Code model picker. Models that only speak the
+            // newer Responses API (some Codex ones) are left out.
+            let items = try await get(CopilotAuth.request(path: "models", oauth: key))["data"]?.array ?? []
+            var seen = Set<String>()
+            return items.filter { model in
+                let supports = model["capabilities"]?["supports"]
+                let endpoints = model["supported_endpoints"]?.array?.compactMap(\.string)
+                return model["capabilities"]?["type"]?.string == "chat" && model["model_picker_enabled"]?.bool != false
+                    && supports?["tool_calls"]?.bool == true && (endpoints == nil || endpoints!.contains("/chat/completions"))
+                    && model["policy"]?["state"]?.string != "disabled"
+            }.compactMap { model in
+                guard let id = model["id"]?.string, seen.insert(id).inserted else { return nil }
+                return Model(id: id, name: model["name"]?.string ?? id)
+            }
         case .copilot:
             var request = URLRequest(url: URL(string: "https://models.github.ai/catalog/models")!)
             request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
@@ -123,6 +149,8 @@ final class ModelCatalog {
         switch provider {
         case .claude: ChatSettings.claudeModels.map { Model(id: $0.id, name: $0.name) }
         case .openAI: ["gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5", "gpt-5-mini", "gpt-4.1", "gpt-4o", "o3", "o4-mini"].map { Model(id: $0, name: $0) }
+        case .copilot where CopilotAuth.isSignedIn:
+            [("gpt-4.1", "GPT-4.1"), ("gpt-5-mini", "GPT-5 mini"), ("claude-sonnet-4", "Claude Sonnet 4")].map { Model(id: $0.0, name: $0.1) }
         case .copilot: ChatSettings.copilotModels.map { Model(id: $0.id, name: $0.name) }
         case .gemini: [("gemini-2.5-pro", "Gemini 2.5 Pro"), ("gemini-2.5-flash", "Gemini 2.5 Flash"), ("gemini-2.5-flash-lite", "Gemini 2.5 Flash-Lite")]
             .map { Model(id: $0.0, name: $0.1) }
