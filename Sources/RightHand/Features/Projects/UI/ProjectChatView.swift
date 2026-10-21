@@ -20,7 +20,7 @@ struct ProjectChatView: View {
             .padding(16)
         }
         .navigationTitle(engine.chat.title)
-        .navigationSubtitle(ChatSettings.claudeModels.first { $0.id == engine.chat.model }?.name ?? engine.chat.model)
+        .navigationSubtitle(ModelCatalog.shared.name(of: engine.chat.model, provider: engine.chat.provider))
         .onAppear { isInputFocused = true }
     }
 

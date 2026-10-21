@@ -39,9 +39,26 @@ struct ChatView: View {
             .labelsHidden()
             .fixedSize()
             .disabled(store.isSending)
-            Text(store.modelName)
+            // The model for new chats; an empty chat switches right away.
+            Menu {
+                ForEach(ModelCatalog.shared.list(for: store.provider)) { model in
+                    Button { store.chooseModel(model.id) } label: {
+                        if model.id == store.engine.chat.model { Label(model.name, systemImage: "checkmark") } else { Text(model.name) }
+                    }
+                }
+            } label: {
+                HStack(spacing: 3) {
+                    Text(store.modelName)
+                    Image(systemName: "chevron.down").font(.system(size: 8, weight: .bold))
+                }
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            }
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .fixedSize()
+            .disabled(store.isSending)
+            .help("Model")
             Spacer()
             Button("Projects", systemImage: "rectangle.stack") { openProjects() }
                 .buttonStyle(.notchPill())

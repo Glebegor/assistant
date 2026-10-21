@@ -3,9 +3,6 @@ import SwiftUI
 
 /// Settings → Assistant: API keys (stored in the Keychain) and models.
 struct AssistantSettingsPane: View {
-    @AppStorage(ChatSettings.Key.claudeModel) private var claudeModel = ChatSettings.Default.claudeModel
-    @AppStorage(ChatSettings.Key.openAIModel) private var openAIModel = ChatSettings.Default.openAIModel
-    @AppStorage(ChatSettings.Key.copilotModel) private var copilotModel = ChatSettings.Default.copilotModel
     @State private var alwaysAllowed = ToolPermissions.alwaysAllowed
     @AppStorage(ComputerAccess.key) private var wholeMac = true
     @AppStorage(AboutMe.key) private var aboutMe = ""
@@ -20,62 +17,16 @@ struct AssistantSettingsPane: View {
             } header: {
                 Text("About me")
             } footer: {
-                SettingsFooter("Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.")
+                SettingsFooter("Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Every AI reads this at the start of every chat.")
             }
 
-            Section {
-                APIKeyRow(account: ChatProvider.claude.keychainAccount, keysURL: ChatProvider.claude.keysURL,
-                          color: .orange, systemImage: "sparkle")
-                LabeledContent {
-                    Picker("Model", selection: $claudeModel) {
-                        ForEach(ChatSettings.claudeModels, id: \.id) { Text($0.name).tag($0.id) }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                } label: {
-                    SettingsRowLabel("Model", subtitle: "Opus is the smartest, Haiku the fastest and cheapest.",
-                                     systemImage: "cpu", color: .brown)
-                }
-            } header: {
-                Text("Claude")
-            }
-
-            Section {
-                APIKeyRow(account: ChatProvider.openAI.keychainAccount, keysURL: ChatProvider.openAI.keysURL,
-                          color: .green, systemImage: "bubble.left.and.bubble.right.fill")
-                LabeledContent {
-                    TextField("Model", text: $openAIModel, prompt: Text(ChatSettings.Default.openAIModel))
-                        .textFieldStyle(.roundedBorder)
-                        .labelsHidden()
-                        .frame(width: 160)
-                } label: {
-                    SettingsRowLabel("Model", subtitle: "Any model name from your OpenAI account, e.g. gpt-5.",
-                                     systemImage: "cpu", color: .mint)
-                }
-            } header: {
-                Text("ChatGPT")
-            }
-
-            Section {
-                APIKeyRow(account: ChatProvider.copilot.keychainAccount, keysURL: ChatProvider.copilot.keysURL,
-                          color: .gray, systemImage: "chevron.left.forwardslash.chevron.right")
-                LabeledContent {
-                    Picker("Model", selection: $copilotModel) {
-                        ForEach(ChatSettings.copilotModels, id: \.id) { Text(verbatim: $0.name).tag($0.id) }
-                        if !ChatSettings.copilotModels.contains(where: { $0.id == copilotModel }) { Text(verbatim: copilotModel).tag(copilotModel) }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                } label: {
-                    SettingsRowLabel("Model", subtitle: "Models from GitHub Models; a Copilot subscription gives higher limits.",
-                                     systemImage: "cpu", color: .gray)
-                }
-            } header: {
-                Text("GitHub Copilot")
-            } footer: {
-                SettingsFooter("Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
-            }
-
+            ProviderSection(provider: .claude, color: .orange,
+                            subtitle: "Fable and Opus are the smartest, Haiku the fastest and cheapest.")
+            ProviderSection(provider: .openAI, color: .green, subtitle: "The models your OpenAI account can use.")
+            ProviderSection(provider: .gemini, color: .blue, subtitle: "Google's models.",
+                            footer: "Create a free key in Google AI Studio and paste it as the API key.")
+            ProviderSection(provider: .copilot, color: .gray, subtitle: "Models from GitHub Models; a Copilot subscription gives higher limits.",
+                            footer: "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.")
 
             Section {
                 Toggle(isOn: $wholeMac) {
@@ -306,5 +257,50 @@ private struct VoiceSettingsSection: View {
         if let monitor { NSEvent.removeMonitor(monitor) }
         monitor = nil
         NotificationCenter.default.post(name: VoiceAssistant.pauseShortcutNotification, object: false)
+    }
+}
+
+/// One AI: its key and its model (the list comes from the provider, so new models appear by themselves).
+private struct ProviderSection: View {
+    let provider: ChatProvider
+    let color: Color
+    let subtitle: String
+    var footer: String?
+    @AppStorage private var model: String
+    private var catalog: ModelCatalog { .shared }
+
+    init(provider: ChatProvider, color: Color, subtitle: String, footer: String? = nil) {
+        self.provider = provider
+        self.color = color
+        self.subtitle = subtitle
+        self.footer = footer
+        _model = AppStorage(wrappedValue: ChatSettings.model(for: provider), ChatSettings.modelKey(for: provider))
+    }
+
+    var body: some View {
+        Section {
+            APIKeyRow(account: provider.keychainAccount, keysURL: provider.keysURL, color: color, systemImage: provider.systemImage)
+            LabeledContent {
+                HStack(spacing: 6) {
+                    Picker("Model", selection: $model) {
+                        ForEach(catalog.list(for: provider)) { Text(verbatim: $0.name).tag($0.id) }
+                        if !catalog.list(for: provider).contains(where: { $0.id == model }) { Text(verbatim: model).tag(model) }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                    Button("Refresh", systemImage: "arrow.clockwise") { Task { await catalog.refresh(provider) } }
+                        .labelStyle(.iconOnly).buttonStyle(.borderless)
+                        .disabled(catalog.loading.contains(provider))
+                        .help("Load the models your key can use")
+                }
+            } label: {
+                SettingsRowLabel("Model", subtitle: subtitle, systemImage: "cpu", color: color)
+            }
+        } header: {
+            Text(verbatim: provider == .copilot ? "GitHub Copilot" : provider.title)
+        } footer: {
+            if let footer { SettingsFooter(footer) }
+        }
+        .task { await catalog.refresh(provider) }
     }
 }

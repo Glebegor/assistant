@@ -2,7 +2,7 @@
 
 Personal macOS productivity hub that lives in the camera notch. Move the mouse to the
 notch and a panel drops down with Pomodoro, tasks, a file/screenshot shelf, screen recording
-and an AI assistant (Claude, ChatGPT or GitHub Copilot) that works with your Mac, Notion, ClickUp, Jira, Google and Outlook — by text or by voice.
+and an AI assistant (Claude, ChatGPT, Gemini or GitHub Copilot) that works with your Mac, Notion, ClickUp, Jira, Google and Outlook — by text or by voice.
 
 ![The AI in the notch working through Notion tasks](assets/screenshots/notch-chat-notion.jpg)
 
@@ -130,7 +130,7 @@ Sources/RightHand/
 - [ ] Assistant tools: screen & clipboard, system control
 - [x] Tasks tab: open Notion tasks (yours or unassigned), overdue and high priority first, tick to mark done
 - [x] AI tools for Notion, ClickUp, Jira, Gmail and Outlook (read) and Google Drive; ClickUp and Jira tasks in the Tasks tab
-- [x] Three AIs: Claude, ChatGPT and GitHub Copilot (GitHub Models), all with the same tools
+- [x] Four AIs: Claude, ChatGPT, Gemini and GitHub Copilot (GitHub Models), all with the same tools; every model your key can use, chosen in Settings or right in the notch
 - [x] "About me" profile that every chat starts with
 - [x] Voice: a shortcut (⌥Space) to talk to the AI, a glowing notch with live text and the answer, answers read aloud by the Mac's own voices
 - [x] Screen recording for meetings: choose a screen, your voice and the computer sound on separate tracks, HEVC ~3 GB per 2 hours, up to 4 hours

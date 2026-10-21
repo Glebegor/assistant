@@ -6,13 +6,18 @@ import Foundation
 struct OpenAIClient: ModelClient {
     static let openAIEndpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
     static let gitHubModelsEndpoint = URL(string: "https://models.github.ai/inference/chat/completions")!
+    static let geminiEndpoint = URL(string: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions")!
     var endpoint = openAIEndpoint
 
     init(endpoint: URL = openAIEndpoint) { self.endpoint = endpoint }
 
     /// The client for a provider that speaks the Chat Completions API.
     init(provider: ChatProvider) {
-        self.init(endpoint: provider == .copilot ? Self.gitHubModelsEndpoint : Self.openAIEndpoint)
+        switch provider {
+        case .copilot: self.init(endpoint: Self.gitHubModelsEndpoint)
+        case .gemini: self.init(endpoint: Self.geminiEndpoint)
+        default: self.init(endpoint: Self.openAIEndpoint)
+        }
     }
     /// Roughly 80k tokens; above this the older part of the chat is summarized.
     static let summarizeAboveCharacters = 320_000

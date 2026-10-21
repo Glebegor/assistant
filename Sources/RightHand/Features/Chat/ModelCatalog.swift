@@ -1,0 +1,131 @@
+import Foundation
+import Observation
+
+/// The chat models each AI offers on your key, fetched from the provider (so new models show up
+/// by themselves) and remembered; a built-in list is used until the first fetch.
+@Observable
+@MainActor
+final class ModelCatalog {
+    static let shared = ModelCatalog()
+
+    struct Model: Codable, Hashable, Identifiable {
+        let id: String
+        let name: String
+    }
+
+    private(set) var models: [ChatProvider: [Model]] = [:]
+    private(set) var loading: Set<ChatProvider> = []
+    private static let cacheKey = "chat.modelCatalog"
+
+    init() {
+        let cached = (UserDefaults.standard.data(forKey: Self.cacheKey))
+            .flatMap { try? JSONDecoder().decode([String: [Model]].self, from: $0) } ?? [:]
+        for provider in ChatProvider.allCases {
+            models[provider] = cached[provider.rawValue].flatMap { $0.isEmpty ? nil : $0 } ?? Self.builtIn(provider)
+        }
+    }
+
+    func list(for provider: ChatProvider) -> [Model] { models[provider] ?? Self.builtIn(provider) }
+
+    func name(of id: String, provider: ChatProvider) -> String {
+        list(for: provider).first { $0.id == id }?.name ?? id
+    }
+
+    /// Fetches every provider that has a key (called at launch and from Settings).
+    func refreshAll() {
+        for provider in ChatProvider.allCases where Keychain.read(provider.keychainAccount) != nil {
+            Task { await refresh(provider) }
+        }
+    }
+
+    func refresh(_ provider: ChatProvider) async {
+        guard let key = Keychain.read(provider.keychainAccount), !loading.contains(provider) else { return }
+        loading.insert(provider)
+        defer { loading.remove(provider) }
+        guard let fetched = try? await Self.fetch(provider, key: key), !fetched.isEmpty else { return }
+        models[provider] = fetched
+        let cache = Dictionary(uniqueKeysWithValues: models.map { ($0.key.rawValue, $0.value) })
+        UserDefaults.standard.set(try? JSONEncoder().encode(cache), forKey: Self.cacheKey)
+    }
+
+    // MARK: Fetching
+
+    private static func fetch(_ provider: ChatProvider, key: String) async throws -> [Model] {
+        switch provider {
+        case .claude:
+            var request = URLRequest(url: URL(string: "https://api.anthropic.com/v1/models?limit=100")!)
+            request.setValue(key, forHTTPHeaderField: "x-api-key")
+            request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+            let json = try await get(request)
+            return (json["data"]?.array ?? []).compactMap { model in
+                model["id"]?.string.map { Model(id: $0, name: model["display_name"]?.string ?? $0) }
+            }
+        case .openAI:
+            var request = URLRequest(url: URL(string: "https://api.openai.com/v1/models")!)
+            request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+            let ids = (try await get(request)["data"]?.array ?? []).compactMap { $0["id"]?.string }
+            // GPT models first (newest on top), then the o-series reasoning models.
+            return ids.filter(isOpenAIChatModel).sorted { a, b in
+                let aGPT = a.hasPrefix("gpt-"), bGPT = b.hasPrefix("gpt-")
+                return aGPT != bGPT ? aGPT : newestFirst(a, b)
+            }.map { Model(id: $0, name: $0) }
+        case .copilot:
+            var request = URLRequest(url: URL(string: "https://models.github.ai/catalog/models")!)
+            request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+            let items = try await get(request).array ?? []
+            return items.filter { ($0["capabilities"]?.array ?? []).contains("tool-calling") }.compactMap { model in
+                model["id"]?.string.map { Model(id: $0, name: model["name"]?.string ?? $0) }
+            }
+        case .gemini:
+            let request = URLRequest(url: URL(string: "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=\(key)")!)
+            let items = try await get(request)["models"]?.array ?? []
+            return items.filter { model in
+                let id = model["name"]?.string ?? ""
+                let skip = ["embedding", "image", "tts", "live", "aqa", "vision", "learnlm", "imagen", "veo"]
+                return id.contains("gemini") && !skip.contains { id.contains($0) }
+                    && (model["supportedGenerationMethods"]?.array ?? []).contains("generateContent")
+            }.compactMap { model in
+                (model["name"]?.string).map { name in
+                    let id = name.replacingOccurrences(of: "models/", with: "")
+                    return Model(id: id, name: model["displayName"]?.string ?? id)
+                }
+            }.sorted { newestFirst($0.id, $1.id) }
+        }
+    }
+
+    private static func get(_ request: URLRequest) async throws -> JSONValue {
+        var request = request
+        request.timeoutInterval = 20
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200, let json = JSONValue.parse(data) else {
+            throw ChatError(message: "Couldn't load the model list.")
+        }
+        return json
+    }
+
+    /// Chat models only: no audio, images, realtime, search, embeddings, old or dated snapshots.
+    static func isOpenAIChatModel(_ id: String) -> Bool {
+        guard id.hasPrefix("gpt-") || id.hasPrefix("o1") || id.hasPrefix("o3") || id.hasPrefix("o4") else { return false }
+        let skip = ["audio", "realtime", "tts", "transcribe", "image", "search", "live", "instruct", "codex", "-pro",
+                    "gpt-3.5", "gpt-4-", "chat-latest", "translate", "whisper"]
+        if skip.contains(where: id.contains) || id == "gpt-4" { return false }
+        // "gpt-4.1-2025-04-14" duplicates "gpt-4.1".
+        return id.range(of: "-20\\d\\d-\\d\\d-\\d\\d$", options: .regularExpression) == nil
+    }
+
+    /// Higher version numbers first ("gpt-6.1-sol" before "gpt-5.5").
+    nonisolated static func newestFirst(_ a: String, _ b: String) -> Bool {
+        a.compare(b, options: [.numeric]) == .orderedDescending
+    }
+
+    static func builtIn(_ provider: ChatProvider) -> [Model] {
+        switch provider {
+        case .claude: ChatSettings.claudeModels.map { Model(id: $0.id, name: $0.name) }
+        case .openAI: ["gpt-5.5", "gpt-5.4", "gpt-5.4-mini", "gpt-5", "gpt-5-mini", "gpt-4.1", "gpt-4o", "o3", "o4-mini"].map { Model(id: $0, name: $0) }
+        case .copilot: ChatSettings.copilotModels.map { Model(id: $0.id, name: $0.name) }
+        case .gemini: [("gemini-2.5-pro", "Gemini 2.5 Pro"), ("gemini-2.5-flash", "Gemini 2.5 Flash"), ("gemini-2.5-flash-lite", "Gemini 2.5 Flash-Lite")]
+            .map { Model(id: $0.0, name: $0.1) }
+        }
+    }
+}

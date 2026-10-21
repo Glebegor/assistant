@@ -138,6 +138,7 @@
 "Create Google Doc “%@”" = "Vytvořit Google Doc „%@“";
 "Create Google Docs" = "Vytváření Google Docs";
 "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Vytvoř fine-grained token GitHubu s oprávněním „Models: read“ a vlož ho jako klíč API.";
+"Create a free key in Google AI Studio and paste it as the API key." = "Vytvoř si zdarma klíč v Google AI Studiu a vlož ho jako klíč API.";
 "Create folder %@" = "Vytvořit složku %@";
 "Create folders" = "Vytváření složek";
 "Cut" = "Vyjmout";
@@ -177,6 +178,7 @@
 "Every" = "Každých";
 "Eye Rest" = "Odpočinek očí";
 "Eye Rest Reminders" = "Připomínky odpočinku očí";
+"Fable and Opus are the smartest, Haiku the fastest and cheapest." = "Fable a Opus jsou nejchytřejší, Haiku nejrychlejší a nejlevnější.";
 "Failed" = "Nepodařilo se";
 "Files" = "Soubory";
 "Files folder" = "Složka se soubory";
@@ -205,6 +207,7 @@
 "Google sign-in failed. Try again." = "Přihlášení ke Googlu se nepovedlo. Zkus to znovu.";
 "Google sign-in timed out. Try again." = "Čas na přihlášení ke Googlu vypršel. Zkus to znovu.";
 "Google sign-in was cancelled (%@)." = "Přihlášení ke Googlu bylo zrušeno (%@).";
+"Google's models." = "Modely Googlu.";
 "Hi! I'm RightHand, your right hand on the Mac." = "Ahoj! Jsem RightHand, tvoje pravá ruka na Macu.";
 "Homework" = "Domácí úkoly";
 "How productive the meeting was" = "Jak produktivní schůzka byla";
@@ -242,6 +245,7 @@
 "Listening…" = "Poslouchám…";
 "Load tasks again" = "Znovu načíst úkoly";
 "Load tasks from Notion again" = "Znovu načíst úkoly z Notionu";
+"Load the models your key can use" = "Načíst modely, které tvůj klíč může používat";
 "Loading speech model…" = "Načítám model rozpoznávání…";
 "Long Break" = "Dlouhá přestávka";
 "Long break" = "Dlouhá přestávka";
@@ -522,6 +526,7 @@
 "The download failed." = "Stahování se nezdařilo.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Napoprvé se macOS zeptá, zda RightHand smí ovládat každý prohlížeč. Klikni na OK.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "Mikrofon nedává zvuk. Vyber jiný v Nastavení → Ellipse.";
+"The models your OpenAI account can use." = "Modely, které tvůj účet OpenAI může používat.";
 "The project's instructions, files and memory are already part of this chat." = "Pokyny, soubory a paměť projektu už jsou součástí tohoto chatu.";
 "The recording couldn't be saved." = "Nahrávku se nepodařilo uložit.";
 "The review came back in an unexpected form. Try Analyze Again." = "Shrnutí přišlo v neočekávané podobě. Zkus Analyzovat znovu.";
@@ -581,6 +586,7 @@
 "What you hear: the other people in a call, videos…, on its own track" = "Co slyšíš: ostatní v hovoru, videa… — na samostatné stopě";
 "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper poslouchá na tvém Macu: asi 15–20 minut na dvouhodinovou schůzku.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Kdo jsi, na čem pracuješ, jaké odpovědi máš rád, odkazy (GitHub, LinkedIn, web…). Claude a ChatGPT si to přečtou na začátku každého chatu.";
+"Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Every AI reads this at the start of every chat." = "Kdo jsi, na čem pracuješ, jaké odpovědi máš rád, odkazy (GitHub, LinkedIn, web…). Každá AI si to přečte na začátku každého chatu.";
 "Window" = "Okno";
 "Work with the whole Mac" = "Pracovat s celým Macem";
 "Workshop" = "Workshop";

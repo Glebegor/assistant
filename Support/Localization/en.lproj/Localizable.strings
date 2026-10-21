@@ -138,6 +138,7 @@
 "Create Google Doc “%@”" = "Create Google Doc “%@”";
 "Create Google Docs" = "Create Google Docs";
 "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.";
+"Create a free key in Google AI Studio and paste it as the API key." = "Create a free key in Google AI Studio and paste it as the API key.";
 "Create folder %@" = "Create folder %@";
 "Create folders" = "Create folders";
 "Cut" = "Cut";
@@ -177,6 +178,7 @@
 "Every" = "Every";
 "Eye Rest" = "Eye Rest";
 "Eye Rest Reminders" = "Eye Rest Reminders";
+"Fable and Opus are the smartest, Haiku the fastest and cheapest." = "Fable and Opus are the smartest, Haiku the fastest and cheapest.";
 "Failed" = "Failed";
 "Files" = "Files";
 "Files folder" = "Files folder";
@@ -205,6 +207,7 @@
 "Google sign-in failed. Try again." = "Google sign-in failed. Try again.";
 "Google sign-in timed out. Try again." = "Google sign-in timed out. Try again.";
 "Google sign-in was cancelled (%@)." = "Google sign-in was cancelled (%@).";
+"Google's models." = "Google's models.";
 "Hi! I'm RightHand, your right hand on the Mac." = "Hi! I'm RightHand, your right hand on the Mac.";
 "Homework" = "Homework";
 "How productive the meeting was" = "How productive the meeting was";
@@ -242,6 +245,7 @@
 "Listening…" = "Listening…";
 "Load tasks again" = "Load tasks again";
 "Load tasks from Notion again" = "Load tasks from Notion again";
+"Load the models your key can use" = "Load the models your key can use";
 "Loading speech model…" = "Loading speech model…";
 "Long Break" = "Long Break";
 "Long break" = "Long break";
@@ -522,6 +526,7 @@
 "The download failed." = "The download failed.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "The first time, macOS asks to let RightHand control each browser. Click OK.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "The microphone gives no sound. Choose another one in Settings → Ellipse.";
+"The models your OpenAI account can use." = "The models your OpenAI account can use.";
 "The project's instructions, files and memory are already part of this chat." = "The project's instructions, files and memory are already part of this chat.";
 "The recording couldn't be saved." = "The recording couldn't be saved.";
 "The review came back in an unexpected form. Try Analyze Again." = "The review came back in an unexpected form. Try Analyze Again.";
@@ -581,6 +586,7 @@
 "What you hear: the other people in a call, videos…, on its own track" = "What you hear: the other people in a call, videos…, on its own track";
 "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting." = "Whisper listens on your Mac: about 15–20 minutes for a two-hour meeting.";
 "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat." = "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Claude and ChatGPT read this at the start of every chat.";
+"Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Every AI reads this at the start of every chat." = "Who you are, what you work on, how you like answers, links (GitHub, LinkedIn, website…). Every AI reads this at the start of every chat.";
 "Window" = "Window";
 "Work with the whole Mac" = "Work with the whole Mac";
 "Workshop" = "Workshop";

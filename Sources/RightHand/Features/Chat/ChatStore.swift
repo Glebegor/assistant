@@ -74,7 +74,13 @@ final class ChatStore {
     var isEmpty: Bool { engine.chat.messages.isEmpty }
     var modelName: String {
         _ = settingsRevision
-        return (ChatSettings.claudeModels + ChatSettings.copilotModels).first { $0.id == engine.chat.model }?.name ?? engine.chat.model
+        return ModelCatalog.shared.name(of: engine.chat.model, provider: engine.chat.provider)
+    }
+
+    /// Makes `id` the model for this AI; the current chat switches if it hasn't started.
+    func chooseModel(_ id: String) {
+        UserDefaults.standard.set(id, forKey: ChatSettings.modelKey(for: provider))
+        if isEmpty { replaceSelected(with: provider) }
     }
 
     func send(_ text: String) {

@@ -24,6 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         Notifier.shared.requestAuthorization()
         Updater.shared.startChecking()
+        ModelCatalog.shared.refreshAll()
 
         let settings = settingsWindow
         let eyeRest = EyeRestController(pomodoro: pomodoro)

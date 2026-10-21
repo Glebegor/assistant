@@ -2,7 +2,7 @@ import Foundation
 
 /// Which AI answers in the Assistant tab.
 enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
-    case claude, openAI, copilot
+    case claude, openAI, copilot, gemini
 
     var id: Self { self }
 
@@ -11,6 +11,7 @@ enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
         case .claude: "Claude"
         case .openAI: "ChatGPT"
         case .copilot: "Copilot"
+        case .gemini: "Gemini"
         }
     }
 
@@ -22,6 +23,7 @@ enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
         case .claude: "sparkle"
         case .openAI: "bubble.left.and.bubble.right.fill"
         case .copilot: "chevron.left.forwardslash.chevron.right"
+        case .gemini: "diamond.fill"
         }
     }
 
@@ -31,6 +33,7 @@ enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
         case .claude: "anthropic-api-key"
         case .openAI: "openai-api-key"
         case .copilot: "github-models-token"
+        case .gemini: "gemini-api-key"
         }
     }
 
@@ -39,6 +42,7 @@ enum ChatProvider: String, CaseIterable, Identifiable, Codable, Sendable {
         case .claude: URL(string: "https://console.anthropic.com/settings/keys")!
         case .openAI: URL(string: "https://platform.openai.com/api-keys")!
         case .copilot: URL(string: "https://github.com/settings/personal-access-tokens/new")!
+        case .gemini: URL(string: "https://aistudio.google.com/apikey")!
         }
     }
 }
@@ -50,6 +54,7 @@ enum ChatSettings {
         static let claudeModel = "chat.claudeModel"
         static let openAIModel = "chat.openAIModel"
         static let copilotModel = "chat.copilotModel"
+        static let geminiModel = "chat.geminiModel"
     }
 
     /// GitHub Models that can use tools (Copilot), as "publisher/model".
@@ -62,9 +67,14 @@ enum ChatSettings {
     ]
 
     static let claudeModels: [(id: String, name: String)] = [
+        ("claude-fable-5-1", "Claude Fable 5.1"),
         ("claude-opus-5-5", "Claude Opus 5.5"),
         ("claude-sonnet-5-5", "Claude Sonnet 5.5"),
         ("claude-haiku-5-5", "Claude Haiku 5.5"),
+        ("claude-opus-5", "Claude Opus 5"),
+        ("claude-sonnet-5", "Claude Sonnet 5"),
+        ("claude-opus-4-8", "Claude Opus 4.8"),
+        ("claude-sonnet-4-6", "Claude Sonnet 4.6"),
     ]
 
     enum Default {
@@ -72,6 +82,7 @@ enum ChatSettings {
         static let claudeModel = "claude-opus-5-5"
         static let openAIModel = "gpt-5"
         static let copilotModel = "openai/gpt-4.1"
+        static let geminiModel = "gemini-2.5-pro"
     }
 
     static func registerDefaults() {
@@ -80,6 +91,7 @@ enum ChatSettings {
             Key.claudeModel: Default.claudeModel,
             Key.openAIModel: Default.openAIModel,
             Key.copilotModel: Default.copilotModel,
+            Key.geminiModel: Default.geminiModel,
         ])
     }
 
@@ -94,14 +106,25 @@ enum ChatSettings {
         case .claude: (key, fallback) = (Key.claudeModel, Default.claudeModel)
         case .openAI: (key, fallback) = (Key.openAIModel, Default.openAIModel)
         case .copilot: (key, fallback) = (Key.copilotModel, Default.copilotModel)
+        case .gemini: (key, fallback) = (Key.geminiModel, Default.geminiModel)
         }
         let value = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespaces) ?? ""
         return value.isEmpty ? fallback : value
     }
 
+    @MainActor
     static func modelName(for provider: ChatProvider) -> String {
-        let id = model(for: provider)
-        return (claudeModels + copilotModels).first { $0.id == id }?.name ?? id
+        ModelCatalog.shared.name(of: model(for: provider), provider: provider)
+    }
+
+    /// The model setting of a provider (Settings and the notch's model menu write it).
+    static func modelKey(for provider: ChatProvider) -> String {
+        switch provider {
+        case .claude: Key.claudeModel
+        case .openAI: Key.openAIModel
+        case .copilot: Key.copilotModel
+        case .gemini: Key.geminiModel
+        }
     }
 
     /// Fixed for the whole conversation (Claude requires earlier parts of a chat to stay unchanged).
