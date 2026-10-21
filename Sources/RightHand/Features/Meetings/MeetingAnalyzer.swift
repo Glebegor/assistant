@@ -302,7 +302,7 @@ enum MeetingReviewer {
 
         var chat = ProjectChat(projectID: UUID(), provider: provider, model: ChatSettings.model(for: provider),
                                system: system, contextFingerprint: "")
-        let client: ModelClient = provider == .claude ? ClaudeClient() : OpenAIClient()
+        let client: ModelClient = provider == .claude ? ClaudeClient() : OpenAIClient(provider: provider)
         chat.messages = client.userMessages(text: request, contextUpdate: nil)
         let turn = try await client.turn(system: system, chat: chat, tools: [], apiKey: apiKey) { _ in }
         chat.messages.append(turn.message)

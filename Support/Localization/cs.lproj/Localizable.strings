@@ -136,6 +136,7 @@
 "Create %@" = "Vytvořit %@";
 "Create Google Doc “%@”" = "Vytvořit Google Doc „%@“";
 "Create Google Docs" = "Vytváření Google Docs";
+"Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Vytvoř fine-grained token GitHubu s oprávněním „Models: read“ a vlož ho jako klíč API.";
 "Create folder %@" = "Vytvořit složku %@";
 "Create folders" = "Vytváření složek";
 "Cut" = "Vyjmout";
@@ -254,6 +255,7 @@
 "Microphone" = "Mikrofon";
 "Minimize" = "Minimalizovat";
 "Model" = "Model";
+"Models from GitHub Models; a Copilot subscription gives higher limits." = "Modely z GitHub Models; předplatné Copilot dává vyšší limity.";
 "Move %@ to %@" = "Přesunout %@ do %@";
 "Move %@ to the Trash" = "Přesunout %@ do koše";
 "Move and copy files" = "Přesouvání a kopírování souborů";

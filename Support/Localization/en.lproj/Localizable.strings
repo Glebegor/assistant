@@ -136,6 +136,7 @@
 "Create %@" = "Create %@";
 "Create Google Doc “%@”" = "Create Google Doc “%@”";
 "Create Google Docs" = "Create Google Docs";
+"Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.";
 "Create folder %@" = "Create folder %@";
 "Create folders" = "Create folders";
 "Cut" = "Cut";
@@ -254,6 +255,7 @@
 "Microphone" = "Microphone";
 "Minimize" = "Minimize";
 "Model" = "Model";
+"Models from GitHub Models; a Copilot subscription gives higher limits." = "Models from GitHub Models; a Copilot subscription gives higher limits.";
 "Move %@ to %@" = "Move %@ to %@";
 "Move %@ to the Trash" = "Move %@ to the Trash";
 "Move and copy files" = "Move and copy files";

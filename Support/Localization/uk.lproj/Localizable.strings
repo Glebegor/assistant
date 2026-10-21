@@ -136,6 +136,7 @@
 "Create %@" = "Створити %@";
 "Create Google Doc “%@”" = "Створити Google Doc «%@»";
 "Create Google Docs" = "Створення Google Docs";
+"Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key." = "Створи fine-grained токен GitHub з дозволом «Models: read» і встав його як ключ API.";
 "Create folder %@" = "Створити папку %@";
 "Create folders" = "Створення папок";
 "Cut" = "Вирізати";
@@ -254,6 +255,7 @@
 "Microphone" = "Мікрофон";
 "Minimize" = "Згорнути";
 "Model" = "Модель";
+"Models from GitHub Models; a Copilot subscription gives higher limits." = "Моделі з GitHub Models; підписка Copilot дає більші ліміти.";
 "Move %@ to %@" = "Перемістити %@ у %@";
 "Move %@ to the Trash" = "Перемістити %@ у Кошик";
 "Move and copy files" = "Переміщення й копіювання файлів";

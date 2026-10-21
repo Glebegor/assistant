@@ -587,4 +587,6 @@ T = {
     'Automatic': ('Автоматично', 'Automaticky', 'Автоматически'),
     'Analyze again (choose the kind of meeting)': ('Проаналізувати знову (вибери тип зустрічі)', 'Analyzovat znovu (vyber typ schůzky)', 'Проанализировать снова (выбери тип встречи)'),
     'Transcribe on your Mac and write a review; choose the kind of meeting, or let it recognize it': ("Розпізнати на Mac і написати рев'ю; вибери тип зустрічі або дай визначити самому", 'Přepsat na Macu a napsat shrnutí; vyber typ schůzky, nebo ho nech rozpoznat', 'Распознать на Mac и написать обзор; выбери тип встречи или дай определить самому'),
+    'Models from GitHub Models; a Copilot subscription gives higher limits.': ('Моделі з GitHub Models; підписка Copilot дає більші ліміти.', 'Modely z GitHub Models; předplatné Copilot dává vyšší limity.', 'Модели из GitHub Models; подписка Copilot даёт большие лимиты.'),
+    'Create a fine-grained GitHub token with the “Models: read” permission and paste it as the API key.': ('Створи fine-grained токен GitHub з дозволом «Models: read» і встав його як ключ API.', 'Vytvoř fine-grained token GitHubu s oprávněním „Models: read“ a vlož ho jako klíč API.', 'Создай fine-grained токен GitHub с разрешением «Models: read» и вставь его как ключ API.'),
 }

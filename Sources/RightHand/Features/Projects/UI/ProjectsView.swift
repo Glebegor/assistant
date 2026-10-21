@@ -38,7 +38,7 @@ struct ProjectsView: View {
                     Label("Overview", systemImage: "folder")
                         .tag(Selection.project(project.id))
                     ForEach(store.chats(in: project.id)) { chat in
-                        Label(chat.title, systemImage: chat.provider == .claude ? "sparkle" : "bubble.left.and.bubble.right")
+                        Label(chat.title, systemImage: chat.provider.systemImage)
                             .lineLimit(1)
                             .tag(Selection.chat(chat.id))
                             .contextMenu {

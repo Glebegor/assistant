@@ -22,7 +22,7 @@ enum ChatDisplayItem: Identifiable {
         for (number, message) in chat.messages.enumerated() {
             let id = "\(number)"
             let role = message["role"]?.string
-            if chat.provider == .openAI, number == chat.contextStart, number > 0 {
+            if chat.provider.usesChatCompletions, number == chat.contextStart, number > 0 {
                 items.append(.summarized(id: "\(id)-summary"))
             }
 

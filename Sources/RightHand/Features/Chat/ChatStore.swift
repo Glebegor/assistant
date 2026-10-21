@@ -74,7 +74,7 @@ final class ChatStore {
     var isEmpty: Bool { engine.chat.messages.isEmpty }
     var modelName: String {
         _ = settingsRevision
-        return ChatSettings.claudeModels.first { $0.id == engine.chat.model }?.name ?? engine.chat.model
+        return (ChatSettings.claudeModels + ChatSettings.copilotModels).first { $0.id == engine.chat.model }?.name ?? engine.chat.model
     }
 
     func send(_ text: String) {
