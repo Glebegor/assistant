@@ -132,7 +132,10 @@ struct RecorderView: View {
     private var recent: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text("Recent").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                Text("Recordings").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                if recordings.count > 1 {
+                    Text(verbatim: "\(recordings.count)").font(.caption.monospacedDigit()).foregroundStyle(.tertiary)
+                }
                 Spacer()
                 Button { recorder.showInFinder() } label: {
                     Label("Open Folder", systemImage: "folder").labelStyle(.titleAndIcon)
@@ -144,9 +147,16 @@ struct RecorderView: View {
                     .font(.caption).foregroundStyle(.tertiary)
                     .padding(.vertical, 6)
             } else {
-                ForEach(recordings.prefix(2)) { recording in
-                    RecordingRow(recording: recording, analyzer: analyzer, openReview: openReview) { recorder.showInFinder(recording.url) }
+                // All recordings, newest first; scroll for older ones.
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 4) {
+                        ForEach(recordings) { recording in
+                            RecordingRow(recording: recording, analyzer: analyzer, openReview: openReview) { recorder.showInFinder(recording.url) }
+                        }
+                    }
                 }
+                .scrollIndicators(.automatic)
+                .frame(maxHeight: .infinity)
             }
         }
         .padding(10)

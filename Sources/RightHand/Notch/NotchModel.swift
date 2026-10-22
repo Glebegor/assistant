@@ -34,7 +34,7 @@ enum NotchTab: CaseIterable, Identifiable {
         case .pomodoro: CGSize(width: 560, height: 230)
         case .tasks: CGSize(width: 560, height: 360)
         case .calendar: CGSize(width: 560, height: 420)
-        case .recorder: CGSize(width: 580, height: 236)
+        case .recorder: CGSize(width: 580, height: 300)
         case .chat: CGSize(width: 600, height: 440)
         case .shelf: CGSize(width: 560, height: 325) // two rows: clipboard and files
         }
