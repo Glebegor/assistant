@@ -24,10 +24,10 @@ struct NotchRootView: View {
             && (voice.displayID == nil || voice.displayID == model.displayID)
     }
 
-    /// The Pomodoro dot left of the closed notch; it steps aside while the AI works, a card shows
-    /// or the panel is open.
+    /// The Pomodoro dot left of the closed notch; it steps aside while the AI works, a card shows,
+    /// the panel is open or an app is full screen there.
     private var showsPomodoro: Bool {
-        !model.isExpanded && !showsVoice && !showsApproval && !showsSleep && !voice.isVisible
+        !model.isExpanded && !model.hidesWhenCollapsed && !showsVoice && !showsApproval && !showsSleep && !voice.isVisible
             && !(chat.isWorking && (chat.workingDisplayID == nil || chat.workingDisplayID == model.displayID))
     }
 
