@@ -1,13 +1,30 @@
 import AppKit
 import SwiftUI
 
-/// Tasks tab: open tasks from Notion, overdue and high priority first. Tick one to mark it done.
+/// Tasks tab: today's habits on top, then open tasks from Notion, ClickUp and Jira, overdue and
+/// high priority first. Tick one to mark it done.
 struct TasksView: View {
     let store: TaskStore
     let openSettings: () -> Void
+    @State private var showsHabits = false
+    private var habits: HabitStore { .shared }
 
     var body: some View {
+        if showsHabits {
+            HabitsAnalysisView(store: habits) { showsHabits = false }
+        } else {
+            tasks
+        }
+    }
+
+    private func openHabitSettings() {
+        UserDefaults.standard.set(SettingsPage.habits.rawValue, forKey: "settings.page")
+        openSettings()
+    }
+
+    private var tasks: some View {
         VStack(spacing: 8) {
+            HabitsStrip(store: habits, showAnalysis: { showsHabits = true }, openSettings: openHabitSettings)
             toolbar
             if !store.isConfigured {
                 notConnected

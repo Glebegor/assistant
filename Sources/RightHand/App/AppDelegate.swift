@@ -18,6 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var projectsWindow: ProjectsWindowController?
     private lazy var settingsWindow = SettingsWindowController(tasks: tasks)
     private var eyeRest: EyeRestController?
+    private var habitReminders: HabitReminders?
     private var blocker: URLBlocker?
     private var notch: NotchController?
     private var statusItem: StatusItemController?
@@ -26,6 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Notifier.shared.requestAuthorization()
         Updater.shared.startChecking()
         ModelCatalog.shared.refreshAll()
+        habitReminders = HabitReminders()
 
         let settings = settingsWindow
         let eyeRest = EyeRestController(pomodoro: pomodoro)
