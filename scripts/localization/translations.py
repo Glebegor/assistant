@@ -642,4 +642,5 @@ T = {
     'Reviews of your recordings: summary, timeline, tasks and assessment.': ('Ревʼю твоїх записів: підсумок, таймлайн, задачі й оцінка.', 'Recenze tvých nahrávek: shrnutí, časová osa, úkoly a hodnocení.', 'Ревью твоих записей: итог, таймлайн, задачи и оценка.'),
     'Meeting analysis': ('Аналіз зустрічей', 'Analýza schůzek', 'Анализ встреч'),
     'A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits.': ('Довга зустріч — це великий текст: сильна модель із великим контекстом (Claude Opus чи Sonnet, GPT-5, Gemini Pro) пише значно краще ревʼю. У GitHub Models малі ліміти.', 'Dlouhá schůzka je dlouhý text: silný model s velkým kontextem (Claude Opus nebo Sonnet, GPT-5, Gemini Pro) napíše mnohem lepší recenzi. GitHub Models má malé limity.', 'Длинная встреча — это большой текст: сильная модель с большим контекстом (Claude Opus или Sonnet, GPT-5, Gemini Pro) пишет гораздо лучшее ревью. У GitHub Models маленькие лимиты.'),
+    'Continue automatically': ('Продовжувати автоматично', 'Pokračovat automaticky', 'Продолжать автоматически'),
 }

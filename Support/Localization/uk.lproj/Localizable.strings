@@ -125,6 +125,7 @@
 "Connect Notion to see your tasks" = "Підключи Notion, щоб бачити задачі";
 "Connect them in Settings → Services." = "Підключи їх у Налаштування → Сервіси.";
 "Connected" = "Підключено";
+"Continue automatically" = "Продовжувати автоматично";
 "Copied" = "Скопійовано";
 "Copied image" = "Скопійоване зображення";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Копіюються в проєкт. Текст цих файлів є в кожному новому чаті (PDF, Markdown, код, нотатки…).";

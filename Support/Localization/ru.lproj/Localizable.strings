@@ -125,6 +125,7 @@
 "Connect Notion to see your tasks" = "Подключи Notion, чтобы видеть задачи";
 "Connect them in Settings → Services." = "Подключи их в Настройки → Сервисы.";
 "Connected" = "Подключено";
+"Continue automatically" = "Продолжать автоматически";
 "Copied" = "Скопировано";
 "Copied image" = "Скопированное изображение";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Копируются в проект. Текст этих файлов есть в каждом новом чате (PDF, Markdown, код, заметки…).";

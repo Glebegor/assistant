@@ -4,6 +4,7 @@ import SwiftUI
 struct PomodoroView: View {
     let timer: PomodoroTimer
     var showStats: () -> Void = {}
+    @AppStorage(PomodoroSettings.Key.autoStartNext) private var autoStartNext = PomodoroSettings.Default.autoStartNext
 
     var body: some View {
         HStack(spacing: 32) {
@@ -27,6 +28,13 @@ struct PomodoroView: View {
                         .labelStyle(.iconOnly)
                         .help("Skip to next phase")
                 }
+                Toggle(isOn: $autoStartNext) {
+                    Text("Continue automatically").font(.caption).foregroundStyle(.secondary)
+                }
+                .toggleStyle(.switch)
+                .controlSize(.mini)
+                .tint(timer.phase.color)
+                .help("Breaks and focus sessions follow each other without pressing Start.")
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
