@@ -53,7 +53,7 @@ struct PomodoroView: View {
                 .trim(from: 0, to: timer.progress)
                 .stroke(timer.phase.color, style: StrokeStyle(lineWidth: 8, lineCap: .round))
                 .rotationEffect(.degrees(-90))
-                .animation(.linear(duration: 0.25), value: timer.progress)
+                .animation(.linear(duration: 1), value: timer.progress)
             Text(timer.formattedRemaining)
                 .font(.system(size: 30, weight: .semibold, design: .rounded))
                 .monospacedDigit()

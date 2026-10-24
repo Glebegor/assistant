@@ -228,95 +228,186 @@ struct NotchRootView: View {
 /// and a pulse runs out when the phase changes. Still and dimmer while paused.
 private struct PomodoroDot: View {
     let timer: PomodoroTimer
-    @State private var booted = false
-    @State private var spin = false
-    @State private var breathe = false
-    /// 0 → 1 as the pulse runs out (0 means none).
-    @State private var ripple = 0.0
-
-    private var isActive: Bool { timer.isRunning || timer.isPaused }
-    private var state: String { isActive ? (timer.phase == .focus ? "focus" : "break") : "idle" }
-    private var color: Color {
-        switch state {
-        case "focus": .orange
-        case "break": .green
-        default: Theme.neon
-        }
-    }
-    private var fraction: Double {
-        timer.phaseDuration > 0 ? max(0, min(1, timer.remaining / timer.phaseDuration)) : 0
-    }
-    /// Faster while you work, slow when idle.
-    private var period: Double { timer.isRunning ? (timer.phase == .focus ? 3 : 5) : 9 }
 
     var body: some View {
-        ZStack {
-            // Outer segmented ring.
-            Circle()
-                .trim(from: 0, to: booted ? 1 : 0)
-                .stroke(color.opacity(0.55), style: StrokeStyle(lineWidth: 1, dash: [2.2, 1.6]))
-                .frame(width: 20, height: 20)
-                .rotationEffect(.degrees(spin ? 360 : 0))
-            // Two scanner arcs turning the other way.
-            ForEach(0..<2) { index in
-                Circle()
-                    .trim(from: 0, to: booted ? 0.2 : 0)
-                    .stroke(color, style: StrokeStyle(lineWidth: 1.4, lineCap: .round))
-                    .frame(width: 15, height: 15)
-                    .rotationEffect(.degrees(Double(index) * 180 + (spin ? -360 : 0) * 1.6))
-            }
-            .opacity(isActive ? 0.45 : 0.9)
-            // Time left in the phase.
-            if isActive {
-                Circle()
-                    .trim(from: 0, to: booted ? fraction : 0)
-                    .stroke(color, style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
-                    .frame(width: 15, height: 15)
-                    .rotationEffect(.degrees(-90))
-                    .shadow(color: color.opacity(0.9), radius: 2)
-            }
-            // The core.
-            Circle()
-                .fill(RadialGradient(colors: [.white, color, color.opacity(0.6)], center: .center, startRadius: 0, endRadius: 4))
-                .frame(width: 7, height: 7)
-                .scaleEffect(booted ? (breathe ? 1.12 : 0.86) : 0.2)
-                .shadow(color: color, radius: breathe ? 5 : 3)
-            // Pulse when the phase changes.
-            Circle()
-                .stroke(color, lineWidth: 1.2)
-                .frame(width: 8, height: 8)
-                .scaleEffect(1 + ripple * 2)
-                .opacity(ripple == 0 ? 0 : 1 - ripple)
+        let isActive = timer.isRunning || timer.isPaused
+        let fraction = isActive && timer.phaseDuration > 0 ? max(0, min(1, timer.remaining / timer.phaseDuration)) : 0
+        ReactorView(state: !isActive ? .idle : timer.phase == .focus ? .focus : .rest,
+                    fraction: fraction, isRunning: timer.isRunning, isPaused: timer.isPaused)
+            .frame(width: 22, height: 22)
+            .help(isActive ? timer.phase.title : L("Pomodoro"))
+            .allowsHitTesting(false)
+    }
+}
+
+/// The reactor drawn with Core Animation: the spinning and breathing run in the system's render
+/// server, so they cost RightHand no CPU (SwiftUI animations would redraw every frame).
+private struct ReactorView: NSViewRepresentable {
+    enum State: Equatable { case idle, focus, rest }
+    let state: State
+    let fraction: Double
+    let isRunning: Bool
+    let isPaused: Bool
+
+    func makeNSView(context: Context) -> ReactorLayerView { ReactorLayerView() }
+
+    func updateNSView(_ view: ReactorLayerView, context: Context) {
+        view.update(state: state, fraction: fraction, isRunning: isRunning, isPaused: isPaused)
+    }
+}
+
+private final class ReactorLayerView: NSView {
+    private let outer = CAShapeLayer()
+    private let scanners = CAShapeLayer()
+    private let progress = CAShapeLayer()
+    private let core = CAShapeLayer()
+    private let ripple = CAShapeLayer()
+    private var state: ReactorView.State?
+    private var motion: String?
+
+    override init(frame: NSRect) {
+        super.init(frame: NSRect(x: 0, y: 0, width: 22, height: 22))
+        wantsLayer = true
+        let root = layer!
+        let center = CGPoint(x: 11, y: 11)
+        func ring(_ radius: CGFloat) -> CGPath {
+            CGPath(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2), transform: nil)
         }
-        .frame(width: 22, height: 22)
-        .opacity(timer.isPaused ? 0.55 : 1)
-        .animation(.easeInOut(duration: 0.5), value: color)
-        .animation(.easeInOut(duration: 0.5), value: fraction)
-        .onAppear {
-            withAnimation(.spring(response: 0.7, dampingFraction: 0.7).delay(0.1)) { booted = true }
-            startMotion()
+        for shape in [outer, scanners, progress, core, ripple] {
+            shape.frame = CGRect(x: 0, y: 0, width: 22, height: 22)
+            shape.fillColor = nil
+            shape.contentsScale = 2
+            root.addSublayer(shape)
         }
-        .onChange(of: state) { pulse() }
-        .onChange(of: timer.isRunning) { startMotion() }
-        .help(isActive ? timer.phase.title : L("Pomodoro"))
-        .allowsHitTesting(false)
+        outer.path = ring(10)
+        outer.lineWidth = 1
+        outer.lineDashPattern = [2.2, 1.6]
+        outer.opacity = 0.55
+
+        // Two short arcs opposite each other.
+        let arcs = CGMutablePath()
+        arcs.addArc(center: center, radius: 7.5, startAngle: 0, endAngle: .pi * 0.4, clockwise: false)
+        arcs.move(to: CGPoint(x: center.x - 7.5, y: center.y))
+        arcs.addArc(center: center, radius: 7.5, startAngle: .pi, endAngle: .pi * 1.4, clockwise: false)
+        scanners.path = arcs
+        scanners.lineWidth = 1.4
+        scanners.lineCap = .round
+
+        // Starts at the top and runs clockwise.
+        let top = CGMutablePath()
+        top.addArc(center: center, radius: 7.5, startAngle: .pi / 2, endAngle: .pi / 2 - .pi * 2, clockwise: true)
+        progress.path = top
+        progress.lineWidth = 1.6
+        progress.lineCap = .round
+        progress.shadowOpacity = 0.9
+        progress.shadowRadius = 2
+        progress.shadowOffset = .zero
+
+        core.path = ring(3.5)
+        core.shadowOpacity = 1
+        core.shadowRadius = 3
+        core.shadowOffset = .zero
+
+        ripple.path = ring(4)
+        ripple.lineWidth = 1.2
+        ripple.opacity = 0
     }
 
-    /// Spins the rings and breathes the core; stands still while paused.
-    private func startMotion() {
-        var still = Transaction(animation: nil)
-        still.disablesAnimations = true
-        withTransaction(still) { spin = false; breathe = false }
-        guard !timer.isPaused else { return }
-        withAnimation(.linear(duration: period).repeatForever(autoreverses: false)) { spin = true }
-        withAnimation(.easeInOut(duration: timer.isRunning ? 1.2 : 2.4).repeatForever(autoreverses: true)) { breathe = true }
+    required init?(coder: NSCoder) { nil }
+
+    func update(state: ReactorView.State, fraction: Double, isRunning: Bool, isPaused: Bool) {
+        let color: NSColor = switch state {
+        case .focus: .systemOrange
+        case .rest: .systemGreen
+        case .idle: NSColor(red: 0.36, green: 0.66, blue: 1.0, alpha: 1)
+        }
+        let first = self.state == nil
+        if self.state != state {
+            CATransaction.begin()
+            CATransaction.setAnimationDuration(first ? 0 : 0.5)
+            for shape in [outer, scanners, progress, ripple] { shape.strokeColor = color.cgColor }
+            core.fillColor = color.cgColor
+            core.shadowColor = color.cgColor
+            progress.shadowColor = color.cgColor
+            CATransaction.commit()
+            if first { boot() } else { pulse() }
+            self.state = state
+        }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        progress.strokeEnd = fraction
+        progress.isHidden = state == .idle
+        scanners.opacity = state == .idle ? 0.9 : 0.45
+        layer?.opacity = isPaused ? 0.55 : 1
+        CATransaction.commit()
+
+        // Faster while you work, slow when idle, still while paused.
+        let kind = isPaused ? "paused" : isRunning ? (state == .focus ? "focus" : "rest") : "idle"
+        guard kind != motion else { return }
+        motion = kind
+        for shape in [outer, scanners, core] { shape.removeAnimation(forKey: "motion") }
+        guard !isPaused else { return }
+        let period: CFTimeInterval = isRunning ? (state == .focus ? 3 : 5) : 9
+        outer.add(spin(period, clockwise: true), forKey: "motion")
+        scanners.add(spin(period / 1.6, clockwise: false), forKey: "motion")
+        let breathe = CABasicAnimation(keyPath: "transform.scale")
+        breathe.fromValue = 0.86
+        breathe.toValue = 1.12
+        breathe.duration = isRunning ? 1.2 : 2.4
+        breathe.autoreverses = true
+        breathe.repeatCount = .infinity
+        breathe.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        core.add(breathe, forKey: "motion")
     }
 
+    private func spin(_ period: CFTimeInterval, clockwise: Bool) -> CABasicAnimation {
+        let spin = CABasicAnimation(keyPath: "transform.rotation.z")
+        spin.fromValue = 0
+        spin.toValue = clockwise ? -Double.pi * 2 : Double.pi * 2
+        spin.duration = period
+        spin.repeatCount = .infinity
+        return spin
+    }
+
+    /// Rings draw in and the core lights up.
+    private func boot() {
+        for shape in [outer, scanners] {
+            let draw = CABasicAnimation(keyPath: "strokeEnd")
+            draw.fromValue = 0
+            draw.toValue = 1
+            draw.duration = 0.7
+            draw.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            shape.add(draw, forKey: "boot")
+        }
+        let light = CASpringAnimation(keyPath: "transform.scale")
+        light.fromValue = 0.2
+        light.toValue = 1
+        light.damping = 9
+        light.duration = light.settlingDuration
+        core.add(light, forKey: "boot")
+    }
+
+    /// A ring of light runs out from the core.
     private func pulse() {
-        var reset = Transaction(animation: nil)
-        reset.disablesAnimations = true
-        withTransaction(reset) { ripple = 0 }
-        withAnimation(.easeOut(duration: 0.9)) { ripple = 1 }
-        startMotion()
+        let grow = CABasicAnimation(keyPath: "transform.scale")
+        grow.fromValue = 1
+        grow.toValue = 3
+        let fade = CABasicAnimation(keyPath: "opacity")
+        fade.fromValue = 1
+        fade.toValue = 0
+        let group = CAAnimationGroup()
+        group.animations = [grow, fade]
+        group.duration = 0.9
+        group.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        ripple.add(group, forKey: "pulse")
+    }
+
+    /// Scale and rotation turn around the centre of the 22 pt view.
+    override func layout() {
+        super.layout()
+        for shape in [outer, scanners, progress, core, ripple] {
+            shape.bounds = CGRect(x: 0, y: 0, width: 22, height: 22)
+            shape.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
     }
 }
