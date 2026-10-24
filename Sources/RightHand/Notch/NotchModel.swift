@@ -34,7 +34,7 @@ enum NotchTab: CaseIterable, Identifiable {
     var panelSize: CGSize {
         switch self {
         case .pomodoro: CGSize(width: 560, height: 230)
-        case .tasks: CGSize(width: 560, height: 360)
+        case .tasks: CGSize(width: 580, height: 420)
         case .calendar: CGSize(width: 560, height: 420)
         case .notes: CGSize(width: 600, height: 400)
         case .recorder: CGSize(width: 580, height: 300)

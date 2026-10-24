@@ -10,18 +10,39 @@ struct ProjectChatView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            header
+            Rectangle().fill(Theme.hairline).frame(height: 1)
             conversation
-            Divider()
             VStack(spacing: 10) {
                 if let approval = engine.pendingApproval { ApprovalCard(approval: approval, provider: engine.chat.provider, engine: engine) }
                 if let error = engine.errorMessage { errorBanner(error) }
                 inputBar
             }
-            .padding(16)
+            .padding(.horizontal, 24)
+            .padding(.bottom, 18)
+            .padding(.top, 6)
         }
-        .navigationTitle(engine.chat.title)
-        .navigationSubtitle(ModelCatalog.shared.name(of: engine.chat.model, provider: engine.chat.provider))
         .onAppear { isInputFocused = true }
+    }
+
+    private var header: some View {
+        let provider = engine.chat.provider
+        return HStack(spacing: 10) {
+            Circle().fill(provider.tint).frame(width: 8, height: 8).shadow(color: provider.tint, radius: 4)
+            Text(verbatim: engine.chat.title).font(.system(size: 14, weight: .semibold)).lineLimit(1)
+            Text(verbatim: ModelCatalog.shared.name(of: engine.chat.model, provider: provider))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 8).padding(.vertical, 3)
+                .background(Color.white.opacity(0.06), in: Capsule())
+            Spacer()
+            if engine.isRunning {
+                ProgressView().controlSize(.small)
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 34)
+        .padding(.bottom, 12)
     }
 
     private var conversation: some View {
@@ -29,9 +50,15 @@ struct ProjectChatView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 14) {
                     if engine.chat.messages.isEmpty {
-                        ContentUnavailableView("Start the conversation", systemImage: "sparkles",
-                                               description: Text("The project's instructions, files and memory are already part of this chat."))
-                            .padding(.top, 80)
+                        VStack(spacing: 10) {
+                            Image(systemName: "sparkles").font(.system(size: 30, weight: .light))
+                                .foregroundStyle(engine.chat.provider.tint).shadow(color: engine.chat.provider.tint.opacity(0.6), radius: 10)
+                            Text("Start the conversation").font(.system(size: 18, weight: .semibold))
+                            Text("The project's instructions, files and memory are already part of this chat.")
+                                .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 90)
                     }
                     ForEach(engine.display) { item in
                         ProjectMessageRow(item: item, provider: engine.chat.provider)
@@ -43,13 +70,14 @@ struct ProjectChatView: View {
                         if let activity = engine.activity {
                             HStack(spacing: 8) {
                                 ProgressView().controlSize(.small)
-                                Text(activity).foregroundStyle(.secondary)
+                                Text(activity).font(.callout).foregroundStyle(.secondary)
                             }
                         }
                     }
                     Color.clear.frame(height: 1).id("bottom")
                 }
-                .padding(20)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 20)
                 .frame(maxWidth: 820)
                 .frame(maxWidth: .infinity)
             }
@@ -67,21 +95,38 @@ struct ProjectChatView: View {
                 .focused($isInputFocused)
                 .onSubmit(send)
                 .shiftReturnAddsNewLine()
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(.quaternary.opacity(0.6), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .font(.system(size: 13.5))
+                .padding(.vertical, 6)
             if engine.isRunning {
-                Button("Stop", systemImage: "stop.circle.fill", action: engine.stop)
-                    .labelStyle(.iconOnly).buttonStyle(.plain).font(.system(size: 28))
+                Button("Stop", systemImage: "stop.fill", action: engine.stop)
+                    .labelStyle(.iconOnly).buttonStyle(.plain)
+                    .font(.system(size: 11, weight: .bold))
+                    .frame(width: 30, height: 30)
+                    .background(Color.white.opacity(0.12), in: Circle())
                     .help("Stop")
             } else {
-                Button("Send", systemImage: "arrow.up.circle.fill", action: send)
-                    .labelStyle(.iconOnly).buttonStyle(.plain).font(.system(size: 28))
-                    .foregroundStyle(Color.accentColor)
-                    .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                let isEmpty = draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                Button("Send", systemImage: "arrow.up", action: send)
+                    .labelStyle(.iconOnly).buttonStyle(.plain)
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(isEmpty ? Color.secondary : .black)
+                    .frame(width: 30, height: 30)
+                    .background(isEmpty ? Color.white.opacity(0.08) : Theme.neon, in: Circle())
+                    .shadow(color: isEmpty ? .clear : Theme.neon.opacity(0.5), radius: 8)
+                    .disabled(isEmpty)
                     .help("Send (Return)")
             }
         }
+        .padding(.leading, 16)
+        .padding(.trailing, 7)
+        .padding(.vertical, 7)
+        .background(Color.white.opacity(0.045), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(isInputFocused ? Theme.neon.opacity(0.55) : Theme.cardStroke, lineWidth: 1)
+        }
+        .shadow(color: isInputFocused ? Theme.neon.opacity(0.18) : .clear, radius: 12)
+        .animation(.easeOut(duration: 0.2), value: isInputFocused)
         .frame(maxWidth: 820)
     }
 
@@ -141,11 +186,12 @@ private struct ApprovalCard: View {
                 .frame(maxHeight: 160)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(10)
-                .background(.background.opacity(0.7), in: RoundedRectangle(cornerRadius: 8))
+                .background(Color.black.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
             }
         }
         .padding(12)
-        .background(.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+        .background(.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.orange.opacity(0.3)))
         .frame(maxWidth: 820)
     }
 }
@@ -164,14 +210,18 @@ struct ProjectMessageRow: View {
                 Spacer(minLength: 80)
                 Text(text)
                     .textSelection(.enabled)
+                    .font(.system(size: 13.5))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 9)
                     .foregroundStyle(.white)
-                    .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .background(Theme.neon.opacity(0.18), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Theme.neon.opacity(0.35)))
             }
         case .assistant(_, let text):
             VStack(alignment: .leading, spacing: 4) {
                 Text(Self.markdown(text))
+                    .font(.system(size: 13.5))
+                    .lineSpacing(2)
                     .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: 10) {
@@ -209,12 +259,13 @@ struct ProjectMessageRow: View {
                         .textSelection(.enabled)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
+                        .background(Color.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 8))
                 }
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
-            .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 10))
+            .background(Theme.cardFill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(Theme.cardStroke))
         case .summarized:
             notice("Earlier messages were summarized so the chat can keep going", systemImage: "arrow.down.right.and.arrow.up.left")
         case .projectUpdated:

@@ -64,9 +64,12 @@ final class PomodoroTimer {
         isFresh = false
         endDate = Date().addingTimeInterval(remaining)
         isRunning = true
-        let timer = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
+        // Once a second, just after each whole second of the countdown (the shown time changes then).
+        let firstTick = Date().addingTimeInterval(remaining.truncatingRemainder(dividingBy: 1) + 0.02)
+        let timer = Timer(fire: firstTick, interval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.tick() }
         }
+        timer.tolerance = 0.05
         RunLoop.main.add(timer, forMode: .common) // .common keeps it ticking while menus are open
         ticker = timer
     }

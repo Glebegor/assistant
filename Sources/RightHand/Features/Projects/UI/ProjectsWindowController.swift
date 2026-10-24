@@ -20,6 +20,10 @@ final class ProjectsWindowController: NSObject, NSWindowDelegate {
             ))
             window.title = L("Projects")
             window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
+            window.titlebarAppearsTransparent = true
+            window.titleVisibility = .hidden
+            window.appearance = NSAppearance(named: .darkAqua)
+            window.backgroundColor = NSColor(red: 0.045, green: 0.05, blue: 0.065, alpha: 1)
             window.setContentSize(NSSize(width: 1100, height: 720))
             window.minSize = NSSize(width: 760, height: 480)
             window.isReleasedWhenClosed = false
