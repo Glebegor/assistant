@@ -10,9 +10,13 @@
 "%@ wants to: %@" = "%@ wants to: %@";
 "%@ · stops at %lld:00:00" = "%@ · stops at %lld:00:00";
 "%@. Press once to talk, again to send. Esc cancels." = "%@. Press once to talk, again to send. Esc cancels.";
+"%lld chats" = "%lld chats";
 "%lld d" = "%lld d";
+"%lld d clean" = "%lld d clean";
 "%lld days in a row" = "%lld days in a row";
 "%lld done" = "%lld done";
+"%lld files" = "%lld files";
+"%lld folders" = "%lld folders";
 "%lld h" = "%lld h";
 "%lld h %lld min" = "%lld h %lld min";
 "%lld min" = "%lld min";
@@ -87,6 +91,7 @@
 "Automatic understands all four; choosing one is a bit faster" = "Automatic understands all four; choosing one is a bit faster";
 "Back" = "Back";
 "Back to Shelf" = "Back to Shelf";
+"Back to tasks" = "Back to tasks";
 "Back to the timer" = "Back to the timer";
 "Bedtime" = "Bedtime";
 "Bedtime in %lld min" = "Bedtime in %lld min";
@@ -143,6 +148,7 @@
 "Copied" = "Copied";
 "Copied image" = "Copied image";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…).";
+"Copied into the project. Their text is part of every new chat." = "Copied into the project. Their text is part of every new chat.";
 "Copilot subscription" = "Copilot subscription";
 "Copy" = "Copy";
 "Copy %@ to %@" = "Copy %@ to %@";
@@ -177,6 +183,7 @@
 "Deny" = "Deny";
 "Disconnect" = "Disconnect";
 "Display %lld" = "Display %lld";
+"Do it" = "Do it";
 "Do it (yes / no)" = "Do it (yes / no)";
 "Don't ask again for “%@” (change it in Settings → Assistant)" = "Don't ask again for “%@” (change it in Settings → Assistant)";
 "Done" = "Done";
@@ -187,7 +194,9 @@
 "Downloading update…" = "Downloading update…";
 "Downloading update… %lld%%" = "Downloading update… %lld%%";
 "Drink water, read, no sugar…" = "Drink water, read, no sugar…";
+"Drop files here" = "Drop files here";
 "Drop files here. New screenshots appear here too." = "Drop files here. New screenshots appear here too.";
+"Drop more files" = "Drop more files";
 "Edit" = "Edit";
 "Edit %@" = "Edit %@";
 "Edit files" = "Edit files";
@@ -242,6 +251,7 @@
 "Google's models." = "Google's models.";
 "Habit analysis" = "Habit analysis";
 "Habits" = "Habits";
+"Habits show at the top of the Tasks tab. Click one to mark it; right-click a counted habit to take one back." = "Habits show at the top of the Tasks tab. Click one to mark it; right-click a counted habit to take one back.";
 "Hi! I'm RightHand, your right hand on the Mac." = "Hi! I'm RightHand, your right hand on the Mac.";
 "Homework" = "Homework";
 "How productive the meeting was" = "How productive the meeting was";
@@ -286,6 +296,7 @@
 "Long Break" = "Long Break";
 "Long break" = "Long break";
 "Long break after" = "Long break after";
+"Longest streak" = "Longest streak";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Look at something at least 6 m (20 ft) away and blink a few times.";
 "Mac default" = "Mac default";
 "Main screen" = "Main screen";
@@ -327,7 +338,9 @@
 "Next time" = "Next time";
 "No answer came back." = "No answer came back.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload.";
+"No folders yet." = "No folders yet.";
 "No habits for today" = "No habits for today";
+"No habits yet" = "No habits yet";
 "No habits yet. Add one: something to do every day, a number to reach, a few times a week, or a bad habit to quit." = "No habits yet. Add one: something to do every day, a number to reach, a few times a week, or a bad habit to quit.";
 "No notes yet." = "No notes yet.";
 "No open tasks for you in Notion." = "No open tasks for you in Notion.";
@@ -342,6 +355,7 @@
 "Not recorded" = "Not recorded";
 "Notes" = "Notes";
 "Notes the AI keeps about this project, shared by all its chats." = "Notes the AI keeps about this project, shared by all its chats.";
+"Nothing for today" = "Nothing for today";
 "Nothing found." = "Nothing found.";
 "Nothing to do" = "Nothing to do";
 "Nothing yet. The AI writes notes here as you work." = "Nothing yet. The AI writes notes here as you work.";
@@ -414,6 +428,7 @@
 "Projects…" = "Projects…";
 "Provider" = "Provider";
 "Quick Add" = "Quick Add";
+"Quit" = "Quit";
 "Quit RightHand" = "Quit RightHand";
 "Quit a bad habit" = "Quit a bad habit";
 "Reach a number" = "Reach a number";
@@ -543,6 +558,7 @@
 "Sleep" = "Sleep";
 "Sleep reminder" = "Sleep reminder";
 "Some weekdays" = "Some weekdays";
+"Something to do every day, a number to reach, a few times a week, or a bad habit to quit." = "Something to do every day, a number to reach, a few times a week, or a bad habit to quit.";
 "Sounds" = "Sounds";
 "Speak your message (%@)" = "Speak your message (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.";
@@ -583,6 +599,7 @@
 "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds." = "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds.";
 "The AI can find, read and change your ClickUp tasks (it asks first)." = "The AI can find, read and change your ClickUp tasks (it asks first).";
 "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good." = "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good.";
+"The AI can read and write files here. It asks before every action." = "The AI can read and write files here. It asks before every action.";
 "The API key was rejected. Check it in Settings → Assistant." = "The API key was rejected. Check it in Settings → Assistant.";
 "The ElevenLabs API key was rejected." = "The ElevenLabs API key was rejected.";
 "The GitHub sign-in failed." = "The GitHub sign-in failed.";
@@ -665,6 +682,7 @@
 "Workshop" = "Workshop";
 "Write down anything. The AI can read your notes and send you links to them." = "Write down anything. The AI can read your notes and send you links to them.";
 "Write files" = "Write files";
+"Write instructions for the AI…" = "Write instructions for the AI…";
 "Write memory note %@" = "Write memory note %@";
 "Writing the review…" = "Writing the review…";
 "You have %@." = "You have %@.";
@@ -673,18 +691,24 @@
 "Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues." = "Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues.";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Your recordings will appear here. They're saved in Movies → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch.";
+"a bad habit" = "a bad habit";
 "a file" = "a file";
 "add comment" = "add comment";
 "add text" = "add text";
 "best" = "best";
+"d" = "d";
 "days" = "days";
+"done" = "done";
+"done on time" = "done on time";
 "due %@" = "due %@";
+"e.g. 8 glasses" = "e.g. 8 glasses";
 "finished focus sessions" = "finished focus sessions";
 "from your calendar" = "from your calendar";
 "goal %lld" = "goal %lld";
 "id.atlassian.com → Security → API tokens" = "id.atlassian.com → Security → API tokens";
 "mark done" = "mark done";
 "min" = "min";
+"of %lld" = "of %lld";
 "priority “%@”" = "priority “%@”";
 "quitting" = "quitting";
 "recordings only" = "recordings only";
@@ -698,5 +722,8 @@
 "the project folder" = "the project folder";
 "this week" = "this week";
 "title “%@”" = "title “%@”";
+"to do" = "to do";
 "weeks" = "weeks";
+"wk" = "wk";
+"yes / no" = "yes / no";
 "“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown." = "“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown.";

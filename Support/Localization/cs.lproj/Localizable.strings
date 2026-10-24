@@ -10,9 +10,13 @@
 "%@ wants to: %@" = "%@ chce: %@";
 "%@ · stops at %lld:00:00" = "%@ · zastaví se v %lld:00:00";
 "%@. Press once to talk, again to send. Esc cancels." = "%@. Stiskni jednou a mluv, podruhé odešleš. Esc zruší.";
+"%lld chats" = "%lld chatů";
 "%lld d" = "%lld d";
+"%lld d clean" = "%lld d bez uklouznutí";
 "%lld days in a row" = "%lld dní v řadě";
 "%lld done" = "%lld hotovo";
+"%lld files" = "%lld souborů";
+"%lld folders" = "%lld složek";
 "%lld h" = "%lld h";
 "%lld h %lld min" = "%lld h %lld min";
 "%lld min" = "%lld min";
@@ -87,6 +91,7 @@
 "Automatic understands all four; choosing one is a bit faster" = "Automaticky rozumí všem čtyřem; jeden jazyk je o něco rychlejší";
 "Back" = "Zpět";
 "Back to Shelf" = "Zpět na Poličku";
+"Back to tasks" = "Zpět k úkolům";
 "Back to the timer" = "Zpět na časovač";
 "Bedtime" = "Čas spánku";
 "Bedtime in %lld min" = "Do spánku %lld min";
@@ -143,6 +148,7 @@
 "Copied" = "Zkopírováno";
 "Copied image" = "Zkopírovaný obrázek";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Zkopírují se do projektu. Text těchto souborů je součástí každého nového chatu (PDF, Markdown, kód, poznámky…).";
+"Copied into the project. Their text is part of every new chat." = "Zkopírují se do projektu. Jejich text je součástí každého nového chatu.";
 "Copilot subscription" = "Předplatné Copilot";
 "Copy" = "Kopírovat";
 "Copy %@ to %@" = "Zkopírovat %@ do %@";
@@ -177,6 +183,7 @@
 "Deny" = "Zakázat";
 "Disconnect" = "Odpojit";
 "Display %lld" = "Obrazovka %lld";
+"Do it" = "Dělat";
 "Do it (yes / no)" = "Udělat (ano / ne)";
 "Don't ask again for “%@” (change it in Settings → Assistant)" = "Už se neptat u „%@“ (změníš v Nastavení → Asistent)";
 "Done" = "Hotovo";
@@ -187,7 +194,9 @@
 "Downloading update…" = "Stahuji aktualizaci…";
 "Downloading update… %lld%%" = "Stahuji aktualizaci… %lld%%";
 "Drink water, read, no sugar…" = "Pít vodu, číst, bez cukru…";
+"Drop files here" = "Přetáhni soubory sem";
 "Drop files here. New screenshots appear here too." = "Přetáhni sem soubory. Objeví se tu i nové snímky obrazovky.";
+"Drop more files" = "Přetáhni další soubory";
 "Edit" = "Úpravy";
 "Edit %@" = "Upravit %@";
 "Edit files" = "Úpravy souborů";
@@ -242,6 +251,7 @@
 "Google's models." = "Modely Googlu.";
 "Habit analysis" = "Analýza návyků";
 "Habits" = "Návyky";
+"Habits show at the top of the Tasks tab. Click one to mark it; right-click a counted habit to take one back." = "Návyky se zobrazují nahoře na kartě Tasks. Klikni pro označení; pravým kliknutím u počítaného jeden uber.";
 "Hi! I'm RightHand, your right hand on the Mac." = "Ahoj! Jsem RightHand, tvoje pravá ruka na Macu.";
 "Homework" = "Domácí úkoly";
 "How productive the meeting was" = "Jak produktivní schůzka byla";
@@ -286,6 +296,7 @@
 "Long Break" = "Dlouhá přestávka";
 "Long break" = "Dlouhá přestávka";
 "Long break after" = "Dlouhá přestávka po";
+"Longest streak" = "Nejdelší série";
 "Look at something at least 6 m (20 ft) away and blink a few times." = "Podívej se na něco aspoň 6 m daleko a několikrát mrkni.";
 "Mac default" = "Výchozí v Macu";
 "Main screen" = "Hlavní obrazovka";
@@ -327,7 +338,9 @@
 "Next time" = "Příště";
 "No answer came back." = "Nepřišla žádná odpověď.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Žádné databáze. V Notionu otevři databázi úkolů → ••• → Connections → přidej svou integraci a pak stiskni Znovu načíst.";
+"No folders yet." = "Zatím žádné složky.";
 "No habits for today" = "Na dnešek žádné návyky";
+"No habits yet" = "Zatím žádné návyky";
 "No habits yet. Add one: something to do every day, a number to reach, a few times a week, or a bad habit to quit." = "Zatím žádné návyky. Přidej: něco každodenního, číslo k dosažení, párkrát týdně nebo zlozvyk, kterého se zbavuješ.";
 "No notes yet." = "Zatím žádné poznámky.";
 "No open tasks for you in Notion." = "V Notionu pro tebe nejsou žádné otevřené úkoly.";
@@ -342,6 +355,7 @@
 "Not recorded" = "Nenahrává se";
 "Notes" = "Poznámky";
 "Notes the AI keeps about this project, shared by all its chats." = "Poznámky, které si AI vede o tomto projektu; sdílí je všechny jeho chaty.";
+"Nothing for today" = "Na dnešek nic";
 "Nothing found." = "Nic nenalezeno.";
 "Nothing to do" = "Nic na práci";
 "Nothing yet. The AI writes notes here as you work." = "Zatím nic. AI sem bude během práce zapisovat poznámky.";
@@ -414,6 +428,7 @@
 "Projects…" = "Projekty…";
 "Provider" = "Služba";
 "Quick Add" = "Rychle přidat";
+"Quit" = "Přestat";
 "Quit RightHand" = "Ukončit RightHand";
 "Quit a bad habit" = "Zbavit se zlozvyku";
 "Reach a number" = "Dosáhnout čísla";
@@ -543,6 +558,7 @@
 "Sleep" = "Spánek";
 "Sleep reminder" = "Připomínka spánku";
 "Some weekdays" = "Některé dny";
+"Something to do every day, a number to reach, a few times a week, or a bad habit to quit." = "Něco každodenního, číslo k dosažení, párkrát týdně nebo zlozvyk, kterého se zbavuješ.";
 "Sounds" = "Zvuky";
 "Speak your message (%@)" = "Namluvit zprávu (%@)";
 "Speech is made by your Mac, offline and free. Nicer voices (★) can be downloaded in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices." = "Řeč vytváří tvůj Mac, offline a zdarma. Hezčí hlasy (★) si stáhneš v Nastavení systému → Zpřístupnění → Mluvený obsah → Systémový hlas → Spravovat hlasy.";
@@ -583,6 +599,7 @@
 "The 20-20-20 rule: every 20 minutes, look 20 feet (6 m) away for 20 seconds." = "Pravidlo 20-20-20: každých 20 minut se na 20 sekund podívej 6 m daleko.";
 "The AI can find, read and change your ClickUp tasks (it asks first)." = "AI může hledat, číst a měnit tvé úkoly v ClickUp (nejdřív se zeptá).";
 "The AI can list, search, read and write files in these folders. It asks before every action unless you allow a tool for good." = "AI může v těchto složkách procházet, hledat, číst a zapisovat soubory. Před každou akcí se zeptá, pokud nástroj nepovolíš natrvalo.";
+"The AI can read and write files here. It asks before every action." = "AI tu může číst a zapisovat soubory. Před každou akcí se zeptá.";
 "The API key was rejected. Check it in Settings → Assistant." = "Klíč API byl odmítnut. Zkontroluj ho v Nastavení → Asistent.";
 "The ElevenLabs API key was rejected." = "Klíč API ElevenLabs byl odmítnut.";
 "The GitHub sign-in failed." = "Přihlášení přes GitHub se nezdařilo.";
@@ -665,6 +682,7 @@
 "Workshop" = "Workshop";
 "Write down anything. The AI can read your notes and send you links to them." = "Zapisuj si cokoli. AI umí číst tvé poznámky a posílat ti na ně odkazy.";
 "Write files" = "Zápis souborů";
+"Write instructions for the AI…" = "Napiš pokyny pro AI…";
 "Write memory note %@" = "Zapsat poznámku do paměti %@";
 "Writing the review…" = "Píšu shrnutí…";
 "You have %@." = "Máš %@.";
@@ -673,18 +691,24 @@
 "Your open Jira issues appear in the Tasks tab (tick one to move it to Done), and the AI can search and read issues." = "Tvoje otevřené úkoly z Jiry se objeví na kartě Úkoly (kolečko je přesune do Done) a AI je může hledat a číst.";
 "Your recordings will appear here. They're saved in Movies → RightHand Recordings." = "Tady se objeví tvoje nahrávky. Ukládají se do Filmy → RightHand Recordings.";
 "Your right hand on the Mac: Pomodoro, Shelf and an AI assistant in the notch." = "Tvoje pravá ruka na Macu: Pomodoro, Polička a AI asistent ve výřezu.";
+"a bad habit" = "zlozvyk";
 "a file" = "soubor";
 "add comment" = "přidat komentář";
 "add text" = "přidat text";
 "best" = "rekord";
+"d" = "d";
 "days" = "dní";
+"done" = "hotovo";
+"done on time" = "splněno včas";
 "due %@" = "termín %@";
+"e.g. 8 glasses" = "např. 8 sklenic";
 "finished focus sessions" = "dokončená sezení";
 "from your calendar" = "z tvého kalendáře";
 "goal %lld" = "cíl %lld";
 "id.atlassian.com → Security → API tokens" = "id.atlassian.com → Security → API tokens";
 "mark done" = "označit jako hotové";
 "min" = "min";
+"of %lld" = "z %lld";
 "priority “%@”" = "priorita „%@“";
 "quitting" = "odvykám";
 "recordings only" = "jen nahrávky";
@@ -698,5 +722,8 @@
 "the project folder" = "složku projektu";
 "this week" = "tento týden";
 "title “%@”" = "název „%@“";
+"to do" = "udělat";
 "weeks" = "týdnů";
+"wk" = "týd";
+"yes / no" = "ano / ne";
 "“15 more minutes” brings the card back later; “Good night” ends the reminders until tomorrow evening. While you record the screen only a notification is shown." = "„Ještě 15 min“ kartu vrátí později; „Dobrou noc“ ukončí připomínky do zítřejšího večera. Při nahrávání obrazovky přijde jen oznámení.";

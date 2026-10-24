@@ -11,7 +11,7 @@ struct TasksView: View {
 
     var body: some View {
         if showsHabits {
-            HabitsAnalysisView(store: habits) { showsHabits = false }
+            HabitsAnalysisView(store: habits, close: { showsHabits = false }, openSettings: openHabitSettings)
         } else {
             tasks
         }

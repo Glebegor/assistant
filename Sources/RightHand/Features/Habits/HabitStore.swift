@@ -73,11 +73,6 @@ final class HabitStore {
         write()
     }
 
-    func move(from source: IndexSet, to destination: Int) {
-        habits.move(fromOffsets: source, toOffset: destination)
-        write()
-    }
-
     // MARK: Marking
 
     func value(_ habit: Habit, on day: Date = Date()) -> Int { log[Self.key(day)]?[habit.id] ?? 0 }
