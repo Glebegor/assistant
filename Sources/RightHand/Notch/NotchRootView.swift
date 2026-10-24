@@ -7,6 +7,7 @@ struct NotchRootView: View {
     let shelf: ShelfStore
     let tasks: TaskStore
     let calendar: CalendarStore
+    let notes: NoteStore
     let chat: ChatStore
     let voice: VoiceAssistant
     let recorder: ScreenRecorder
@@ -157,6 +158,7 @@ struct NotchRootView: View {
                     }
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .calendar: CalendarView(store: calendar, openSettings: openSettings)
+                case .notes: NotesView(store: notes)
                 case .shelf: ShelfView(store: shelf)
                 case .recorder: RecorderView(recorder: recorder, analyzer: analyzer, openReview: openReview)
                 case .chat: ChatView(store: chat, voice: voice, openSettings: openSettings, openProjects: openProjects)

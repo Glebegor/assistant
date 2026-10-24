@@ -27,6 +27,7 @@
 "A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits." = "Длинная встреча — это большой текст: сильная модель с большим контекстом (Claude Opus или Sonnet, GPT-5, Gemini Pro) пишет гораздо лучшее ревью. У GitHub Models маленькие лимиты.";
 "A note before bedtime, then a card in the notch until you say good night." = "Напоминание перед сном, потом карточка в вырезе, пока не скажешь «спокойной ночи».";
 "A reminder to go to bed on time." = "Напоминание ложиться спать вовремя.";
+"A righthand:// link that opens this note — paste it anywhere on your Mac" = "Ссылка righthand://, которая открывает эту заметку — вставь её где угодно на Mac";
 "API key" = "Ключ API";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "Ключи API хранятся в Keychain твоего Mac и отправляются только в Anthropic или OpenAI. За использование API платишь им.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "Ключи API хранятся в Keychain твоего Mac и отправляются только в Anthropic, OpenAI или ElevenLabs. За использование API платишь им.";
@@ -132,6 +133,7 @@
 "Copilot subscription" = "Подписка Copilot";
 "Copy" = "Копировать";
 "Copy %@ to %@" = "Скопировать %@ в %@";
+"Copy Link" = "Копировать ссылку";
 "Copy answer" = "Копировать ответ";
 "Couldn't check for updates" = "Не удалось проверить обновления";
 "Couldn't install the update: %@" = "Не удалось установить обновление: %@";
@@ -156,6 +158,7 @@
 "Delete Project…" = "Удалить проект…";
 "Delete files" = "Удаление файлов";
 "Delete memory %@" = "Удалить из памяти %@";
+"Delete note" = "Удалить заметку";
 "Delete “%@”?" = "Удалить «%@»?";
 "Deny" = "Запретить";
 "Disconnect" = "Отключить";
@@ -249,6 +252,7 @@
 "List %@" = "Показать содержимое %@";
 "List ClickUp tasks" = "Показать задачи ClickUp";
 "List files" = "Просмотр файлов";
+"List your notes" = "Показать твои заметки";
 "Listen in" = "Слушать на языке";
 "Listening…" = "Слушаю…";
 "Load tasks again" = "Загрузить задачи заново";
@@ -285,11 +289,13 @@
 "New %@ Chat" = "Новый чат с %@";
 "New Chat" = "Новый чат";
 "New Folder" = "Новая папка";
+"New Note" = "Новая заметка";
 "New Project" = "Новый проект";
 "New chat" = "Новый чат";
 "New chat in %@" = "Новый чат в «%@»";
 "New chat in a new tab" = "Новый чат в новой вкладке";
 "New folder" = "Новая папка";
+"New note" = "Новая заметка";
 "New project" = "Новый проект";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Новые снимки экрана (⌘⇧3, ⌘⇧4, ⌘⇧5) появляются на Полке.";
 "Next Day" = "Следующий день";
@@ -297,6 +303,7 @@
 "Next time" = "В следующий раз";
 "No answer came back." = "Ответ не пришёл.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Баз не найдено. В Notion открой базу задач → ••• → Connections → добавь свою интеграцию, потом нажми «Обновить базы».";
+"No notes yet." = "Заметок пока нет.";
 "No open tasks for you in Notion." = "В Notion нет открытых задач для тебя.";
 "No open tasks for you." = "Для тебя нет открытых задач.";
 "No recordings yet." = "Записей пока нет.";
@@ -306,6 +313,7 @@
 "No transcript yet." = "Транскрипта пока нет.";
 "None" = "Нет";
 "Not recorded" = "Не записывается";
+"Notes" = "Заметки";
 "Notes the AI keeps about this project, shared by all its chats." = "Заметки, которые AI ведёт об этом проекте; общие для всех его чатов.";
 "Nothing found." = "Ничего не найдено.";
 "Nothing to do" = "Нечего делать";
@@ -398,6 +406,8 @@
 "Read emails" = "Чтение писем";
 "Read files" = "Чтение файлов";
 "Read memory %@" = "Прочитать память %@";
+"Read note “%@”" = "Прочитать заметку «%@»";
+"Read notes" = "Читать заметки";
 "Read voice answers aloud" = "Читать голосовые ответы вслух";
 "Ready to focus again?" = "Готов снова сосредоточиться?";
 "Recent" = "Последние";
@@ -466,6 +476,8 @@
 "Search Outlook mail" = "Поиск в почте Outlook";
 "Search files" = "Поиск в файлах";
 "Search files for “%@”" = "Искать в файлах «%@»";
+"Search notes" = "Искать в заметках";
+"Search notes for “%@”" = "Искать в заметках «%@»";
 "Select All" = "Выбрать всё";
 "Send" = "Отправить";
 "Send (Return)" = "Отправить (Return)";
@@ -612,6 +624,7 @@
 "Window" = "Окно";
 "Work with the whole Mac" = "Работать со всем Mac";
 "Workshop" = "Воркшоп";
+"Write down anything. The AI can read your notes and send you links to them." = "Записывай что угодно. AI может читать твои заметки и присылать ссылки на них.";
 "Write files" = "Запись файлов";
 "Write memory note %@" = "Записать заметку в память %@";
 "Writing the review…" = "Пишу обзор…";

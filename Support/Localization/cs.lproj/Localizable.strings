@@ -27,6 +27,7 @@
 "A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits." = "Dlouhá schůzka je dlouhý text: silný model s velkým kontextem (Claude Opus nebo Sonnet, GPT-5, Gemini Pro) napíše mnohem lepší recenzi. GitHub Models má malé limity.";
 "A note before bedtime, then a card in the notch until you say good night." = "Upozornění před spaním, pak karta ve výřezu, dokud neřekneš dobrou noc.";
 "A reminder to go to bed on time." = "Připomenutí jít včas spát.";
+"A righthand:// link that opens this note — paste it anywhere on your Mac" = "Odkaz righthand://, který otevře tuto poznámku — vlož ho kamkoli na Macu";
 "API key" = "Klíč API";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "Klíče API jsou uložené v Klíčence tvého Macu a posílají se jen do Anthropic nebo OpenAI. Používání API si účtují oni.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "Klíče API jsou uložené v Klíčence tvého Macu a posílají se jen do Anthropic, OpenAI nebo ElevenLabs. Používání API si účtují oni.";
@@ -132,6 +133,7 @@
 "Copilot subscription" = "Předplatné Copilot";
 "Copy" = "Kopírovat";
 "Copy %@ to %@" = "Zkopírovat %@ do %@";
+"Copy Link" = "Kopírovat odkaz";
 "Copy answer" = "Kopírovat odpověď";
 "Couldn't check for updates" = "Aktualizace se nepodařilo zkontrolovat";
 "Couldn't install the update: %@" = "Aktualizaci se nepodařilo nainstalovat: %@";
@@ -156,6 +158,7 @@
 "Delete Project…" = "Smazat projekt…";
 "Delete files" = "Mazání souborů";
 "Delete memory %@" = "Smazat z paměti %@";
+"Delete note" = "Smazat poznámku";
 "Delete “%@”?" = "Smazat „%@“?";
 "Deny" = "Zakázat";
 "Disconnect" = "Odpojit";
@@ -249,6 +252,7 @@
 "List %@" = "Zobrazit obsah %@";
 "List ClickUp tasks" = "Vypsat úkoly v ClickUp";
 "List files" = "Výpis souborů";
+"List your notes" = "Zobrazit tvé poznámky";
 "Listen in" = "Poslouchat v jazyce";
 "Listening…" = "Poslouchám…";
 "Load tasks again" = "Znovu načíst úkoly";
@@ -285,11 +289,13 @@
 "New %@ Chat" = "Nový chat s %@";
 "New Chat" = "Nový chat";
 "New Folder" = "Nová složka";
+"New Note" = "Nová poznámka";
 "New Project" = "Nový projekt";
 "New chat" = "Nový chat";
 "New chat in %@" = "Nový chat v „%@“";
 "New chat in a new tab" = "Nový chat na nové kartě";
 "New folder" = "Nová složka";
+"New note" = "Nová poznámka";
 "New project" = "Nový projekt";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Nové snímky obrazovky (⌘⇧3, ⌘⇧4, ⌘⇧5) se objeví na Poličce.";
 "Next Day" = "Další den";
@@ -297,6 +303,7 @@
 "Next time" = "Příště";
 "No answer came back." = "Nepřišla žádná odpověď.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Žádné databáze. V Notionu otevři databázi úkolů → ••• → Connections → přidej svou integraci a pak stiskni Znovu načíst.";
+"No notes yet." = "Zatím žádné poznámky.";
 "No open tasks for you in Notion." = "V Notionu pro tebe nejsou žádné otevřené úkoly.";
 "No open tasks for you." = "Nemáš žádné otevřené úkoly.";
 "No recordings yet." = "Zatím žádné nahrávky.";
@@ -306,6 +313,7 @@
 "No transcript yet." = "Přepis zatím není.";
 "None" = "Žádný";
 "Not recorded" = "Nenahrává se";
+"Notes" = "Poznámky";
 "Notes the AI keeps about this project, shared by all its chats." = "Poznámky, které si AI vede o tomto projektu; sdílí je všechny jeho chaty.";
 "Nothing found." = "Nic nenalezeno.";
 "Nothing to do" = "Nic na práci";
@@ -398,6 +406,8 @@
 "Read emails" = "Čtení e-mailů";
 "Read files" = "Čtení souborů";
 "Read memory %@" = "Přečíst paměť %@";
+"Read note “%@”" = "Přečíst poznámku „%@“";
+"Read notes" = "Číst poznámky";
 "Read voice answers aloud" = "Číst hlasové odpovědi nahlas";
 "Ready to focus again?" = "Připraven se znovu soustředit?";
 "Recent" = "Poslední";
@@ -466,6 +476,8 @@
 "Search Outlook mail" = "Hledání v poště Outlook";
 "Search files" = "Hledání v souborech";
 "Search files for “%@”" = "Hledat v souborech „%@“";
+"Search notes" = "Hledat v poznámkách";
+"Search notes for “%@”" = "Hledat v poznámkách „%@“";
 "Select All" = "Vybrat vše";
 "Send" = "Odeslat";
 "Send (Return)" = "Odeslat (Return)";
@@ -612,6 +624,7 @@
 "Window" = "Okno";
 "Work with the whole Mac" = "Pracovat s celým Macem";
 "Workshop" = "Workshop";
+"Write down anything. The AI can read your notes and send you links to them." = "Zapisuj si cokoli. AI umí číst tvé poznámky a posílat ti na ně odkazy.";
 "Write files" = "Zápis souborů";
 "Write memory note %@" = "Zapsat poznámku do paměti %@";
 "Writing the review…" = "Píšu shrnutí…";
