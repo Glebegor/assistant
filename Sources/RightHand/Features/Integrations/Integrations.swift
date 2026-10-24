@@ -38,7 +38,7 @@ enum Integrations {
 
     /// Tells the AI which services it can use.
     static var systemPrompt: String? {
-        var services: [String] = []
+        var services = ["the user's RightHand notes (list, search and read; share a note as a Markdown link to its righthand:// link)"]
         if NotionAccess.isConnected { services.append("Notion (search, read pages and databases, change tasks)") }
         if ClickUpSettings.isConnected { services.append("ClickUp (find, read and change tasks)") }
         if JiraSettings.isConnected { services.append("Jira (search issues with words or JQL, read issues)") }
@@ -47,7 +47,6 @@ enum Integrations {
             services.append("Gmail of \(GoogleAuth.email ?? "the user") (search and read emails)")
             services.append("Google Drive (search, read, create Docs, upload, download)")
         }
-        guard !services.isEmpty else { return nil }
         return """
         # Connected services
 

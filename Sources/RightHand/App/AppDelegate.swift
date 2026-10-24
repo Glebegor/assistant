@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let chat = ChatStore()
     private let tasks = TaskStore()
     private let calendar = CalendarStore()
+    private let notes = NoteStore()
     private lazy var voice = VoiceAssistant(chat: chat)
     private let recorder = ScreenRecorder()
     private let sleep = SleepReminder()
@@ -35,7 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         blocker = URLBlocker(pomodoro: pomodoro)
         let projectsWindow = ProjectsWindowController(store: projects, openSettings: { settings.show() })
         self.projectsWindow = projectsWindow
-        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, tasks: tasks, calendar: calendar, chat: chat, voice: voice, recorder: recorder, sleep: sleep,
+        let notch = NotchController(pomodoro: pomodoro, shelf: shelf, tasks: tasks, calendar: calendar, notes: notes, chat: chat, voice: voice, recorder: recorder, sleep: sleep,
                                     analyzer: analyzer, openReview: { [weak self] in self?.reviewWindows.show($0) },
                                     openSettings: { settings.show() }, openProjects: { projectsWindow.show() })
         self.notch = notch
@@ -48,5 +49,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             openProjects: { projectsWindow.show() },
             openSettings: { settings.show() }
         )
+    }
+
+    /// righthand://note/<id> links (from the chat, or pasted anywhere) open the note.
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            if let id = NotesFile.noteID(in: url) { notch?.showNote(id) }
+        }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        notes.flush()
     }
 }

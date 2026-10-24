@@ -7,6 +7,7 @@ struct NotchRootView: View {
     let shelf: ShelfStore
     let tasks: TaskStore
     let calendar: CalendarStore
+    let notes: NoteStore
     let chat: ChatStore
     let voice: VoiceAssistant
     let recorder: ScreenRecorder
@@ -24,10 +25,10 @@ struct NotchRootView: View {
             && (voice.displayID == nil || voice.displayID == model.displayID)
     }
 
-    /// The Pomodoro dot left of the closed notch; it steps aside while the AI works, a card shows
-    /// or the panel is open.
+    /// The Pomodoro dot left of the closed notch; it steps aside while the AI works, a card shows,
+    /// the panel is open or an app is full screen there.
     private var showsPomodoro: Bool {
-        !model.isExpanded && !showsVoice && !showsApproval && !showsSleep && !voice.isVisible
+        !model.isExpanded && !model.hidesWhenCollapsed && !showsVoice && !showsApproval && !showsSleep && !voice.isVisible
             && !(chat.isWorking && (chat.workingDisplayID == nil || chat.workingDisplayID == model.displayID))
     }
 
@@ -157,6 +158,7 @@ struct NotchRootView: View {
                     }
                 case .tasks: TasksView(store: tasks, openSettings: openSettings)
                 case .calendar: CalendarView(store: calendar, openSettings: openSettings)
+                case .notes: NotesView(store: notes)
                 case .shelf: ShelfView(store: shelf)
                 case .recorder: RecorderView(recorder: recorder, analyzer: analyzer, openReview: openReview)
                 case .chat: ChatView(store: chat, voice: voice, openSettings: openSettings, openProjects: openProjects)

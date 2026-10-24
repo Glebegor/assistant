@@ -27,6 +27,7 @@
 "A long meeting is a big text: a strong model with a large context (Claude Opus or Sonnet, GPT-5, Gemini Pro) writes a much better review. GitHub Models has small limits." = "Довга зустріч — це великий текст: сильна модель із великим контекстом (Claude Opus чи Sonnet, GPT-5, Gemini Pro) пише значно краще ревʼю. У GitHub Models малі ліміти.";
 "A note before bedtime, then a card in the notch until you say good night." = "Нагадування перед сном, потім картка в нотчі, доки не скажеш «добраніч».";
 "A reminder to go to bed on time." = "Нагадування лягати спати вчасно.";
+"A righthand:// link that opens this note — paste it anywhere on your Mac" = "Посилання righthand://, яке відкриває цю нотатку — встав його будь-де на Mac";
 "API key" = "Ключ API";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic or OpenAI. Using these APIs is billed by them." = "Ключі API зберігаються у Keychain твого Mac і надсилаються лише в Anthropic або OpenAI. За використання API платиш їм.";
 "API keys are stored in your Mac's Keychain and are only sent to Anthropic, OpenAI or ElevenLabs. Using these APIs is billed by them." = "Ключі API зберігаються у Keychain твого Mac і надсилаються лише в Anthropic, OpenAI або ElevenLabs. За використання API платиш їм.";
@@ -125,12 +126,14 @@
 "Connect Notion to see your tasks" = "Підключи Notion, щоб бачити задачі";
 "Connect them in Settings → Services." = "Підключи їх у Налаштування → Сервіси.";
 "Connected" = "Підключено";
+"Continue automatically" = "Продовжувати автоматично";
 "Copied" = "Скопійовано";
 "Copied image" = "Скопійоване зображення";
 "Copied into the project. The text of these files is part of every new chat (PDF, Markdown, code, notes…)." = "Копіюються в проєкт. Текст цих файлів є в кожному новому чаті (PDF, Markdown, код, нотатки…).";
 "Copilot subscription" = "Підписка Copilot";
 "Copy" = "Копіювати";
 "Copy %@ to %@" = "Скопіювати %@ у %@";
+"Copy Link" = "Копіювати посилання";
 "Copy answer" = "Копіювати відповідь";
 "Couldn't check for updates" = "Не вдалося перевірити оновлення";
 "Couldn't install the update: %@" = "Не вдалося встановити оновлення: %@";
@@ -155,6 +158,7 @@
 "Delete Project…" = "Видалити проєкт…";
 "Delete files" = "Видалення файлів";
 "Delete memory %@" = "Видалити з пам'яті %@";
+"Delete note" = "Видалити нотатку";
 "Delete “%@”?" = "Видалити «%@»?";
 "Deny" = "Заборонити";
 "Disconnect" = "Відключити";
@@ -248,6 +252,7 @@
 "List %@" = "Переглянути вміст %@";
 "List ClickUp tasks" = "Показати задачі ClickUp";
 "List files" = "Перегляд файлів";
+"List your notes" = "Показати твої нотатки";
 "Listen in" = "Слухати мовою";
 "Listening…" = "Слухаю…";
 "Load tasks again" = "Завантажити задачі знову";
@@ -284,11 +289,13 @@
 "New %@ Chat" = "Новий чат з %@";
 "New Chat" = "Новий чат";
 "New Folder" = "Нова папка";
+"New Note" = "Нова нотатка";
 "New Project" = "Новий проєкт";
 "New chat" = "Новий чат";
 "New chat in %@" = "Новий чат у «%@»";
 "New chat in a new tab" = "Новий чат у новій вкладці";
 "New folder" = "Нова папка";
+"New note" = "Нова нотатка";
 "New project" = "Новий проєкт";
 "New screenshots (⌘⇧3, ⌘⇧4, ⌘⇧5) appear on the Shelf." = "Нові знімки екрана (⌘⇧3, ⌘⇧4, ⌘⇧5) з'являються на Полиці.";
 "Next Day" = "Наступний день";
@@ -296,6 +303,7 @@
 "Next time" = "Наступного разу";
 "No answer came back." = "Відповідь не надійшла.";
 "No databases found. In Notion, open a task database → ••• → Connections → add your integration, then press Reload." = "Баз не знайдено. У Notion відкрий базу задач → ••• → Connections → додай свою інтеграцію, потім натисни «Оновити бази».";
+"No notes yet." = "Нотаток ще немає.";
 "No open tasks for you in Notion." = "У Notion немає відкритих задач для тебе.";
 "No open tasks for you." = "Для тебе немає відкритих задач.";
 "No recordings yet." = "Записів ще немає.";
@@ -305,6 +313,7 @@
 "No transcript yet." = "Транскрипту ще немає.";
 "None" = "Немає";
 "Not recorded" = "Не записується";
+"Notes" = "Нотатки";
 "Notes the AI keeps about this project, shared by all its chats." = "Нотатки, які AI веде про цей проєкт; спільні для всіх його чатів.";
 "Nothing found." = "Нічого не знайдено.";
 "Nothing to do" = "Нічого робити";
@@ -397,6 +406,8 @@
 "Read emails" = "Читання листів";
 "Read files" = "Читання файлів";
 "Read memory %@" = "Прочитати пам'ять %@";
+"Read note “%@”" = "Прочитати нотатку «%@»";
+"Read notes" = "Читати нотатки";
 "Read voice answers aloud" = "Читати голосові відповіді вголос";
 "Ready to focus again?" = "Готовий знову зосередитися?";
 "Recent" = "Останні";
@@ -465,6 +476,8 @@
 "Search Outlook mail" = "Пошук у пошті Outlook";
 "Search files" = "Пошук у файлах";
 "Search files for “%@”" = "Шукати у файлах «%@»";
+"Search notes" = "Шукати в нотатках";
+"Search notes for “%@”" = "Шукати в нотатках «%@»";
 "Select All" = "Вибрати все";
 "Send" = "Надіслати";
 "Send (Return)" = "Надіслати (Return)";
@@ -611,6 +624,7 @@
 "Window" = "Вікно";
 "Work with the whole Mac" = "Працювати з усім Mac";
 "Workshop" = "Воркшоп";
+"Write down anything. The AI can read your notes and send you links to them." = "Записуй що завгодно. AI може читати твої нотатки й надсилати посилання на них.";
 "Write files" = "Запис файлів";
 "Write memory note %@" = "Записати нотатку в пам'ять %@";
 "Writing the review…" = "Пишу рев'ю…";
