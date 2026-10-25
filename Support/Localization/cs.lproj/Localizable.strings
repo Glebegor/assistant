@@ -119,6 +119,7 @@
 "Choose a project or chat" = "Vyber projekt nebo chat";
 "Choose the microphone" = "Vybrat mikrofon";
 "Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude a ChatGPT: co o tobě vědí a co smějí dělat na tvém Macu.";
+"Claude, GPT-5.x and more: sign in with Copilot…" = "Claude, GPT-5.x a další: přihlásit se přes Copilot…";
 "Clear" = "Vymazat";
 "Click for one more" = "Klikni pro další";
 "Click if you slipped today" = "Klikni, pokud jsi dnes uklouzl";
@@ -154,8 +155,10 @@
 "Copy %@ to %@" = "Zkopírovat %@ do %@";
 "Copy Link" = "Kopírovat odkaz";
 "Copy answer" = "Kopírovat odpověď";
+"Copy code" = "Kopírovat kód";
 "Couldn't check for updates" = "Aktualizace se nepodařilo zkontrolovat";
 "Couldn't install the update: %@" = "Aktualizaci se nepodařilo nainstalovat: %@";
+"Couldn't load the model list (error %lld)." = "Seznam modelů se nepodařilo načíst (chyba %lld).";
 "Couldn't play the audio." = "Zvuk se nepodařilo přehrát.";
 "Couldn't read the latest release from GitHub." = "Nepodařilo se načíst poslední vydání z GitHubu.";
 "Couldn't read the recording." = "Nahrávku se nepodařilo přečíst.";
@@ -607,10 +610,12 @@
 "The download doesn't contain RightHand." = "Stažený soubor neobsahuje RightHand.";
 "The download failed." = "Stahování se nezdařilo.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "Napoprvé se macOS zeptá, zda RightHand smí ovládat každý prohlížeč. Klikni na OK.";
+"The key was rejected (error %lld). Check it, and for GitHub that the token has “Models: read”." = "Klíč byl odmítnut (chyba %lld). Zkontroluj ho a u GitHubu, že token má „Models: read“.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "Mikrofon nedává zvuk. Vyber jiný v Nastavení → Ellipse.";
 "The models of your Copilot subscription, or of GitHub Models." = "Modely tvého předplatného Copilot nebo GitHub Models.";
 "The models your OpenAI account can use." = "Modely, které tvůj účet OpenAI může používat.";
 "The project's instructions, files and memory are already part of this chat." = "Pokyny, soubory a paměť projektu už jsou součástí tohoto chatu.";
+"The provider listed no models this key can use for chat with tools." = "Poskytovatel pro tento klíč neuvedl žádný model pro chat s nástroji.";
 "The recording couldn't be saved." = "Nahrávku se nepodařilo uložit.";
 "The review came back in an unexpected form. Try Analyze Again." = "Shrnutí přišlo v neočekávané podobě. Zkus Analyzovat znovu.";
 "The review was cut off (the model's answer limit). Try Analyze Again or choose another model." = "Recenze byla useknutá (limit odpovědi modelu). Zkus Analyze Again nebo vyber jiný model.";

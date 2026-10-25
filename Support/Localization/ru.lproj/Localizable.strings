@@ -119,6 +119,7 @@
 "Choose a project or chat" = "Выбери проект или чат";
 "Choose the microphone" = "Выбрать микрофон";
 "Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude и ChatGPT: что они знают о тебе и что могут делать на твоём Mac.";
+"Claude, GPT-5.x and more: sign in with Copilot…" = "Claude, GPT-5.x и другие: войти через Copilot…";
 "Clear" = "Очистить";
 "Click for one more" = "Нажми, чтобы добавить ещё один";
 "Click if you slipped today" = "Нажми, если сегодня сорвался";
@@ -154,8 +155,10 @@
 "Copy %@ to %@" = "Скопировать %@ в %@";
 "Copy Link" = "Копировать ссылку";
 "Copy answer" = "Копировать ответ";
+"Copy code" = "Копировать код";
 "Couldn't check for updates" = "Не удалось проверить обновления";
 "Couldn't install the update: %@" = "Не удалось установить обновление: %@";
+"Couldn't load the model list (error %lld)." = "Не удалось загрузить список моделей (ошибка %lld).";
 "Couldn't play the audio." = "Не удалось воспроизвести аудио.";
 "Couldn't read the latest release from GitHub." = "Не удалось прочитать последний выпуск с GitHub.";
 "Couldn't read the recording." = "Не удалось прочитать запись.";
@@ -607,10 +610,12 @@
 "The download doesn't contain RightHand." = "В загрузке нет RightHand.";
 "The download failed." = "Загрузка не удалась.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "В первый раз macOS спросит, разрешить ли RightHand управлять каждым браузером. Нажми OK.";
+"The key was rejected (error %lld). Check it, and for GitHub that the token has “Models: read”." = "Ключ отклонён (ошибка %lld). Проверь его, а для GitHub — что у токена есть «Models: read».";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "Микрофон не даёт звука. Выбери другой в Настройки → Ellipse.";
 "The models of your Copilot subscription, or of GitHub Models." = "Модели твоей подписки Copilot или GitHub Models.";
 "The models your OpenAI account can use." = "Модели, доступные твоему аккаунту OpenAI.";
 "The project's instructions, files and memory are already part of this chat." = "Инструкции, файлы и память проекта уже есть в этом чате.";
+"The provider listed no models this key can use for chat with tools." = "Провайдер не показал ни одной модели для чата с инструментами для этого ключа.";
 "The recording couldn't be saved." = "Запись не удалось сохранить.";
 "The review came back in an unexpected form. Try Analyze Again." = "Обзор пришёл в неожиданном виде. Попробуй «Проанализировать снова».";
 "The review was cut off (the model's answer limit). Try Analyze Again or choose another model." = "Ревью оборвалось (лимит ответа модели). Попробуй Analyze Again или выбери другую модель.";

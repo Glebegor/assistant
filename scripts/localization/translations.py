@@ -729,4 +729,9 @@ T = {
     'Drop more files': ('Перетягни ще файли', 'Přetáhni další soubory', 'Перетащи ещё файлы'),
     'The AI can read and write files here. It asks before every action.': ('AI може читати й писати файли тут. Перед кожною дією питає.', 'AI tu může číst a zapisovat soubory. Před každou akcí se zeptá.', 'AI может читать и писать файлы здесь. Перед каждым действием спрашивает.'),
     'No folders yet.': ('Папок ще немає.', 'Zatím žádné složky.', 'Папок пока нет.'),
+    'The provider listed no models this key can use for chat with tools.': ('Провайдер не показав жодної моделі для чату з інструментами для цього ключа.', 'Poskytovatel pro tento klíč neuvedl žádný model pro chat s nástroji.', 'Провайдер не показал ни одной модели для чата с инструментами для этого ключа.'),
+    'The key was rejected (error %lld). Check it, and for GitHub that the token has “Models: read”.': ('Ключ відхилено (помилка %lld). Перевір його, а для GitHub — що токен має «Models: read».', 'Klíč byl odmítnut (chyba %lld). Zkontroluj ho a u GitHubu, že token má „Models: read“.', 'Ключ отклонён (ошибка %lld). Проверь его, а для GitHub — что у токена есть «Models: read».'),
+    "Couldn't load the model list (error %lld).": ('Не вдалося завантажити список моделей (помилка %lld).', 'Seznam modelů se nepodařilo načíst (chyba %lld).', 'Не удалось загрузить список моделей (ошибка %lld).'),
+    'Claude, GPT-5.x and more: sign in with Copilot…': ('Claude, GPT-5.x та інші: увійти з Copilot…', 'Claude, GPT-5.x a další: přihlásit se přes Copilot…', 'Claude, GPT-5.x и другие: войти через Copilot…'),
+    'Copy code': ('Копіювати код', 'Kopírovat kód', 'Копировать код'),
 }

@@ -61,12 +61,22 @@ enum ChatSettings {
     }
 
     /// GitHub Models that can use tools (Copilot), as "publisher/model".
+    /// Used until the list is loaded from GitHub.
     static let copilotModels: [(id: String, name: String)] = [
+        ("openai/gpt-5", "GPT-5"),
+        ("openai/gpt-5-mini", "GPT-5 mini"),
+        ("openai/gpt-5-nano", "GPT-5 nano"),
         ("openai/gpt-4.1", "GPT-4.1"),
         ("openai/gpt-4.1-mini", "GPT-4.1 mini"),
         ("openai/gpt-4o", "GPT-4o"),
+        ("openai/o3", "o3"),
         ("openai/o4-mini", "o4-mini"),
+        ("xai/grok-3", "Grok 3"),
+        ("xai/grok-3-mini", "Grok 3 mini"),
+        ("meta/llama-4-maverick-17b-128e-instruct-fp8", "Llama 4 Maverick"),
+        ("deepseek/deepseek-v3-0324", "DeepSeek V3"),
         ("mistral-ai/mistral-medium-2505", "Mistral Medium"),
+        ("mistral-ai/codestral-2501", "Codestral"),
     ]
 
     static let claudeModels: [(id: String, name: String)] = [

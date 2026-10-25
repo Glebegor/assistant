@@ -301,7 +301,8 @@ private struct ProviderSection: View {
                         .help("Load the models your key can use")
                 }
             } label: {
-                SettingsRowLabel("Model", subtitle: subtitle, systemImage: "cpu", color: color)
+                SettingsRowLabel("Model", subtitle: catalog.errors[provider] ?? subtitle, systemImage: "cpu",
+                                 color: catalog.errors[provider] == nil ? color : .orange)
             }
         } header: {
             Text(verbatim: provider == .copilot ? "GitHub Copilot" : provider.title)

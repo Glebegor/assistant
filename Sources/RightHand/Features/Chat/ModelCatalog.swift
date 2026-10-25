@@ -15,7 +15,9 @@ final class ModelCatalog {
 
     private(set) var models: [ChatProvider: [Model]] = [:]
     private(set) var loading: Set<ChatProvider> = []
-    private static let cacheKey = "chat.modelCatalog"
+    /// Why the last fetch failed, shown under the model picker in Settings.
+    private(set) var errors: [ChatProvider: String] = [:]
+    private static let cacheKey = "chat.modelCatalog.v2"
 
     init() {
         let cached = (UserDefaults.standard.data(forKey: Self.cacheKey))
@@ -53,7 +55,18 @@ final class ModelCatalog {
         guard let key = Keychain.read(provider.keychainAccount), !loading.contains(provider) else { return }
         loading.insert(provider)
         defer { loading.remove(provider) }
-        guard let fetched = try? await Self.fetch(provider, key: key), !fetched.isEmpty else { return }
+        let fetched: [Model]
+        do {
+            fetched = try await Self.fetch(provider, key: key)
+        } catch {
+            errors[provider] = error.localizedDescription
+            return
+        }
+        guard !fetched.isEmpty else {
+            errors[provider] = L("The provider listed no models this key can use for chat with tools.")
+            return
+        }
+        errors[provider] = nil
         models[provider] = fetched
         let cache = Dictionary(uniqueKeysWithValues: models.map { ($0.key.rawValue, $0.value) })
         UserDefaults.standard.set(try? JSONEncoder().encode(cache), forKey: Self.cacheKey)
@@ -99,9 +112,19 @@ final class ModelCatalog {
             var request = URLRequest(url: URL(string: "https://models.github.ai/catalog/models")!)
             request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
             request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-            let items = try await get(request).array ?? []
-            return items.filter { ($0["capabilities"]?.array ?? []).contains("tool-calling") }.compactMap { model in
+            request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
+            let json = try await get(request)
+            let items = json.array ?? json["models"]?.array ?? json["data"]?.array ?? []
+            // Models that can use tools, chat ones first; the newest of a family on top.
+            return items.filter { model in
+                let capabilities = (model["capabilities"]?.array ?? []).compactMap(\.string)
+                let output = (model["supported_output_modalities"]?.array ?? []).compactMap(\.string)
+                return capabilities.contains("tool-calling") && (output.isEmpty || output.contains("text"))
+            }.compactMap { model in
                 model["id"]?.string.map { Model(id: $0, name: model["name"]?.string ?? $0) }
+            }.sorted { a, b in
+                let aOpenAI = a.id.hasPrefix("openai/"), bOpenAI = b.id.hasPrefix("openai/")
+                return aOpenAI != bOpenAI ? aOpenAI : newestFirst(a.id, b.id)
             }
         case .gemini:
             let request = URLRequest(url: URL(string: "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=\(key)")!)
@@ -124,8 +147,12 @@ final class ModelCatalog {
         var request = request
         request.timeoutInterval = 20
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard (response as? HTTPURLResponse)?.statusCode == 200, let json = JSONValue.parse(data) else {
-            throw ChatError(message: "Couldn't load the model list.")
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        if status == 401 || status == 403 {
+            throw ChatError(message: L("The key was rejected (error %lld). Check it, and for GitHub that the token has “Models: read”.", status))
+        }
+        guard status == 200, let json = JSONValue.parse(data) else {
+            throw ChatError(message: L("Couldn't load the model list (error %lld).", status))
         }
         return json
     }

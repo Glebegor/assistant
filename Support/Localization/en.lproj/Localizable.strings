@@ -119,6 +119,7 @@
 "Choose a project or chat" = "Choose a project or chat";
 "Choose the microphone" = "Choose the microphone";
 "Claude and ChatGPT, what they know about you and what they may do on your Mac." = "Claude and ChatGPT, what they know about you and what they may do on your Mac.";
+"Claude, GPT-5.x and more: sign in with Copilot…" = "Claude, GPT-5.x and more: sign in with Copilot…";
 "Clear" = "Clear";
 "Click for one more" = "Click for one more";
 "Click if you slipped today" = "Click if you slipped today";
@@ -154,8 +155,10 @@
 "Copy %@ to %@" = "Copy %@ to %@";
 "Copy Link" = "Copy Link";
 "Copy answer" = "Copy answer";
+"Copy code" = "Copy code";
 "Couldn't check for updates" = "Couldn't check for updates";
 "Couldn't install the update: %@" = "Couldn't install the update: %@";
+"Couldn't load the model list (error %lld)." = "Couldn't load the model list (error %lld).";
 "Couldn't play the audio." = "Couldn't play the audio.";
 "Couldn't read the latest release from GitHub." = "Couldn't read the latest release from GitHub.";
 "Couldn't read the recording." = "Couldn't read the recording.";
@@ -607,10 +610,12 @@
 "The download doesn't contain RightHand." = "The download doesn't contain RightHand.";
 "The download failed." = "The download failed.";
 "The first time, macOS asks to let RightHand control each browser. Click OK." = "The first time, macOS asks to let RightHand control each browser. Click OK.";
+"The key was rejected (error %lld). Check it, and for GitHub that the token has “Models: read”." = "The key was rejected (error %lld). Check it, and for GitHub that the token has “Models: read”.";
 "The microphone gives no sound. Choose another one in Settings → Ellipse." = "The microphone gives no sound. Choose another one in Settings → Ellipse.";
 "The models of your Copilot subscription, or of GitHub Models." = "The models of your Copilot subscription, or of GitHub Models.";
 "The models your OpenAI account can use." = "The models your OpenAI account can use.";
 "The project's instructions, files and memory are already part of this chat." = "The project's instructions, files and memory are already part of this chat.";
+"The provider listed no models this key can use for chat with tools." = "The provider listed no models this key can use for chat with tools.";
 "The recording couldn't be saved." = "The recording couldn't be saved.";
 "The review came back in an unexpected form. Try Analyze Again." = "The review came back in an unexpected form. Try Analyze Again.";
 "The review was cut off (the model's answer limit). Try Analyze Again or choose another model." = "The review was cut off (the model's answer limit). Try Analyze Again or choose another model.";
