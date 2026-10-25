@@ -219,11 +219,7 @@ struct ProjectMessageRow: View {
             }
         case .assistant(_, let text):
             VStack(alignment: .leading, spacing: 4) {
-                Text(Self.markdown(text))
-                    .font(.system(size: 13.5))
-                    .lineSpacing(2)
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                MarkdownView(text: text)
                 HStack(spacing: 10) {
                     Button("Copy", systemImage: "doc.on.doc") {
                         NSPasteboard.general.clearContents()
@@ -294,8 +290,4 @@ struct ProjectMessageRow: View {
         return ""
     }
 
-    private static func markdown(_ text: String) -> AttributedString {
-        (try? AttributedString(markdown: text, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
-            ?? AttributedString(text)
-    }
 }

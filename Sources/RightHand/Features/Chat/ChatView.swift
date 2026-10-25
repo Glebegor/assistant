@@ -46,6 +46,14 @@ struct ChatView: View {
                         if model.id == store.engine.chat.model { Label(model.name, systemImage: "checkmark") } else { Text(model.name) }
                     }
                 }
+                // Claude and the newest GPT come with the Copilot subscription, not GitHub Models.
+                if store.provider == .copilot, !CopilotAuth.isSignedIn {
+                    Divider()
+                    Button("Claude, GPT-5.x and more: sign in with Copilot…", systemImage: "person.crop.circle.badge.plus") {
+                        UserDefaults.standard.set(SettingsPage.assistant.rawValue, forKey: "settings.page")
+                        openSettings()
+                    }
+                }
             } label: {
                 HStack(spacing: 3) {
                     Text(store.modelName)
@@ -352,9 +360,7 @@ private struct NotchMessageRow: View {
                 .buttonStyle(.plain)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
-                Text(Self.markdown(text))
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                MarkdownView(text: text, compact: true)
             }
             .padding(.trailing, 40)
             .onHover { isHovered = $0 }
@@ -399,9 +405,4 @@ private struct NotchMessageRow: View {
         return ""
     }
 
-    /// Bold, italics, `code` and links; line breaks are kept.
-    private static func markdown(_ text: String) -> AttributedString {
-        (try? AttributedString(markdown: text, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
-            ?? AttributedString(text)
-    }
 }
